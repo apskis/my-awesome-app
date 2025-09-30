@@ -13,6 +13,8 @@ export default function LoginPage() {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [loginMode, setLoginMode] = useState<'password' | 'magic-link'>('password')
+  const [magicLinkSent, setMagicLinkSent] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,15 +52,31 @@ export default function LoginPage() {
     }
   }
 
-  const handleEmailSignIn = async () => {
+  const handleMagicLinkSignIn = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formData.email) {
+      setError('Please enter your email address')
+      return
+    }
+
     setIsLoading(true)
+    setError('')
+
     try {
-      await signIn('email', { 
+      const result = await signIn('email', { 
         email: formData.email,
+        redirect: false,
         callbackUrl: '/' 
       })
+
+      if (result?.error) {
+        setError('Failed to send magic link. Please try again.')
+      } else {
+        setMagicLinkSent(true)
+      }
     } catch (error) {
       setError('An error occurred. Please try again.')
+    } finally {
       setIsLoading(false)
     }
   }
@@ -81,7 +99,44 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {magicLinkSent && (
+          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <p className="text-green-600 dark:text-green-400 text-sm">
+              Magic link sent! Check your email and click the link to sign in.
+            </p>
+          </div>
+        )}
+
+        {/* Login Mode Toggle */}
+        <div className="mb-6">
+          <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+            <button
+              type="button"
+              onClick={() => setLoginMode('password')}
+              className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${
+                loginMode === 'password'
+                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Password
+            </button>
+            <button
+              type="button"
+              onClick={() => setLoginMode('magic-link')}
+              className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${
+                loginMode === 'magic-link'
+                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Magic Link
+            </button>
+          </div>
+        </div>
+
+        {loginMode === 'password' ? (
+          <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email
@@ -120,6 +175,35 @@ export default function LoginPage() {
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+        ) : (
+          <form onSubmit={handleMagicLinkSignIn} className="space-y-6">
+            <div>
+              <label htmlFor="magic-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Email Address
+              </label>
+              <input
+                id="magic-email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                placeholder="Enter your email address"
+                required
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                We'll send you a magic link to sign in without a password
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || magicLinkSent}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+            >
+              {isLoading ? 'Sending...' : magicLinkSent ? 'Magic Link Sent!' : 'Send Magic Link'}
+            </button>
+          </form>
+        )}
 
         <div className="mt-6">
           <div className="relative">
@@ -158,18 +242,6 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <div className="mt-4">
-            <button
-              onClick={handleEmailSignIn}
-              disabled={isLoading || !formData.email}
-              className="w-full inline-flex justify-center py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              Send Magic Link
-            </button>
-          </div>
         </div>
 
         <div className="mt-8 text-center">
