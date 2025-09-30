@@ -44,10 +44,28 @@ export default function LoginPage() {
 
   const handleOAuthSignIn = async (provider: string) => {
     setIsLoading(true)
+    setError('')
+    
     try {
-      await signIn(provider, { callbackUrl: '/' })
+      console.log(`Attempting to sign in with ${provider}`)
+      const result = await signIn(provider, { 
+        callbackUrl: '/',
+        redirect: false 
+      })
+      
+      console.log('Sign in result:', result)
+      
+      if (result?.error) {
+        setError(`Failed to sign in with ${provider}. Please check your configuration.`)
+        console.error('Sign in error:', result.error)
+      } else if (result?.url) {
+        // Redirect manually if needed
+        window.location.href = result.url
+      }
     } catch (error) {
-      setError('An error occurred. Please try again.')
+      console.error('OAuth sign in error:', error)
+      setError(`An error occurred with ${provider}. Please try again.`)
+    } finally {
       setIsLoading(false)
     }
   }
