@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { registerSchema, RegisterInput } from '@/lib/auth'
 
@@ -41,9 +42,33 @@ export default function RegisterPage() {
       }
 
       setSuccess(true)
-      setTimeout(() => {
-        router.push('/login')
-      }, 2000)
+      
+      // Automatically sign in the user after successful registration
+      try {
+        const signInResult = await signIn('credentials', {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        })
+
+        if (signInResult?.error) {
+          // If auto sign-in fails, redirect to login page
+          setTimeout(() => {
+            router.push('/login')
+          }, 2000)
+        } else {
+          // Successfully signed in, redirect to home page
+          setTimeout(() => {
+            router.push('/')
+            router.refresh()
+          }, 1000)
+        }
+      } catch (signInError) {
+        // If auto sign-in fails, redirect to login page
+        setTimeout(() => {
+          router.push('/login')
+        }, 2000)
+      }
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)
@@ -68,13 +93,13 @@ export default function RegisterPage() {
             Account Created!
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Your account has been created successfully. Redirecting to login...
+            Your account has been created successfully. Signing you in...
           </p>
           <Link 
-            href="/login" 
+            href="/" 
             className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
-            Go to Login
+            Go to Dashboard
           </Link>
         </div>
       </div>
