@@ -21,8 +21,8 @@ export const authOptions: NextAuthOptions = {
   providers: [
     // GitHub OAuth
     GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
     
     // Google OAuth
