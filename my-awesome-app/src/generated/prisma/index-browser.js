@@ -193,6 +193,60 @@ exports.Prisma.NoteTagScalarFieldEnum = {
   tagId: 'tagId'
 };
 
+exports.Prisma.TemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  content: 'content',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DailyNoteScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  content: 'content',
+  mood: 'mood',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  completed: 'completed',
+  priority: 'priority',
+  dueDate: 'dueDate',
+  userId: 'userId',
+  projectId: 'projectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  progress: 'progress',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.KnowledgeArticleScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  category: 'category',
+  tags: 'tags',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -213,6 +267,28 @@ exports.NoteStatus = exports.$Enums.NoteStatus = {
   ARCHIVED: 'ARCHIVED'
 };
 
+exports.Mood = exports.$Enums.Mood = {
+  GREAT: 'GREAT',
+  GOOD: 'GOOD',
+  NEUTRAL: 'NEUTRAL',
+  BAD: 'BAD',
+  TERRIBLE: 'TERRIBLE'
+};
+
+exports.TaskPriority = exports.$Enums.TaskPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
+exports.ProjectStatus = exports.$Enums.ProjectStatus = {
+  PLANNING: 'PLANNING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  ON_HOLD: 'ON_HOLD',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
@@ -221,7 +297,12 @@ exports.Prisma.ModelName = {
   Note: 'Note',
   Category: 'Category',
   Tag: 'Tag',
-  NoteTag: 'NoteTag'
+  NoteTag: 'NoteTag',
+  Template: 'Template',
+  DailyNote: 'DailyNote',
+  Task: 'Task',
+  Project: 'Project',
+  KnowledgeArticle: 'KnowledgeArticle'
 };
 
 /**

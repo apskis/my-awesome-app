@@ -43,18 +43,22 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
-  name          String?
-  email         String     @unique
-  emailVerified DateTime?
-  image         String?
-  password      String? // For email/password authentication
-  accounts      Account[]
-  sessions      Session[]
-  notes         Note[]
-  categories    Category[]
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id                String             @id @default(cuid())
+  name              String?
+  email             String             @unique
+  emailVerified     DateTime?
+  image             String?
+  password          String? // For email/password authentication
+  accounts          Account[]
+  sessions          Session[]
+  notes             Note[]
+  categories        Category[]
+  dailyNotes        DailyNote[]
+  tasks             Task[]
+  projects          Project[]
+  knowledgeArticles KnowledgeArticle[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 }
 
 model VerificationToken {
@@ -128,4 +132,110 @@ model NoteTag {
 
   @@id([noteId, tagId])
   @@index([tagId])
+}
+
+// Template models
+model Template {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  content     String   @db.Text
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+}
+
+// Daily Note / Journal models
+enum Mood {
+  GREAT
+  GOOD
+  NEUTRAL
+  BAD
+  TERRIBLE
+}
+
+model DailyNote {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  content   String   @db.Text
+  mood      Mood?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([date])
+}
+
+// Task management models
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Task {
+  id        String       @id @default(cuid())
+  title     String
+  completed Boolean      @default(false)
+  priority  TaskPriority @default(MEDIUM)
+  dueDate   DateTime?
+  userId    String
+  projectId String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([dueDate])
+}
+
+// Project management models
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?       @db.Text
+  status      ProjectStatus @default(PLANNING)
+  progress    Int           @default(0) // 0-100
+  userId      String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Knowledge Hub models
+model KnowledgeArticle {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  category  String
+  tags      String[] // Simple array of tag strings
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
 }
