@@ -42,7 +42,7 @@ export function AppHeader() {
         {/* Left Side - Mobile Menu & Logo */}
         <div className="flex items-center gap-4">
           <MobileNavigation />
-          <h1 className="text-lg md:text-xl font-bold text-primary-blue">My Notes App</h1>
+          <h1 className="text-lg md:text-xl font-bold text-blue-600">My Notes App</h1>
         </div>
 
         {/* Center - Search Bar (hidden on mobile) */}

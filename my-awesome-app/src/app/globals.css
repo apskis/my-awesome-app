@@ -5,16 +5,21 @@
 
 @theme inline {
   /* Custom Palette Colors */
-  --color-primary-blue: var(--primary-blue);
-  --color-accent-cyan: var(--accent-cyan);
-  --color-background-cream: var(--background-cream);
-  --color-warning-orange: var(--warning-orange);
+  --color-primary-blue: 214 100% 50%;
+  --color-accent-cyan: 190 52% 63%;
+  --color-background-cream: 46 58% 91%;
+  --color-warning-orange: 30 100% 54%;
   
   /* Semantic aliases */
-  --color-app-primary: var(--app-primary);
-  --color-app-accent: var(--app-accent);
-  --color-app-background: var(--app-background);
-  --color-app-warning: var(--app-warning);
+  --color-app-primary: 214 100% 50%;
+  --color-app-accent: 190 52% 63%;
+  --color-app-background: 46 58% 91%;
+  --color-app-warning: 30 100% 54%;
+  
+  /* Custom color classes for Tailwind */
+  --color-blue-600: 214 100% 50%;
+  --color-cyan-400: 190 52% 63%;
+  --color-orange-500: 30 100% 54%;
   
   /* Theme Colors */
   --color-background: var(--background);

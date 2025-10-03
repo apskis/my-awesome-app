@@ -81,7 +81,7 @@ function NavigationContent() {
           <div key={section.title}>
             {/* Section Header */}
             <h2 
-              className={`text-xs font-bold text-primary-blue uppercase tracking-wide mb-3 ${
+              className={`text-xs font-bold text-blue-600 uppercase tracking-wide mb-3 ${
                 sectionIndex === 0 ? 'mt-0' : 'mt-8'
               }`}
             >
@@ -103,8 +103,8 @@ function NavigationContent() {
                       variant="ghost"
                       className={`w-full justify-start gap-3 h-auto py-2.5 px-3 text-sm font-medium transition-all duration-200 ${
                         isActive
-                          ? 'bg-primary-blue/10 text-primary-blue font-semibold border-l-4 border-primary-blue pl-2'
-                          : 'text-gray-700 hover:bg-accent-cyan/15 hover:text-primary-blue hover:translate-x-1'
+                          ? 'bg-blue-600/10 text-blue-600 font-semibold border-l-4 border-blue-600 pl-2'
+                          : 'text-gray-700 hover:bg-cyan-400/15 hover:text-blue-600 hover:translate-x-1'
                       }`}
                       aria-current={isActive ? 'page' : undefined}
                     >
@@ -151,7 +151,7 @@ export function MobileNavigation() {
           className="lg:hidden"
           aria-label="Toggle navigation menu"
         >
-          <Menu className="h-6 w-6 text-primary-blue" />
+          <Menu className="h-6 w-6 text-blue-600" />
         </Button>
       </SheetTrigger>
       <SheetContent 

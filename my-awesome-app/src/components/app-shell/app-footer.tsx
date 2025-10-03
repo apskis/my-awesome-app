@@ -18,25 +18,25 @@ export function AppFooter() {
             <div className="flex items-center gap-6">
               <Link 
                 href="/about" 
-                className="text-sm text-gray-600 hover:text-primary-blue transition-colors duration-200"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
               >
                 About
               </Link>
               <Link 
                 href="/privacy" 
-                className="text-sm text-gray-600 hover:text-primary-blue transition-colors duration-200"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
               >
                 Privacy
               </Link>
               <Link 
                 href="/terms" 
-                className="text-sm text-gray-600 hover:text-primary-blue transition-colors duration-200"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
               >
                 Terms
               </Link>
               <Link 
                 href="/contact" 
-                className="text-sm text-gray-600 hover:text-primary-blue transition-colors duration-200"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
               >
                 Contact
               </Link>
@@ -48,7 +48,7 @@ export function AppFooter() {
                 href="https://twitter.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-primary-blue transition-colors duration-200"
+                className="text-gray-500 hover:text-blue-600 transition-colors duration-200"
                 aria-label="Follow us on Twitter"
               >
                 <Twitter className="w-5 h-5" />
@@ -57,7 +57,7 @@ export function AppFooter() {
                 href="https://github.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-primary-blue transition-colors duration-200"
+                className="text-gray-500 hover:text-blue-600 transition-colors duration-200"
                 aria-label="View our GitHub"
               >
                 <Github className="w-5 h-5" />
@@ -66,7 +66,7 @@ export function AppFooter() {
                 href="https://linkedin.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-primary-blue transition-colors duration-200"
+                className="text-gray-500 hover:text-blue-600 transition-colors duration-200"
                 aria-label="Connect on LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />

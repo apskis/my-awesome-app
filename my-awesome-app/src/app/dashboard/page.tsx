@@ -132,11 +132,11 @@ async function getDashboardData() {
 function getStatusBadgeVariant(status: string) {
   switch (status) {
     case 'DRAFT':
-      return 'bg-warning-orange text-white'
+      return 'bg-orange-500 text-white'
     case 'PUBLISHED':
-      return 'bg-primary-blue text-white'
+      return 'bg-blue-600 text-white'
     case 'ARCHIVED':
-      return 'bg-accent-cyan text-white'
+      return 'bg-cyan-400 text-white'
     default:
       return 'bg-gray-500 text-white'
   }
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
               <p className="text-muted-foreground">
                 Get started by creating your first note to organize your thoughts and ideas.
               </p>
-              <Button asChild className="bg-primary-blue hover:bg-primary-blue/90 text-white">
+              <Button asChild className="bg-blue-600 hover:bg-blue-600/90 text-white">
                 <Link href="/notes">
                   <Plus className="w-4 h-4 mr-2" />
                   Create New Note
@@ -200,12 +200,12 @@ export default async function DashboardPage() {
         <Card className="bg-white shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <FileText className="w-4 h-4 text-primary-blue" />
+              <FileText className="w-4 h-4 text-blue-600" />
               Total Notes
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary-blue">{stats.totalNotes}</div>
+            <div className="text-3xl font-bold text-blue-600">{stats.totalNotes}</div>
             <p className="text-xs text-muted-foreground mt-1">
               Across {stats.totalCategories} categories
             </p>
@@ -235,7 +235,7 @@ export default async function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary-blue">{stats.notesByStatus.PUBLISHED}</div>
+            <div className="text-3xl font-bold text-blue-600">{stats.notesByStatus.PUBLISHED}</div>
             <p className="text-xs text-muted-foreground mt-1">
               Ready to share
             </p>
@@ -293,12 +293,12 @@ export default async function DashboardPage() {
         <Card className="bg-white shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-primary-blue" />
+              <TrendingUp className="w-4 h-4 text-blue-600" />
               Active Projects
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary-blue">{stats.activeProjects}</div>
+            <div className="text-3xl font-bold text-blue-600">{stats.activeProjects}</div>
             <p className="text-xs text-muted-foreground mt-1">
               In progress
             </p>
@@ -315,7 +315,7 @@ export default async function DashboardPage() {
           {recentNotes.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-4">No notes yet. Create your first note!</p>
-              <Button asChild className="bg-primary-blue hover:bg-primary-blue/90 text-white">
+              <Button asChild className="bg-blue-600 hover:bg-blue-600/90 text-white">
                 <Link href="/notes">
                   <Plus className="w-4 h-4 mr-2" />
                   Create New Note
@@ -328,7 +328,7 @@ export default async function DashboardPage() {
                 <Link
                   key={note.id}
                   href={`/notes/${note.id}`}
-                  className="block p-4 rounded-lg border border-gray-200 hover:border-primary-blue hover:bg-primary-blue/5 transition-all duration-200"
+                  className="block p-4 rounded-lg border border-gray-200 hover:border-blue-600 hover:bg-blue-600/5 transition-all duration-200"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
@@ -373,7 +373,7 @@ export default async function DashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild className="bg-primary-blue hover:bg-primary-blue/90 text-white flex-1">
+            <Button asChild className="bg-blue-600 hover:bg-blue-600/90 text-white flex-1">
               <Link href="/notes">
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Note
