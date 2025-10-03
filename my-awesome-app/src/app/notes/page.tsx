@@ -1,5 +1,7 @@
-import { Metadata } from 'next'
-import { PrismaClient, NoteStatus } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -7,103 +9,55 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Plus, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 
-export const metadata: Metadata = {
-  title: 'Notes - My Notes App',
-  description: 'Browse and manage all your notes',
+interface Note {
+  id: string
+  title: string
+  content: string
+  status: string
+  categoryId?: string
+  category?: {
+    id: string
+    name: string
+    color: string
+  }
+  tags: Array<{
+    id: string
+    name: string
+    color: string
+  }>
+  createdAt: string
+  updatedAt: string
 }
 
-const prisma = new PrismaClient()
-
-interface NotesPageProps {
-  searchParams: {
-    page?: string
-    search?: string
-    status?: string
-    category?: string
-  }
+interface Category {
+  id: string
+  name: string
+  color: string
 }
 
-async function getNotesData(page: number = 1, search?: string, status?: string, category?: string) {
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@myawesomeapp.com' },
-  })
-
-  if (!demoUser) {
-    return {
-      notes: [],
-      totalCount: 0,
-      categories: [],
-      totalPages: 0,
-    }
-  }
-
-  const pageSize = 10
-  const skip = (page - 1) * pageSize
-
-  // Build where clause
-  const where: any = {
-    userId: demoUser.id,
-  }
-
-  if (search) {
-    where.title = {
-      contains: search,
-      mode: 'insensitive',
-    }
-  }
-
-  if (status && status !== 'all') {
-    where.status = status as NoteStatus
-  }
-
-  if (category && category !== 'all') {
-    where.categoryId = category
-  }
-
-  const [notes, totalCount, categories] = await Promise.all([
-    prisma.note.findMany({
-      where,
-      include: {
-        category: true,
-        tags: {
-          include: {
-            tag: true,
-          },
-        },
-      },
-      orderBy: { updatedAt: 'desc' },
-      skip,
-      take: pageSize,
-    }),
-    prisma.note.count({ where }),
-    prisma.category.findMany({
-      where: { userId: demoUser.id },
-      orderBy: { name: 'asc' },
-    }),
-  ])
-
-  const totalPages = Math.ceil(totalCount / pageSize)
-
-  return {
-    notes,
-    totalCount,
-    categories,
-    totalPages,
-  }
+interface NotesResponse {
+  notes: Note[]
+  total: number
+  page: number
+  totalPages: number
 }
 
-function getStatusBadgeColor(status: NoteStatus) {
+interface CategoriesResponse {
+  categories: Category[]
+}
+
+function getStatusBadgeColor(status: string) {
   switch (status) {
-    case NoteStatus.DRAFT:
-      return 'bg-warning-orange text-white hover:bg-warning-orange/80'
-    case NoteStatus.PUBLISHED:
-      return 'bg-primary-blue text-white hover:bg-primary-blue/80'
-    case NoteStatus.ARCHIVED:
-      return 'bg-accent-cyan text-white hover:bg-accent-cyan/80'
+    case 'DRAFT':
+      return 'bg-orange-500 text-white hover:bg-orange-500/80'
+    case 'PUBLISHED':
+      return 'bg-blue-600 text-white hover:bg-blue-600/80'
+    case 'ARCHIVED':
+      return 'bg-cyan-400 text-white hover:bg-cyan-400/80'
     default:
       return 'bg-gray-500 text-white hover:bg-gray-500/80'
   }
@@ -114,23 +68,121 @@ function truncateText(text: string, maxLength: number = 100) {
   return text.substring(0, maxLength) + '...'
 }
 
-export default async function NotesPage({ searchParams }: NotesPageProps) {
-  const page = parseInt(searchParams.page || '1')
-  const search = searchParams.search
-  const status = searchParams.status
-  const category = searchParams.category
+export default function NotesPage() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  
+  const [notes, setNotes] = useState<Note[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [totalCount, setTotalCount] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  
+  const search = searchParams.get('search') || ''
+  const status = searchParams.get('status') || ''
+  const category = searchParams.get('category') || ''
 
-  const { notes, totalCount, categories, totalPages } = await getNotesData(page, search, status, category)
+  // Fetch notes and categories
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        // Build query parameters
+        const params = new URLSearchParams()
+        if (search) params.append('search', search)
+        if (status && status !== 'all') params.append('status', status)
+        if (category && category !== 'all') params.append('categoryId', category)
+        params.append('page', currentPage.toString())
+
+        const [notesResponse, categoriesResponse] = await Promise.all([
+          fetch(`/api/notes?${params.toString()}`),
+          fetch('/api/categories')
+        ])
+
+        if (notesResponse.ok) {
+          const notesData: NotesResponse = await notesResponse.json()
+          setNotes(notesData.notes)
+          setTotalCount(notesData.total)
+          setTotalPages(notesData.totalPages)
+        }
+
+        if (categoriesResponse.ok) {
+          const categoriesData: CategoriesResponse = await categoriesResponse.json()
+          setCategories(categoriesData.categories)
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [search, status, category, currentPage])
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newSearch = formData.get('search') as string
+    const newStatus = formData.get('status') as string
+    const newCategory = formData.get('category') as string
+
+    const params = new URLSearchParams()
+    if (newSearch) params.append('search', newSearch)
+    if (newStatus && newStatus !== 'all') params.append('status', newStatus)
+    if (newCategory && newCategory !== 'all') params.append('category', newCategory)
+
+    router.push(`/notes?${params.toString()}`)
+  }
 
   const hasNotes = notes.length > 0
   const hasFilters = search || (status && status !== 'all') || (category && category !== 'all')
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="h-8 w-24 bg-gray-200 rounded animate-pulse" />
+            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mt-2" />
+          </div>
+          <div className="h-10 w-40 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <Card>
+          <CardHeader>
+            <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 h-10 bg-gray-200 rounded animate-pulse" />
+              <div className="h-10 w-40 bg-gray-200 rounded animate-pulse" />
+              <div className="h-10 w-48 bg-gray-200 rounded animate-pulse" />
+              <div className="h-10 w-32 bg-gray-200 rounded animate-pulse" />
+            </div>
+          </CardContent>
+        </Card>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse mb-2" />
+                <div className="h-4 w-full bg-gray-200 rounded animate-pulse mb-2" />
+                <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Notes</h1>
+          <h1 className="text-3xl font-bold text-slate-800">Notes</h1>
           <p className="text-muted-foreground mt-1">
             {totalCount === 0 
               ? 'No notes yet' 
@@ -139,7 +191,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
           </p>
         </div>
         <Link href="/notes/new">
-          <Button className="bg-primary-blue hover:bg-primary-blue/90">
+          <Button className="bg-blue-600 hover:bg-blue-700">
             <Plus className="w-4 h-4 mr-2" />
             Create New Note
           </Button>
@@ -152,7 +204,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
           <CardTitle className="text-lg">Search & Filter</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
             {/* Search Input */}
             <div className="flex-1">
               <div className="relative">
@@ -198,7 +250,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
             <Button type="submit" variant="outline" className="w-full sm:w-auto">
               Apply Filters
             </Button>
-          </div>
+          </form>
         </CardContent>
       </Card>
 
@@ -215,7 +267,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
             }
           </AlertDescription>
           <Link href="/notes/new">
-            <Button className="mt-4 bg-primary-blue hover:bg-primary-blue/90">
+            <Button className="mt-4 bg-blue-600 hover:bg-blue-700">
               <Plus className="w-4 h-4 mr-2" />
               Create New Note
             </Button>
@@ -237,10 +289,10 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
               </TableHeader>
               <TableBody>
                 {notes.map((note) => (
-                  <TableRow key={note.id} className="hover:bg-accent-cyan/10 cursor-pointer">
+                  <TableRow key={note.id} className="hover:bg-cyan-400/10 cursor-pointer">
                     <TableCell>
                       <Link href={`/notes/${note.id}`} className="block">
-                        <div className="font-medium text-foreground hover:text-primary-blue">
+                        <div className="font-medium text-slate-800 hover:text-blue-600">
                           {note.title}
                         </div>
                         <div className="text-sm text-muted-foreground mt-1">
@@ -270,14 +322,14 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {note.tags.slice(0, 2).map((noteTag) => (
+                        {note.tags.slice(0, 2).map((tag) => (
                           <Badge
-                            key={noteTag.tag.id}
+                            key={tag.id}
                             variant="outline"
                             className="text-xs"
-                            style={{ color: noteTag.tag.color }}
+                            style={{ color: tag.color }}
                           >
-                            {noteTag.tag.name}
+                            {tag.name}
                           </Badge>
                         ))}
                         {note.tags.length > 2 && (
@@ -303,7 +355,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
                 <Link href={`/notes/${note.id}`}>
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between gap-2">
-                      <CardTitle className="text-lg hover:text-primary-blue">
+                      <CardTitle className="text-lg hover:text-blue-600">
                         {note.title}
                       </CardTitle>
                       <Badge className={getStatusBadgeColor(note.status)}>
@@ -329,14 +381,14 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
                         </Badge>
                       )}
                       
-                      {note.tags.slice(0, 3).map((noteTag) => (
+                      {note.tags.slice(0, 3).map((tag) => (
                         <Badge
-                          key={noteTag.tag.id}
+                          key={tag.id}
                           variant="outline"
                           className="text-xs"
-                          style={{ color: noteTag.tag.color }}
+                          style={{ color: tag.color }}
                         >
-                          {noteTag.tag.name}
+                          {tag.name}
                         </Badge>
                       ))}
                       
@@ -362,14 +414,15 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-muted-foreground">
-                    Showing {((page - 1) * 10) + 1} to {Math.min(page * 10, totalCount)} of {totalCount} notes
+                    Showing {((currentPage - 1) * 10) + 1} to {Math.min(currentPage * 10, totalCount)} of {totalCount} notes
                   </div>
                   
                   <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={page === 1}
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage(currentPage - 1)}
                       aria-label="Previous page"
                     >
                       <ChevronLeft className="w-4 h-4" />
@@ -380,11 +433,12 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
                       return (
                         <Button
                           key={pageNum}
-                          variant={pageNum === page ? "default" : "outline"}
+                          variant={pageNum === currentPage ? "default" : "outline"}
                           size="sm"
-                          className={pageNum === page ? "bg-primary-blue" : ""}
+                          className={pageNum === currentPage ? "bg-blue-600" : ""}
+                          onClick={() => setCurrentPage(pageNum)}
                           aria-label={`Go to page ${pageNum}`}
-                          aria-current={pageNum === page ? "page" : undefined}
+                          aria-current={pageNum === currentPage ? "page" : undefined}
                         >
                           {pageNum}
                         </Button>
@@ -394,7 +448,8 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={page === totalPages}
+                      disabled={currentPage === totalPages}
+                      onClick={() => setCurrentPage(currentPage + 1)}
                       aria-label="Next page"
                     >
                       <ChevronRight className="w-4 h-4" />
