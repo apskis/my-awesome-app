@@ -37,7 +37,7 @@ export function AppHeader() {
   }
 
   return (
-    <header role="banner" className="sticky top-0 z-50 h-16 bg-white border-b shadow-sm">
+    <header role="banner" className="sticky top-0 z-50 h-16 bg-card border-b shadow-sm">
       <div className="h-full px-4 md:px-6 flex items-center justify-between">
         {/* Left Side - Mobile Menu & Logo */}
         <div className="flex items-center gap-4">
