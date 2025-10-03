@@ -1,64 +1,150 @@
 import { Metadata } from 'next'
-import { PrismaClient } from '@/generated/prisma'
-import { Plus, Calendar, Flag } from 'lucide-react'
+import { PrismaClient, TaskPriority } from '@/generated/prisma'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Plus, Calendar, AlertTriangle, Clock, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
+import { format, isToday, isTomorrow, isPast, addDays } from 'date-fns'
 
 export const metadata: Metadata = {
-  title: 'Tasks - My Awesome Notes',
+  title: 'Tasks - My Notes App',
   description: 'Manage your tasks and to-dos',
 }
 
 const prisma = new PrismaClient()
 
-async function getTasks() {
-  // TODO: In production, filter by actual user ID from session
+interface TasksPageProps {
+  searchParams: {
+    completion?: string
+    priority?: string
+    project?: string
+    sort?: string
+  }
+}
+
+async function getTasksData(completion?: string, priority?: string, project?: string, sort?: string) {
   const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@example.com' },
+    where: { email: 'demo@myawesomeapp.com' },
   })
 
   if (!demoUser) {
-    return []
+    return {
+      tasks: [],
+      projects: [],
+    }
   }
 
-  const tasks = await prisma.task.findMany({
-    where: { userId: demoUser.id },
-    include: {
-      project: true,
-    },
-    orderBy: [
-      { completed: 'asc' },
-      { dueDate: 'asc' },
-    ],
-  })
+  // Build where clause
+  const where: any = {
+    userId: demoUser.id,
+  }
 
-  return tasks
-}
+  if (completion && completion !== 'all') {
+    where.completed = completion === 'completed'
+  }
 
-function getPriorityColor(priority: string) {
-  switch (priority) {
-    case 'HIGH':
-      return 'bg-destructive text-destructive-foreground'
-    case 'MEDIUM':
-      return 'bg-warning text-warning-foreground'
-    case 'LOW':
-      return 'bg-secondary text-secondary-foreground'
+  if (priority && priority !== 'all') {
+    where.priority = priority as TaskPriority
+  }
+
+  if (project && project !== 'all') {
+    where.projectId = project
+  }
+
+  // Build orderBy clause
+  let orderBy: any = {}
+  switch (sort) {
+    case 'dueDate':
+      orderBy = { dueDate: 'asc' }
+      break
+    case 'priority':
+      orderBy = { priority: 'desc' }
+      break
+    case 'created':
+      orderBy = { createdAt: 'desc' }
+      break
     default:
-      return 'bg-muted'
+      // Default: incomplete first, then by due date, then by priority
+      orderBy = [
+        { completed: 'asc' },
+        { dueDate: 'asc' },
+        { priority: 'desc' },
+      ]
+  }
+
+  const [tasks, projects] = await Promise.all([
+    prisma.task.findMany({
+      where,
+      include: {
+        project: true,
+      },
+      orderBy,
+    }),
+    prisma.project.findMany({
+      where: { userId: demoUser.id },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    }),
+  ])
+
+  return {
+    tasks,
+    projects,
   }
 }
 
-function isOverdue(dueDate: Date | null) {
-  if (!dueDate) return false
-  return new Date(dueDate) < new Date()
+function getPriorityBadgeColor(priority: TaskPriority) {
+  switch (priority) {
+    case TaskPriority.LOW:
+      return 'bg-accent-cyan text-white'
+    case TaskPriority.MEDIUM:
+      return 'bg-warning-orange text-white'
+    case TaskPriority.HIGH:
+      return 'bg-primary-blue text-white'
+    default:
+      return 'bg-gray-500 text-white'
+  }
 }
 
-export default async function TasksPage() {
-  const tasks = await getTasks()
-  const activeTasks = tasks.filter((t) => !t.completed)
-  const completedTasks = tasks.filter((t) => t.completed)
+function getDueDateStatus(dueDate: Date | null, completed: boolean) {
+  if (!dueDate) return { status: 'none', text: '', color: '' }
+  if (completed) return { status: 'completed', text: 'Completed', color: 'text-green-600' }
+  
+  if (isPast(dueDate)) {
+    return { status: 'overdue', text: 'Overdue', color: 'text-red-600' }
+  } else if (isToday(dueDate)) {
+    return { status: 'today', text: 'Due today', color: 'text-orange-600' }
+  } else if (isTomorrow(dueDate)) {
+    return { status: 'tomorrow', text: 'Due tomorrow', color: 'text-yellow-600' }
+  } else {
+    const daysUntil = Math.ceil((dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+    if (daysUntil <= 3) {
+      return { status: 'soon', text: `Due in ${daysUntil} days`, color: 'text-yellow-600' }
+    }
+    return { status: 'future', text: format(dueDate, 'MMM d'), color: 'text-gray-600' }
+  }
+}
+
+export default async function TasksPage({ searchParams }: TasksPageProps) {
+  const completion = searchParams.completion
+  const priority = searchParams.priority
+  const project = searchParams.project
+  const sort = searchParams.sort
+
+  const { tasks, projects } = await getTasksData(completion, priority, project, sort)
+
+  const hasTasks = tasks.length > 0
+  const hasFilters = completion || priority || project || sort
+
+  const completedCount = tasks.filter(t => t.completed).length
+  const overdueCount = tasks.filter(t => 
+    t.dueDate && isPast(t.dueDate) && !t.completed
+  ).length
 
   return (
     <div className="space-y-6">
@@ -67,225 +153,225 @@ export default async function TasksPage() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Tasks</h1>
           <p className="text-muted-foreground mt-1">
-            Manage your to-dos and stay organized
+            {hasTasks 
+              ? `${tasks.length} task${tasks.length === 1 ? '' : 's'} found`
+              : 'No tasks yet'
+            }
           </p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          New Task
-        </Button>
+        <Link href="/tasks/new">
+          <Button className="bg-primary-blue hover:bg-primary-blue/90">
+            <Plus className="w-4 h-4 mr-2" />
+            Create Task
+          </Button>
+        </Link>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-l-4 border-l-warning">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active Tasks
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{activeTasks.length}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-primary">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Completed
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{completedTasks.length}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-destructive">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Overdue
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              {activeTasks.filter((t) => isOverdue(t.dueDate)).length}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tasks Tabs */}
-      <Tabs defaultValue="active" className="w-full">
-        <TabsList className="w-full sm:w-auto">
-          <TabsTrigger value="active" className="flex-1 sm:flex-none">
-            Active ({activeTasks.length})
-          </TabsTrigger>
-          <TabsTrigger value="completed" className="flex-1 sm:flex-none">
-            Completed ({completedTasks.length})
-          </TabsTrigger>
-          <TabsTrigger value="all" className="flex-1 sm:flex-none">
-            All ({tasks.length})
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="active" className="mt-6">
-          {activeTasks.length === 0 ? (
-            <Card className="p-12">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Plus className="w-8 h-8 text-muted-foreground" />
+      {/* Task Statistics */}
+      {hasTasks && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{completedCount}</div>
+                  <div className="text-sm text-muted-foreground">Completed</div>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  No active tasks
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  You're all caught up! Create a new task to get started.
-                </p>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Task
-                </Button>
               </div>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {activeTasks.map((task) => (
-                <Card
-                  key={task.id}
-                  className={`hover:shadow-md transition-all ${
-                    isOverdue(task.dueDate) ? 'border-l-4 border-l-destructive' : ''
-                  }`}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
-                      <input
-                        type="checkbox"
-                        className="mt-1 w-5 h-5 rounded border-input text-primary focus:ring-primary cursor-pointer"
-                        defaultChecked={task.completed}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-foreground mb-2">
-                          {task.title}
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge className={getPriorityColor(task.priority)}>
-                            <Flag className="w-3 h-3 mr-1" />
-                            {task.priority}
-                          </Badge>
-                          {task.dueDate && (
-                            <Badge
-                              variant={isOverdue(task.dueDate) ? 'destructive' : 'outline'}
-                            >
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {new Date(task.dueDate).toLocaleDateString()}
-                            </Badge>
-                          )}
-                          {task.project && (
-                            <Badge variant="secondary">
-                              {task.project.name}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="completed" className="mt-6">
-          {completedTasks.length === 0 ? (
-            <Card className="p-12">
-              <div className="text-center">
-                <p className="text-muted-foreground">
-                  No completed tasks yet. Keep working!
-                </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-600" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{overdueCount}</div>
+                  <div className="text-sm text-muted-foreground">Overdue</div>
+                </div>
               </div>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {completedTasks.map((task) => (
-                <Card key={task.id} className="opacity-60 hover:opacity-100 transition-opacity">
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
-                      <input
-                        type="checkbox"
-                        className="mt-1 w-5 h-5 rounded border-input text-primary focus:ring-primary cursor-pointer"
-                        defaultChecked={true}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-foreground line-through mb-2">
-                          {task.title}
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge className={getPriorityColor(task.priority)}>
-                            {task.priority}
-                          </Badge>
-                          {task.project && (
-                            <Badge variant="secondary">
-                              {task.project.name}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-primary-blue" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{tasks.length - completedCount}</div>
+                  <div className="text-sm text-muted-foreground">Pending</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
-        <TabsContent value="all" className="mt-6">
-          <div className="space-y-3">
-            {tasks.map((task) => (
-              <Card
-                key={task.id}
-                className={`hover:shadow-md transition-all ${
-                  task.completed ? 'opacity-60' : ''
-                } ${isOverdue(task.dueDate) && !task.completed ? 'border-l-4 border-l-destructive' : ''}`}
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Filters & Sort</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Completion Filter */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">Status</label>
+              <Select name="completion" defaultValue={completion || 'all'}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Tasks" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tasks</SelectItem>
+                  <SelectItem value="incomplete">Incomplete</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Priority Filter */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">Priority</label>
+              <Select name="priority" defaultValue={priority || 'all'}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Priorities" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                  <SelectItem value="MEDIUM">Medium</SelectItem>
+                  <SelectItem value="LOW">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Project Filter */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">Project</label>
+              <Select name="project" defaultValue={project || 'all'}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Projects" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Projects</SelectItem>
+                  {projects.map((proj) => (
+                    <SelectItem key={proj.id} value={proj.id}>
+                      {proj.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">Sort By</label>
+              <Select name="sort" defaultValue={sort || 'default'}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="default">Default (Incomplete First)</SelectItem>
+                  <SelectItem value="dueDate">Due Date</SelectItem>
+                  <SelectItem value="priority">Priority</SelectItem>
+                  <SelectItem value="created">Created Date</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tasks List */}
+      {!hasTasks ? (
+        <Alert className="text-center py-8">
+          <AlertTitle>
+            {hasFilters ? 'No tasks match your filters' : 'No tasks yet'}
+          </AlertTitle>
+          <AlertDescription className="mt-2">
+            {hasFilters 
+              ? 'Try adjusting your filters to see more tasks.'
+              : 'Add your first task to get started!'
+            }
+          </AlertDescription>
+          <Link href="/tasks/new">
+            <Button className="mt-4 bg-primary-blue hover:bg-primary-blue/90">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Task
+            </Button>
+          </Link>
+        </Alert>
+      ) : (
+        <div className="space-y-3">
+          {tasks.map((task) => {
+            const dueDateStatus = getDueDateStatus(task.dueDate, task.completed)
+            
+            return (
+              <Card 
+                key={task.id} 
+                className={`transition-all duration-200 ${
+                  task.completed 
+                    ? 'opacity-60 bg-gray-50' 
+                    : 'hover:shadow-md'
+                }`}
               >
                 <CardContent className="p-4">
-                  <div className="flex items-start gap-4">
-                    <input
-                      type="checkbox"
-                      className="mt-1 w-5 h-5 rounded border-input text-primary focus:ring-primary cursor-pointer"
-                      defaultChecked={task.completed}
+                  <div className="flex items-start gap-3">
+                    {/* Checkbox */}
+                    <Checkbox
+                      checked={task.completed}
+                      className="mt-1"
+                      aria-label={`Mark task "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
                     />
+                    
+                    {/* Task Content */}
                     <div className="flex-1 min-w-0">
-                      <h3 className={`font-medium text-foreground mb-2 ${task.completed ? 'line-through' : ''}`}>
-                        {task.title}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge className={getPriorityColor(task.priority)}>
-                          <Flag className="w-3 h-3 mr-1" />
-                          {task.priority}
-                        </Badge>
-                        {task.dueDate && (
-                          <Badge
-                            variant={isOverdue(task.dueDate) && !task.completed ? 'destructive' : 'outline'}
-                          >
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {new Date(task.dueDate).toLocaleDateString()}
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className={`font-medium text-foreground ${
+                          task.completed ? 'line-through text-muted-foreground' : ''
+                        }`}>
+                          {task.title}
+                        </h3>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Badge className={getPriorityBadgeColor(task.priority)}>
+                            {task.priority}
                           </Badge>
-                        )}
+                        </div>
+                      </div>
+                      
+                      {task.description && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {task.description}
+                        </p>
+                      )}
+                      
+                      <div className="flex items-center gap-4 mt-2 text-sm">
                         {task.project && (
-                          <Badge variant="secondary">
-                            {task.project.name}
-                          </Badge>
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <span>Project:</span>
+                            <Badge variant="outline" className="text-xs">
+                              {task.project.name}
+                            </Badge>
+                          </div>
+                        )}
+                        
+                        {task.dueDate && (
+                          <div className={`flex items-center gap-1 ${dueDateStatus.color}`}>
+                            <Calendar className="w-3 h-3" />
+                            <span>{dueDateStatus.text}</span>
+                            {dueDateStatus.status === 'overdue' && (
+                              <AlertTriangle className="w-3 h-3" />
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
-

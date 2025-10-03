@@ -1,83 +1,119 @@
 import { Metadata } from 'next'
 import { PrismaClient } from '@/generated/prisma'
-import { Plus, TrendingUp, Clock, CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Progress } from '@/components/ui/progress'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Plus, Calendar, CheckCircle2, Clock, Target } from 'lucide-react'
 import Link from 'next/link'
+import { formatDistanceToNow } from 'date-fns'
 
 export const metadata: Metadata = {
-  title: 'Projects - My Awesome Notes',
-  description: 'Manage your projects and track progress',
+  title: 'Projects - My Notes App',
+  description: 'Track your projects and progress',
 }
 
 const prisma = new PrismaClient()
 
-async function getProjects() {
-  // TODO: In production, filter by actual user ID from session
+interface ProjectsPageProps {
+  searchParams: {
+    status?: string
+  }
+}
+
+async function getProjectsData(status?: string) {
   const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@example.com' },
+    where: { email: 'demo@myawesomeapp.com' },
   })
 
   if (!demoUser) {
     return []
   }
 
+  // Build where clause
+  const where: any = {
+    userId: demoUser.id,
+  }
+
+  if (status && status !== 'all') {
+    where.status = status
+  }
+
   const projects = await prisma.project.findMany({
-    where: { userId: demoUser.id },
+    where,
     include: {
-      tasks: {
+      _count: {
         select: {
-          id: true,
-          completed: true,
+          tasks: true,
         },
       },
     },
-    orderBy: { updatedAt: 'desc' },
+    orderBy: [
+      { status: 'asc' }, // Active projects first
+      { progress: 'desc' }, // Then by progress
+    ],
   })
 
-  return projects
+  // Get completed task count for each project
+  const projectsWithTaskCounts = await Promise.all(
+    projects.map(async (project) => {
+      const completedTasks = await prisma.task.count({
+        where: {
+          projectId: project.id,
+          completed: true,
+        },
+      })
+
+      return {
+        ...project,
+        completedTasks,
+      }
+    })
+  )
+
+  return projectsWithTaskCounts
 }
 
-function getStatusColor(status: string) {
-  switch (status) {
-    case 'COMPLETED':
-      return 'bg-primary text-primary-foreground'
-    case 'IN_PROGRESS':
-      return 'bg-secondary text-secondary-foreground'
-    case 'PLANNING':
-      return 'bg-warning/20 text-warning border-warning'
-    case 'ON_HOLD':
-      return 'bg-muted text-muted-foreground border-muted-foreground'
-    case 'CANCELLED':
-      return 'bg-destructive/20 text-destructive border-destructive'
+function getStatusBadgeColor(status: string) {
+  switch (status.toLowerCase()) {
+    case 'active':
+    case 'in_progress':
+      return 'bg-primary-blue text-white'
+    case 'completed':
+    case 'done':
+      return 'bg-green-500 text-white'
+    case 'on_hold':
+    case 'on hold':
+      return 'bg-gray-400 text-white'
+    case 'planning':
+      return 'bg-yellow-500 text-white'
     default:
-      return ''
+      return 'bg-gray-500 text-white'
   }
 }
 
-function getStatusIcon(status: string) {
-  switch (status) {
-    case 'COMPLETED':
-      return CheckCircle
-    case 'IN_PROGRESS':
-      return TrendingUp
-    case 'PLANNING':
-      return Clock
-    default:
-      return Clock
-  }
+function getProgressColor(progress: number) {
+  if (progress >= 80) return 'bg-green-500'
+  if (progress >= 60) return 'bg-primary-blue'
+  if (progress >= 40) return 'bg-yellow-500'
+  if (progress >= 20) return 'bg-orange-500'
+  return 'bg-red-500'
 }
 
-export default async function ProjectsPage() {
-  const projects = await getProjects()
+export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+  const status = searchParams.status
 
-  const stats = {
-    total: projects.length,
-    inProgress: projects.filter((p) => p.status === 'IN_PROGRESS').length,
-    completed: projects.filter((p) => p.status === 'COMPLETED').length,
-    planning: projects.filter((p) => p.status === 'PLANNING').length,
-  }
+  const projects = await getProjectsData(status)
+
+  const hasProjects = projects.length > 0
+  const hasFilters = status && status !== 'all'
+
+  const activeProjects = projects.filter(p => p.status.toLowerCase() === 'active' || p.status.toLowerCase() === 'in_progress')
+  const completedProjects = projects.filter(p => p.status.toLowerCase() === 'completed' || p.status.toLowerCase() === 'done')
+  const totalTasks = projects.reduce((sum, p) => sum + p._count.tasks, 0)
+  const completedTasks = projects.reduce((sum, p) => sum + p.completedTasks, 0)
 
   return (
     <div className="space-y-6">
@@ -86,152 +122,216 @@ export default async function ProjectsPage() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground mt-1">
-            Track and manage your projects
+            {hasProjects 
+              ? `${projects.length} project${projects.length === 1 ? '' : 's'} found`
+              : 'No projects yet'
+            }
           </p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          New Project
-        </Button>
+        <Link href="/projects/new">
+          <Button className="bg-primary-blue hover:bg-primary-blue/90">
+            <Plus className="w-4 h-4 mr-2" />
+            Create Project
+          </Button>
+        </Link>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Projects
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{stats.total}</div>
-          </CardContent>
-        </Card>
+      {/* Project Statistics */}
+      {hasProjects && (
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-primary-blue" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{projects.length}</div>
+                  <div className="text-sm text-muted-foreground">Total Projects</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-yellow-600" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{activeProjects.length}</div>
+                  <div className="text-sm text-muted-foreground">Active</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{completedProjects.length}</div>
+                  <div className="text-sm text-muted-foreground">Completed</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-accent-cyan" />
+                <div>
+                  <div className="text-2xl font-bold text-foreground">{totalTasks}</div>
+                  <div className="text-sm text-muted-foreground">Total Tasks</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
-        <Card className="border-l-4 border-l-secondary">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              In Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{stats.inProgress}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-primary">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Completed
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{stats.completed}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-warning">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Planning
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{stats.planning}</div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Status Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Filter by Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Select name="status" defaultValue={status || 'all'}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="in_progress">In Progress</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="on_hold">On Hold</SelectItem>
+              <SelectItem value="planning">Planning</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
 
       {/* Projects Grid */}
-      {projects.length === 0 ? (
-        <Card className="p-12">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Plus className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">
-              No projects yet
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Start organizing your work by creating your first project
-            </p>
-            <Button>
+      {!hasProjects ? (
+        <Alert className="text-center py-8">
+          <AlertTitle>
+            {hasFilters ? 'No projects match your filter' : 'No projects yet'}
+          </AlertTitle>
+          <AlertDescription className="mt-2">
+            {hasFilters 
+              ? 'Try adjusting your status filter to see more projects.'
+              : 'Start your first project to track your progress!'
+            }
+          </AlertDescription>
+          <Link href="/projects/new">
+            <Button className="mt-4 bg-primary-blue hover:bg-primary-blue/90">
               <Plus className="w-4 h-4 mr-2" />
               Create Project
             </Button>
-          </div>
-        </Card>
+          </Link>
+        </Alert>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => {
-            const StatusIcon = getStatusIcon(project.status)
-            const totalTasks = project.tasks.length
-            const completedTaskCount = project.tasks.filter((t) => t.completed).length
+            const taskCompletionRate = project._count.tasks > 0 
+              ? Math.round((project.completedTasks / project._count.tasks) * 100)
+              : 0
 
             return (
-              <Link key={project.id} href={`/projects/${project.id}`}>
-                <Card className="h-full hover:shadow-lg hover:border-primary transition-all cursor-pointer group">
-                  <CardContent className="p-6">
-                    {/* Header */}
-                    <div className="flex items-start justify-between gap-2 mb-4">
-                      <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                          <StatusIcon className="w-5 h-5 text-primary group-hover:text-primary-foreground" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                            {project.name}
-                          </h3>
-                        </div>
-                      </div>
-                      <Badge className={getStatusColor(project.status)}>
-                        {project.status.replace('_', ' ')}
-                      </Badge>
+              <Card 
+                key={project.id} 
+                className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-lg truncate">{project.name}</CardTitle>
+                    <Badge className={getStatusBadgeColor(project.status)}>
+                      {project.status}
+                    </Badge>
+                  </div>
+                  {project.description && (
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {project.description}
+                    </p>
+                  )}
+                </CardHeader>
+                
+                <CardContent className="pt-0">
+                  {/* Progress Bar */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-foreground">Progress</span>
+                      <span className="text-sm text-muted-foreground">{project.progress}%</span>
                     </div>
+                    <Progress 
+                      value={project.progress} 
+                      className="h-2"
+                      style={{
+                        '--progress-background': getProgressColor(project.progress),
+                      } as React.CSSProperties}
+                    />
+                  </div>
 
-                    {/* Description */}
-                    {project.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                        {project.description}
-                      </p>
-                    )}
-
-                    {/* Progress Bar */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>Progress</span>
-                        <span className="font-medium">{project.progress}%</span>
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-2.5">
-                        <div
-                          className="bg-primary h-2.5 rounded-full transition-all"
-                          style={{ width: `${project.progress}%` }}
+                  {/* Task Statistics */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Tasks</span>
+                      <span className="font-medium text-foreground">
+                        {project.completedTasks} of {project._count.tasks} completed
+                      </span>
+                    </div>
+                    {project._count.tasks > 0 && (
+                      <div className="mt-1">
+                        <Progress 
+                          value={taskCompletionRate} 
+                          className="h-1"
                         />
-                      </div>
-                    </div>
-
-                    {/* Tasks Summary */}
-                    {totalTasks > 0 && (
-                      <div className="flex items-center justify-between text-xs pt-3 border-t border-border">
-                        <span className="text-muted-foreground">Tasks</span>
-                        <span className="font-medium text-foreground">
-                          {completedTaskCount}/{totalTasks} completed
-                        </span>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {taskCompletionRate}% task completion
+                        </div>
                       </div>
                     )}
+                  </div>
 
-                    {/* Last Updated */}
-                    <div className="text-xs text-muted-foreground mt-2">
-                      Updated {new Date(project.updatedAt).toLocaleDateString()}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+                  {/* Created Date */}
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar className="w-3 h-3" />
+                    <span>Created {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}</span>
+                  </div>
+                </CardContent>
+              </Card>
             )
           })}
         </div>
       )}
+
+      {/* Summary Stats */}
+      {hasProjects && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Project Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">
+                  {Math.round(projects.reduce((sum, p) => sum + p.progress, 0) / projects.length)}%
+                </div>
+                <div className="text-sm text-muted-foreground">Average Progress</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">
+                  {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
+                </div>
+                <div className="text-sm text-muted-foreground">Task Completion</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">
+                  {projects.length > 0 ? Math.round(projects.reduce((sum, p) => sum + p._count.tasks, 0) / projects.length) : 0}
+                </div>
+                <div className="text-sm text-muted-foreground">Avg Tasks/Project</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
-

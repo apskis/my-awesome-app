@@ -1,21 +1,22 @@
 import { Metadata } from 'next'
 import { PrismaClient } from '@/generated/prisma'
-import { Plus, Tag as TagIcon } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Plus, Pencil, Trash2, FileText } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Categories - My Awesome Notes',
-  description: 'Organize your notes with categories',
+  title: 'Categories - My Notes App',
+  description: 'Manage your note categories',
 }
 
 const prisma = new PrismaClient()
 
-async function getCategories() {
-  // TODO: In production, filter by actual user ID from session
+async function getCategoriesData() {
   const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@example.com' },
+    where: { email: 'demo@myawesomeapp.com' },
   })
 
   if (!demoUser) {
@@ -26,7 +27,9 @@ async function getCategories() {
     where: { userId: demoUser.id },
     include: {
       _count: {
-        select: { notes: true },
+        select: {
+          notes: true,
+        },
       },
     },
     orderBy: { name: 'asc' },
@@ -35,8 +38,16 @@ async function getCategories() {
   return categories
 }
 
+function getCategoryColorStyle(color: string) {
+  return {
+    backgroundColor: color + '20',
+    color: color,
+    borderColor: color + '40',
+  }
+}
+
 export default async function CategoriesPage() {
-  const categories = await getCategories()
+  const categories = await getCategoriesData()
 
   return (
     <div className="space-y-6">
@@ -45,90 +56,138 @@ export default async function CategoriesPage() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Categories</h1>
           <p className="text-muted-foreground mt-1">
-            Organize your notes into categories
+            {categories.length === 0 
+              ? 'No categories yet' 
+              : `${categories.length} categor${categories.length === 1 ? 'y' : 'ies'} found`
+            }
           </p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          New Category
-        </Button>
+        <Link href="/categories/new">
+          <Button className="bg-primary-blue hover:bg-primary-blue/90">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Category
+          </Button>
+        </Link>
       </div>
 
       {/* Categories Grid */}
       {categories.length === 0 ? (
-        <Card className="p-12">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <TagIcon className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">
-              No categories yet
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Create categories to organize your notes better
-            </p>
-            <Button>
+        <Alert className="text-center py-8">
+          <AlertTitle>No categories yet</AlertTitle>
+          <AlertDescription className="mt-2">
+            Create your first category to organize your notes better.
+          </AlertDescription>
+          <Link href="/categories/new">
+            <Button className="mt-4 bg-primary-blue hover:bg-primary-blue/90">
               <Plus className="w-4 h-4 mr-2" />
-              Create Category
+              Add Category
             </Button>
-          </div>
-        </Card>
+          </Link>
+        </Alert>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.map((category) => (
-            <Link key={category.id} href={`/categories/${category.id}`}>
-              <Card
-                className="hover:shadow-lg transition-all cursor-pointer group h-full"
-                style={{ borderColor: category.color + '40' }}
-              >
-                <CardContent className="p-6">
-                  {/* Color Circle */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
-                      style={{ backgroundColor: category.color + '20' }}
-                    >
-                      <TagIcon
-                        className="w-6 h-6"
-                        style={{ color: category.color }}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h3
-                        className="font-semibold text-lg group-hover:scale-105 transition-transform origin-left"
-                        style={{ color: category.color }}
-                      >
-                        {category.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {category._count.notes} {category._count.notes === 1 ? 'note' : 'notes'}
+            <Card 
+              key={category.id} 
+              className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-lg truncate">{category.name}</CardTitle>
+                    {category.description && (
+                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                        {category.description}
                       </p>
-                    </div>
+                    )}
                   </div>
+                  <Badge
+                    variant="secondary"
+                    className="flex-shrink-0"
+                    style={getCategoryColorStyle(category.color)}
+                  >
+                    {category.color}
+                  </Badge>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                {/* Note Count */}
+                <div className="flex items-center gap-2 mb-4">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    {category._count.notes} note{category._count.notes === 1 ? '' : 's'}
+                  </span>
+                </div>
 
-                  {/* Description */}
-                  {category.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {category.description}
-                    </p>
-                  )}
+                {/* Color Indicator */}
+                <div className="mb-4">
+                  <div 
+                    className="w-full h-2 rounded-full"
+                    style={{ backgroundColor: category.color }}
+                  />
+                </div>
 
-                  {/* Stats Bar */}
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Created</span>
-                      <span className="text-foreground font-medium">
-                        {new Date(category.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1"
+                    aria-label={`Edit category ${category.name}`}
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    aria-label={`Delete category ${category.name}`}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
+      )}
+
+      {/* Summary Stats */}
+      {categories.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">
+                  {categories.length}
+                </div>
+                <div className="text-sm text-muted-foreground">Total Categories</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">
+                  {categories.reduce((sum, cat) => sum + cat._count.notes, 0)}
+                </div>
+                <div className="text-sm text-muted-foreground">Total Notes</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">
+                  {categories.length > 0 
+                    ? Math.round(categories.reduce((sum, cat) => sum + cat._count.notes, 0) / categories.length)
+                    : 0
+                  }
+                </div>
+                <div className="text-sm text-muted-foreground">Avg Notes/Category</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
 }
-
