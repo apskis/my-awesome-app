@@ -21,7 +21,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-app-background">
+    <div className="min-h-screen flex flex-col bg-slate-50">
       <AppHeader />
       
       <div className="flex flex-1">
@@ -29,7 +29,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         
         <main 
           role="main" 
-          className="flex-1 ml-0 lg:ml-64 xl:ml-72 p-6 md:p-8 min-h-[calc(100vh-4rem-5rem)] bg-app-background"
+          className="flex-1 ml-0 lg:ml-64 xl:ml-72 p-6 md:p-8 min-h-[calc(100vh-4rem-5rem)] bg-slate-50"
         >
           <div className="max-w-7xl mx-auto">
             {children}

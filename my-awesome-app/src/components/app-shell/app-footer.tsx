@@ -6,7 +6,7 @@ export function AppFooter() {
   return (
     <>
       <Separator className="mt-8" />
-      <footer role="contentinfo" className="bg-card border-t py-6 px-4">
+      <footer role="contentinfo" className="bg-white border-t border-slate-200 py-6 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Copyright */}

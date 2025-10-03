@@ -133,7 +133,7 @@ export function SidebarNavigation() {
       role="navigation" 
       id="sidebar-navigation"
       aria-label="Main navigation"
-      className="w-64 md:w-72 bg-app-background border-r h-[calc(100vh-4rem)] fixed left-0 top-16 hidden lg:block overflow-y-auto"
+      className="w-64 md:w-72 bg-white border-r border-slate-200 h-[calc(100vh-4rem)] fixed left-0 top-16 hidden lg:block overflow-y-auto"
     >
       <NavigationContent />
     </nav>
@@ -156,7 +156,7 @@ export function MobileNavigation() {
       </SheetTrigger>
       <SheetContent 
         side="left" 
-        className="w-72 p-6 bg-app-background"
+        className="w-72 p-6 bg-white"
       >
         <NavigationContent />
       </SheetContent>

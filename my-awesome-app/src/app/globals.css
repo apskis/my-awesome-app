@@ -4,22 +4,24 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Custom Palette Colors */
-  --color-primary-blue: 214 100% 50%;
-  --color-accent-cyan: 190 52% 63%;
-  --color-background-cream: 46 58% 91%;
-  --color-warning-orange: 30 100% 54%;
+  /* Professional Color Palette */
+  --color-primary-blue: 220 100% 50%;      /* More professional blue */
+  --color-accent-cyan: 200 100% 50%;       /* Vibrant teal accent */
+  --color-background-cream: 45 20% 96%;    /* Cleaner off-white */
+  --color-warning-orange: 25 95% 53%;      /* Professional orange */
   
   /* Semantic aliases */
-  --color-app-primary: 214 100% 50%;
-  --color-app-accent: 190 52% 63%;
-  --color-app-background: 46 58% 91%;
-  --color-app-warning: 30 100% 54%;
+  --color-app-primary: 220 100% 50%;
+  --color-app-accent: 200 100% 50%;
+  --color-app-background: 45 20% 96%;
+  --color-app-warning: 25 95% 53%;
   
   /* Custom color classes for Tailwind */
-  --color-blue-600: 214 100% 50%;
-  --color-cyan-400: 190 52% 63%;
-  --color-orange-500: 30 100% 54%;
+  --color-blue-600: 220 100% 50%;          /* #0066FF - Professional blue */
+  --color-cyan-400: 200 100% 50%;          /* #00BFFF - Vibrant teal */
+  --color-orange-500: 25 95% 53%;          /* #FF6B35 - Professional orange */
+  --color-slate-50: 45 20% 96%;            /* #F8F9FA - Clean background */
+  --color-slate-100: 45 20% 92%;           /* #F1F3F4 - Card background */
   
   /* Theme Colors */
   --color-background: var(--background);
@@ -71,11 +73,11 @@
 :root {
   --radius: 0.625rem;
   
-  /* Custom Color Palette */
-  --primary-blue: 214 100% 50%;
-  --accent-cyan: 190 52% 63%;
-  --background-cream: 46 58% 91%;
-  --warning-orange: 30 100% 54%;
+  /* Professional Color Palette */
+  --primary-blue: 220 100% 50%;      /* #0066FF - Professional blue */
+  --accent-cyan: 200 100% 50%;       /* #00BFFF - Vibrant teal */
+  --background-cream: 45 20% 96%;    /* #F8F9FA - Clean off-white */
+  --warning-orange: 25 95% 53%;      /* #FF6B35 - Professional orange */
   
   /* Semantic aliases */
   --app-primary: var(--primary-blue);
@@ -83,40 +85,40 @@
   --app-background: var(--background-cream);
   --app-warning: var(--warning-orange);
   
-  /* Theme Colors using Custom Palette */
+  /* Theme Colors using Professional Palette */
   --background: hsl(var(--background-cream));
-  --foreground: #1a1a1a;
-  --card: hsl(var(--background-cream));
-  --card-foreground: #1a1a1a;
-  --popover: hsl(var(--background-cream));
-  --popover-foreground: #1a1a1a;
+  --foreground: #1e293b;
+  --card: #ffffff;
+  --card-foreground: #1e293b;
+  --popover: #ffffff;
+  --popover-foreground: #1e293b;
   --primary: hsl(var(--primary-blue));
   --primary-foreground: #ffffff;
   --secondary: hsl(var(--accent-cyan));
   --secondary-foreground: #ffffff;
-  --muted: #e8e4cf;
-  --muted-foreground: #6b7280;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
   --accent: hsl(var(--accent-cyan));
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --warning: hsl(var(--warning-orange));
   --warning-foreground: #ffffff;
-  --border: #d4d0bb;
-  --input: #d4d0bb;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
   --ring: hsl(var(--primary-blue));
   --chart-1: hsl(var(--primary-blue));
   --chart-2: hsl(var(--accent-cyan));
   --chart-3: hsl(var(--warning-orange));
   --chart-4: #6366f1;
   --chart-5: #8b5cf6;
-  --sidebar: hsl(var(--background-cream));
-  --sidebar-foreground: #1a1a1a;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1e293b;
   --sidebar-primary: hsl(var(--primary-blue));
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0ecd8;
-  --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #d4d0bb;
+  --sidebar-accent: #f8fafc;
+  --sidebar-accent-foreground: #1e293b;
+  --sidebar-border: #e2e8f0;
   --sidebar-ring: hsl(var(--primary-blue));
 }
 
