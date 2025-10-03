@@ -161,3 +161,55 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Smooth transitions for all interactive elements */
+  .transition-smooth {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .transition-colors-smooth {
+    @apply transition-colors duration-200 ease-in-out;
+  }
+  
+  .transition-shadow-smooth {
+    @apply transition-shadow duration-300 ease-in-out;
+  }
+  
+  .transition-transform-smooth {
+    @apply transition-transform duration-300 ease-in-out;
+  }
+  
+  /* Hover effects */
+  .hover-lift {
+    @apply hover:shadow-lg hover:-translate-y-0.5 transition-shadow duration-300 ease-in-out transition-transform duration-300 ease-in-out;
+  }
+  
+  .hover-scale {
+    @apply hover:scale-105 transition-transform duration-300 ease-in-out;
+  }
+  
+  .active-scale {
+    @apply active:scale-95 transition-transform duration-300 ease-in-out;
+  }
+  
+  /* Focus styles */
+  .focus-ring {
+    @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  
+  /* Button interactions */
+  .btn-interactive {
+    @apply transition-all duration-200 ease-in-out active:scale-95 hover:shadow-md;
+  }
+  
+  /* Card interactions */
+  .card-interactive {
+    @apply transition-shadow duration-300 ease-in-out hover:shadow-lg;
+  }
+  
+  /* Link interactions */
+  .link-interactive {
+    @apply transition-colors duration-200 ease-in-out hover:text-primary-blue;
+  }
+}
