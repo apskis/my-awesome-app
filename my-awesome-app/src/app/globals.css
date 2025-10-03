@@ -8,7 +8,13 @@
   --color-primary-blue: var(--primary-blue);
   --color-accent-cyan: var(--accent-cyan);
   --color-background-cream: var(--background-cream);
-  --color-accent-orange: var(--accent-orange);
+  --color-warning-orange: var(--warning-orange);
+  
+  /* Semantic aliases */
+  --color-app-primary: var(--app-primary);
+  --color-app-accent: var(--app-accent);
+  --color-app-background: var(--app-background);
+  --color-app-warning: var(--app-warning);
   
   /* Theme Colors */
   --color-background: var(--background);
@@ -61,10 +67,16 @@
   --radius: 0.625rem;
   
   /* Custom Color Palette */
-  --primary-blue: #0046FF;
-  --accent-cyan: #73C8D2;
-  --background-cream: #F5F1DC;
-  --accent-orange: #FF9013;
+  --primary-blue: 214 100% 50%;
+  --accent-cyan: 190 52% 63%;
+  --background-cream: 46 58% 91%;
+  --warning-orange: 30 100% 54%;
+  
+  /* Semantic aliases */
+  --app-primary: var(--primary-blue);
+  --app-accent: var(--accent-cyan);
+  --app-background: var(--background-cream);
+  --app-warning: var(--warning-orange);
   
   /* Theme Colors using Custom Palette */
   --background: var(--background-cream);
@@ -83,14 +95,14 @@
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --warning: var(--accent-orange);
+  --warning: var(--warning-orange);
   --warning-foreground: #ffffff;
   --border: #d4d0bb;
   --input: #d4d0bb;
   --ring: var(--primary-blue);
   --chart-1: var(--primary-blue);
   --chart-2: var(--accent-cyan);
-  --chart-3: var(--accent-orange);
+  --chart-3: var(--warning-orange);
   --chart-4: #6366f1;
   --chart-5: #8b5cf6;
   --sidebar: #ffffff;
@@ -121,14 +133,14 @@
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --warning: var(--accent-orange);
+  --warning: var(--warning-orange);
   --warning-foreground: #ffffff;
   --border: #404040;
   --input: #404040;
   --ring: var(--primary-blue);
   --chart-1: var(--primary-blue);
   --chart-2: var(--accent-cyan);
-  --chart-3: var(--accent-orange);
+  --chart-3: var(--warning-orange);
   --chart-4: #6366f1;
   --chart-5: #8b5cf6;
   --sidebar: #262626;

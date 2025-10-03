@@ -21,7 +21,7 @@ async function getTemplates() {
   return templates
 }
 
-function getCategoryColor(category: string) {
+function getCategoryColor(category: string | null) {
   const colors: Record<string, string> = {
     Work: '#0046FF',
     Personal: '#73C8D2',
@@ -29,7 +29,7 @@ function getCategoryColor(category: string) {
     Projects: '#0046FF',
     Ideas: '#73C8D2',
   }
-  return colors[category] || '#6b7280'
+  return colors[category || ''] || '#6b7280'
 }
 
 export default async function TemplatesPage() {
@@ -60,8 +60,8 @@ export default async function TemplatesPage() {
             All ({templates.length})
           </TabsTrigger>
           {categories.map((category) => (
-            <TabsTrigger key={category} value={category}>
-              {category} ({templates.filter((t) => t.category === category).length})
+            <TabsTrigger key={category} value={category || 'uncategorized'}>
+              {category || 'Uncategorized'} ({templates.filter((t) => t.category === category).length})
             </TabsTrigger>
           ))}
         </TabsList>
@@ -117,7 +117,7 @@ export default async function TemplatesPage() {
         </TabsContent>
 
         {categories.map((category) => (
-          <TabsContent key={category} value={category} className="mt-6">
+          <TabsContent key={category} value={category || 'uncategorized'} className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {templates
                 .filter((t) => t.category === category)

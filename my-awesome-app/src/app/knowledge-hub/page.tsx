@@ -32,7 +32,7 @@ async function getKnowledgeArticles() {
   return articles
 }
 
-function getCategoryColor(category: string) {
+function getCategoryColor(category: string | null) {
   const colors: Record<string, string> = {
     Development: '#0046FF',
     Design: '#73C8D2',
@@ -40,7 +40,7 @@ function getCategoryColor(category: string) {
     Database: '#6366f1',
     DevOps: '#8b5cf6',
   }
-  return colors[category] || '#6b7280'
+  return colors[category || ''] || '#6b7280'
 }
 
 export default async function KnowledgeHubPage() {
@@ -84,8 +84,8 @@ export default async function KnowledgeHubPage() {
             All ({articles.length})
           </TabsTrigger>
           {categories.map((category) => (
-            <TabsTrigger key={category} value={category}>
-              {category} ({articles.filter((a) => a.category === category).length})
+            <TabsTrigger key={category} value={category || 'uncategorized'}>
+              {category || 'Uncategorized'} ({articles.filter((a) => a.category === category).length})
             </TabsTrigger>
           ))}
         </TabsList>
@@ -179,7 +179,7 @@ export default async function KnowledgeHubPage() {
         </TabsContent>
 
         {categories.map((category) => (
-          <TabsContent key={category} value={category} className="mt-6">
+          <TabsContent key={category} value={category || 'uncategorized'} className="mt-6">
             <div className="space-y-4">
               {articles
                 .filter((a) => a.category === category)

@@ -148,9 +148,9 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
-  password: 'password',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  password: 'password'
 };
 
 exports.Prisma.VerificationTokenScalarFieldEnum = {
@@ -189,18 +189,9 @@ exports.Prisma.TagScalarFieldEnum = {
 };
 
 exports.Prisma.NoteTagScalarFieldEnum = {
+  id: 'id',
   noteId: 'noteId',
   tagId: 'tagId'
-};
-
-exports.Prisma.TemplateScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  content: 'content',
-  category: 'category',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.DailyNoteScalarFieldEnum = {
@@ -216,6 +207,7 @@ exports.Prisma.DailyNoteScalarFieldEnum = {
 exports.Prisma.TaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  description: 'description',
   completed: 'completed',
   priority: 'priority',
   dueDate: 'dueDate',
@@ -232,6 +224,16 @@ exports.Prisma.ProjectScalarFieldEnum = {
   status: 'status',
   progress: 'progress',
   userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  content: 'content',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -267,14 +269,6 @@ exports.NoteStatus = exports.$Enums.NoteStatus = {
   ARCHIVED: 'ARCHIVED'
 };
 
-exports.Mood = exports.$Enums.Mood = {
-  GREAT: 'GREAT',
-  GOOD: 'GOOD',
-  NEUTRAL: 'NEUTRAL',
-  BAD: 'BAD',
-  TERRIBLE: 'TERRIBLE'
-};
-
 exports.TaskPriority = exports.$Enums.TaskPriority = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
@@ -298,10 +292,10 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   Tag: 'Tag',
   NoteTag: 'NoteTag',
-  Template: 'Template',
   DailyNote: 'DailyNote',
   Task: 'Task',
   Project: 'Project',
+  Template: 'Template',
   KnowledgeArticle: 'KnowledgeArticle'
 };
 

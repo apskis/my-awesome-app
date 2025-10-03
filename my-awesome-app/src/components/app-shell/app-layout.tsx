@@ -1,7 +1,7 @@
 'use client'
 
 import { AppHeader } from './app-header'
-import { AppSidebar } from './app-sidebar'
+import { AppSidebar } from './sidebar'
 import { AppFooter } from './app-footer'
 import { usePathname } from 'next/navigation'
 
@@ -21,22 +21,23 @@ export function AppLayout({ children }: AppLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-app-background">
       <AppHeader />
       
-      <div className="flex flex-1 pt-16">
+      <div className="flex flex-1">
         <AppSidebar />
         
-        <main className="flex-1 ml-64 transition-all duration-300">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main 
+          role="main" 
+          className="flex-1 ml-0 lg:ml-64 xl:ml-72 p-6 md:p-8 min-h-[calc(100vh-4rem-5rem)] bg-app-background"
+        >
+          <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </main>
       </div>
 
-      <div className="ml-64 transition-all duration-300">
-        <AppFooter />
-      </div>
+      <AppFooter />
     </div>
   )
 }

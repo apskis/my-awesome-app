@@ -54,11 +54,6 @@ export type Tag = $Result.DefaultSelection<Prisma.$TagPayload>
  */
 export type NoteTag = $Result.DefaultSelection<Prisma.$NoteTagPayload>
 /**
- * Model Template
- * 
- */
-export type Template = $Result.DefaultSelection<Prisma.$TemplatePayload>
-/**
  * Model DailyNote
  * 
  */
@@ -73,6 +68,11 @@ export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
  * 
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
+/**
+ * Model Template
+ * 
+ */
+export type Template = $Result.DefaultSelection<Prisma.$TemplatePayload>
 /**
  * Model KnowledgeArticle
  * 
@@ -90,17 +90,6 @@ export namespace $Enums {
 };
 
 export type NoteStatus = (typeof NoteStatus)[keyof typeof NoteStatus]
-
-
-export const Mood: {
-  GREAT: 'GREAT',
-  GOOD: 'GOOD',
-  NEUTRAL: 'NEUTRAL',
-  BAD: 'BAD',
-  TERRIBLE: 'TERRIBLE'
-};
-
-export type Mood = (typeof Mood)[keyof typeof Mood]
 
 
 export const TaskPriority: {
@@ -127,10 +116,6 @@ export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 export type NoteStatus = $Enums.NoteStatus
 
 export const NoteStatus: typeof $Enums.NoteStatus
-
-export type Mood = $Enums.Mood
-
-export const Mood: typeof $Enums.Mood
 
 export type TaskPriority = $Enums.TaskPriority
 
@@ -339,16 +324,6 @@ export class PrismaClient<
   get noteTag(): Prisma.NoteTagDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.template`: Exposes CRUD operations for the **Template** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Templates
-    * const templates = await prisma.template.findMany()
-    * ```
-    */
-  get template(): Prisma.TemplateDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.dailyNote`: Exposes CRUD operations for the **DailyNote** model.
     * Example usage:
     * ```ts
@@ -377,6 +352,16 @@ export class PrismaClient<
     * ```
     */
   get project(): Prisma.ProjectDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.template`: Exposes CRUD operations for the **Template** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Templates
+    * const templates = await prisma.template.findMany()
+    * ```
+    */
+  get template(): Prisma.TemplateDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.knowledgeArticle`: Exposes CRUD operations for the **KnowledgeArticle** model.
@@ -835,10 +820,10 @@ export namespace Prisma {
     Category: 'Category',
     Tag: 'Tag',
     NoteTag: 'NoteTag',
-    Template: 'Template',
     DailyNote: 'DailyNote',
     Task: 'Task',
     Project: 'Project',
+    Template: 'Template',
     KnowledgeArticle: 'KnowledgeArticle'
   };
 
@@ -858,7 +843,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "user" | "verificationToken" | "note" | "category" | "tag" | "noteTag" | "template" | "dailyNote" | "task" | "project" | "knowledgeArticle"
+      modelProps: "account" | "session" | "user" | "verificationToken" | "note" | "category" | "tag" | "noteTag" | "dailyNote" | "task" | "project" | "template" | "knowledgeArticle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1454,80 +1439,6 @@ export namespace Prisma {
           }
         }
       }
-      Template: {
-        payload: Prisma.$TemplatePayload<ExtArgs>
-        fields: Prisma.TemplateFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.TemplateFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.TemplateFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
-          }
-          findFirst: {
-            args: Prisma.TemplateFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.TemplateFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
-          }
-          findMany: {
-            args: Prisma.TemplateFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>[]
-          }
-          create: {
-            args: Prisma.TemplateCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
-          }
-          createMany: {
-            args: Prisma.TemplateCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.TemplateCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>[]
-          }
-          delete: {
-            args: Prisma.TemplateDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
-          }
-          update: {
-            args: Prisma.TemplateUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
-          }
-          deleteMany: {
-            args: Prisma.TemplateDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.TemplateUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.TemplateUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>[]
-          }
-          upsert: {
-            args: Prisma.TemplateUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
-          }
-          aggregate: {
-            args: Prisma.TemplateAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTemplate>
-          }
-          groupBy: {
-            args: Prisma.TemplateGroupByArgs<ExtArgs>
-            result: $Utils.Optional<TemplateGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.TemplateCountArgs<ExtArgs>
-            result: $Utils.Optional<TemplateCountAggregateOutputType> | number
-          }
-        }
-      }
       DailyNote: {
         payload: Prisma.$DailyNotePayload<ExtArgs>
         fields: Prisma.DailyNoteFieldRefs
@@ -1750,6 +1661,80 @@ export namespace Prisma {
           }
         }
       }
+      Template: {
+        payload: Prisma.$TemplatePayload<ExtArgs>
+        fields: Prisma.TemplateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TemplateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TemplateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
+          }
+          findFirst: {
+            args: Prisma.TemplateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TemplateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
+          }
+          findMany: {
+            args: Prisma.TemplateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>[]
+          }
+          create: {
+            args: Prisma.TemplateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
+          }
+          createMany: {
+            args: Prisma.TemplateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TemplateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>[]
+          }
+          delete: {
+            args: Prisma.TemplateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
+          }
+          update: {
+            args: Prisma.TemplateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
+          }
+          deleteMany: {
+            args: Prisma.TemplateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TemplateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TemplateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>[]
+          }
+          upsert: {
+            args: Prisma.TemplateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TemplatePayload>
+          }
+          aggregate: {
+            args: Prisma.TemplateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTemplate>
+          }
+          groupBy: {
+            args: Prisma.TemplateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TemplateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TemplateCountArgs<ExtArgs>
+            result: $Utils.Optional<TemplateCountAggregateOutputType> | number
+          }
+        }
+      }
       KnowledgeArticle: {
         payload: Prisma.$KnowledgeArticlePayload<ExtArgs>
         fields: Prisma.KnowledgeArticleFieldRefs
@@ -1928,10 +1913,10 @@ export namespace Prisma {
     category?: CategoryOmit
     tag?: TagOmit
     noteTag?: NoteTagOmit
-    template?: TemplateOmit
     dailyNote?: DailyNoteOmit
     task?: TaskOmit
     project?: ProjectOmit
+    template?: TemplateOmit
     knowledgeArticle?: KnowledgeArticleOmit
   }
 
@@ -2014,24 +1999,24 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     accounts: number
-    sessions: number
-    notes: number
     categories: number
     dailyNotes: number
-    tasks: number
-    projects: number
     knowledgeArticles: number
+    notes: number
+    projects: number
+    sessions: number
+    tasks: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
-    sessions?: boolean | UserCountOutputTypeCountSessionsArgs
-    notes?: boolean | UserCountOutputTypeCountNotesArgs
     categories?: boolean | UserCountOutputTypeCountCategoriesArgs
     dailyNotes?: boolean | UserCountOutputTypeCountDailyNotesArgs
-    tasks?: boolean | UserCountOutputTypeCountTasksArgs
-    projects?: boolean | UserCountOutputTypeCountProjectsArgs
     knowledgeArticles?: boolean | UserCountOutputTypeCountKnowledgeArticlesArgs
+    notes?: boolean | UserCountOutputTypeCountNotesArgs
+    projects?: boolean | UserCountOutputTypeCountProjectsArgs
+    sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+    tasks?: boolean | UserCountOutputTypeCountTasksArgs
   }
 
   // Custom InputTypes
@@ -2055,20 +2040,6 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SessionWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: NoteWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CategoryWhereInput
   }
@@ -2083,8 +2054,15 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TaskWhereInput
+  export type UserCountOutputTypeCountKnowledgeArticlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: KnowledgeArticleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoteWhereInput
   }
 
   /**
@@ -2097,8 +2075,15 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountKnowledgeArticlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: KnowledgeArticleWhereInput
+  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
   }
 
 
@@ -4474,9 +4459,9 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
-    password: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    password: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -4485,9 +4470,9 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
-    password: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    password: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -4496,9 +4481,9 @@ export namespace Prisma {
     email: number
     emailVerified: number
     image: number
-    password: number
     createdAt: number
     updatedAt: number
+    password: number
     _all: number
   }
 
@@ -4509,9 +4494,9 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
-    password?: true
     createdAt?: true
     updatedAt?: true
+    password?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -4520,9 +4505,9 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
-    password?: true
     createdAt?: true
     updatedAt?: true
+    password?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -4531,9 +4516,9 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
-    password?: true
     createdAt?: true
     updatedAt?: true
+    password?: true
     _all?: true
   }
 
@@ -4615,9 +4600,9 @@ export namespace Prisma {
     email: string
     emailVerified: Date | null
     image: string | null
-    password: string | null
     createdAt: Date
     updatedAt: Date
+    password: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -4643,17 +4628,17 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
-    password?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    password?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
-    sessions?: boolean | User$sessionsArgs<ExtArgs>
-    notes?: boolean | User$notesArgs<ExtArgs>
     categories?: boolean | User$categoriesArgs<ExtArgs>
     dailyNotes?: boolean | User$dailyNotesArgs<ExtArgs>
-    tasks?: boolean | User$tasksArgs<ExtArgs>
-    projects?: boolean | User$projectsArgs<ExtArgs>
     knowledgeArticles?: boolean | User$knowledgeArticlesArgs<ExtArgs>
+    notes?: boolean | User$notesArgs<ExtArgs>
+    projects?: boolean | User$projectsArgs<ExtArgs>
+    sessions?: boolean | User$sessionsArgs<ExtArgs>
+    tasks?: boolean | User$tasksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4663,9 +4648,9 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
-    password?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    password?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4674,9 +4659,9 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
-    password?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    password?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -4685,21 +4670,21 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
-    password?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    password?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "password", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
-    sessions?: boolean | User$sessionsArgs<ExtArgs>
-    notes?: boolean | User$notesArgs<ExtArgs>
     categories?: boolean | User$categoriesArgs<ExtArgs>
     dailyNotes?: boolean | User$dailyNotesArgs<ExtArgs>
-    tasks?: boolean | User$tasksArgs<ExtArgs>
-    projects?: boolean | User$projectsArgs<ExtArgs>
     knowledgeArticles?: boolean | User$knowledgeArticlesArgs<ExtArgs>
+    notes?: boolean | User$notesArgs<ExtArgs>
+    projects?: boolean | User$projectsArgs<ExtArgs>
+    sessions?: boolean | User$sessionsArgs<ExtArgs>
+    tasks?: boolean | User$tasksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4709,13 +4694,13 @@ export namespace Prisma {
     name: "User"
     objects: {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
-      sessions: Prisma.$SessionPayload<ExtArgs>[]
-      notes: Prisma.$NotePayload<ExtArgs>[]
       categories: Prisma.$CategoryPayload<ExtArgs>[]
       dailyNotes: Prisma.$DailyNotePayload<ExtArgs>[]
-      tasks: Prisma.$TaskPayload<ExtArgs>[]
-      projects: Prisma.$ProjectPayload<ExtArgs>[]
       knowledgeArticles: Prisma.$KnowledgeArticlePayload<ExtArgs>[]
+      notes: Prisma.$NotePayload<ExtArgs>[]
+      projects: Prisma.$ProjectPayload<ExtArgs>[]
+      sessions: Prisma.$SessionPayload<ExtArgs>[]
+      tasks: Prisma.$TaskPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4723,9 +4708,9 @@ export namespace Prisma {
       email: string
       emailVerified: Date | null
       image: string | null
-      password: string | null
       createdAt: Date
       updatedAt: Date
+      password: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -5121,13 +5106,13 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notes<T extends User$notesArgs<ExtArgs> = {}>(args?: Subset<T, User$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     categories<T extends User$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dailyNotes<T extends User$dailyNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$dailyNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tasks<T extends User$tasksArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    projects<T extends User$projectsArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     knowledgeArticles<T extends User$knowledgeArticlesArgs<ExtArgs> = {}>(args?: Subset<T, User$knowledgeArticlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KnowledgeArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notes<T extends User$notesArgs<ExtArgs> = {}>(args?: Subset<T, User$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    projects<T extends User$projectsArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tasks<T extends User$tasksArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5162,9 +5147,9 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly emailVerified: FieldRef<"User", 'DateTime'>
     readonly image: FieldRef<"User", 'String'>
-    readonly password: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly password: FieldRef<"User", 'String'>
   }
     
 
@@ -5577,54 +5562,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.sessions
-   */
-  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    where?: SessionWhereInput
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    cursor?: SessionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
-  }
-
-  /**
-   * User.notes
-   */
-  export type User$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Note
-     */
-    select?: NoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Note
-     */
-    omit?: NoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: NoteInclude<ExtArgs> | null
-    where?: NoteWhereInput
-    orderBy?: NoteOrderByWithRelationInput | NoteOrderByWithRelationInput[]
-    cursor?: NoteWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: NoteScalarFieldEnum | NoteScalarFieldEnum[]
-  }
-
-  /**
    * User.categories
    */
   export type User$categoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5673,27 +5610,51 @@ export namespace Prisma {
   }
 
   /**
-   * User.tasks
+   * User.knowledgeArticles
    */
-  export type User$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$knowledgeArticlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Task
+     * Select specific fields to fetch from the KnowledgeArticle
      */
-    select?: TaskSelect<ExtArgs> | null
+    select?: KnowledgeArticleSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Task
+     * Omit specific fields from the KnowledgeArticle
      */
-    omit?: TaskOmit<ExtArgs> | null
+    omit?: KnowledgeArticleOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskInclude<ExtArgs> | null
-    where?: TaskWhereInput
-    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
-    cursor?: TaskWhereUniqueInput
+    include?: KnowledgeArticleInclude<ExtArgs> | null
+    where?: KnowledgeArticleWhereInput
+    orderBy?: KnowledgeArticleOrderByWithRelationInput | KnowledgeArticleOrderByWithRelationInput[]
+    cursor?: KnowledgeArticleWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+    distinct?: KnowledgeArticleScalarFieldEnum | KnowledgeArticleScalarFieldEnum[]
+  }
+
+  /**
+   * User.notes
+   */
+  export type User$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Note
+     */
+    select?: NoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Note
+     */
+    omit?: NoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoteInclude<ExtArgs> | null
+    where?: NoteWhereInput
+    orderBy?: NoteOrderByWithRelationInput | NoteOrderByWithRelationInput[]
+    cursor?: NoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NoteScalarFieldEnum | NoteScalarFieldEnum[]
   }
 
   /**
@@ -5721,27 +5682,51 @@ export namespace Prisma {
   }
 
   /**
-   * User.knowledgeArticles
+   * User.sessions
    */
-  export type User$knowledgeArticlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the KnowledgeArticle
+     * Select specific fields to fetch from the Session
      */
-    select?: KnowledgeArticleSelect<ExtArgs> | null
+    select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the KnowledgeArticle
+     * Omit specific fields from the Session
      */
-    omit?: KnowledgeArticleOmit<ExtArgs> | null
+    omit?: SessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: KnowledgeArticleInclude<ExtArgs> | null
-    where?: KnowledgeArticleWhereInput
-    orderBy?: KnowledgeArticleOrderByWithRelationInput | KnowledgeArticleOrderByWithRelationInput[]
-    cursor?: KnowledgeArticleWhereUniqueInput
+    include?: SessionInclude<ExtArgs> | null
+    where?: SessionWhereInput
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    cursor?: SessionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: KnowledgeArticleScalarFieldEnum | KnowledgeArticleScalarFieldEnum[]
+    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.tasks
+   */
+  export type User$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
   }
 
   /**
@@ -6920,8 +6905,8 @@ export namespace Prisma {
     updatedAt?: boolean
     userId?: boolean
     categoryId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Note$categoryArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     tags?: boolean | Note$tagsArgs<ExtArgs>
     _count?: boolean | NoteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["note"]>
@@ -6935,8 +6920,8 @@ export namespace Prisma {
     updatedAt?: boolean
     userId?: boolean
     categoryId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Note$categoryArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["note"]>
 
   export type NoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6948,8 +6933,8 @@ export namespace Prisma {
     updatedAt?: boolean
     userId?: boolean
     categoryId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Note$categoryArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["note"]>
 
   export type NoteSelectScalar = {
@@ -6965,25 +6950,25 @@ export namespace Prisma {
 
   export type NoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "status" | "createdAt" | "updatedAt" | "userId" | "categoryId", ExtArgs["result"]["note"]>
   export type NoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Note$categoryArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     tags?: boolean | Note$tagsArgs<ExtArgs>
     _count?: boolean | NoteCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type NoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Note$categoryArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type NoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Note$categoryArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $NotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Note"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       category: Prisma.$CategoryPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
       tags: Prisma.$NoteTagPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7389,8 +7374,8 @@ export namespace Prisma {
    */
   export interface Prisma__NoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     category<T extends Note$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Note$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tags<T extends Note$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Note$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -10081,16 +10066,19 @@ export namespace Prisma {
   }
 
   export type NoteTagMinAggregateOutputType = {
+    id: string | null
     noteId: string | null
     tagId: string | null
   }
 
   export type NoteTagMaxAggregateOutputType = {
+    id: string | null
     noteId: string | null
     tagId: string | null
   }
 
   export type NoteTagCountAggregateOutputType = {
+    id: number
     noteId: number
     tagId: number
     _all: number
@@ -10098,16 +10086,19 @@ export namespace Prisma {
 
 
   export type NoteTagMinAggregateInputType = {
+    id?: true
     noteId?: true
     tagId?: true
   }
 
   export type NoteTagMaxAggregateInputType = {
+    id?: true
     noteId?: true
     tagId?: true
   }
 
   export type NoteTagCountAggregateInputType = {
+    id?: true
     noteId?: true
     tagId?: true
     _all?: true
@@ -10186,6 +10177,7 @@ export namespace Prisma {
   }
 
   export type NoteTagGroupByOutputType = {
+    id: string
     noteId: string
     tagId: string
     _count: NoteTagCountAggregateOutputType | null
@@ -10208,6 +10200,7 @@ export namespace Prisma {
 
 
   export type NoteTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     noteId?: boolean
     tagId?: boolean
     note?: boolean | NoteDefaultArgs<ExtArgs>
@@ -10215,6 +10208,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["noteTag"]>
 
   export type NoteTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     noteId?: boolean
     tagId?: boolean
     note?: boolean | NoteDefaultArgs<ExtArgs>
@@ -10222,6 +10216,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["noteTag"]>
 
   export type NoteTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     noteId?: boolean
     tagId?: boolean
     note?: boolean | NoteDefaultArgs<ExtArgs>
@@ -10229,11 +10224,12 @@ export namespace Prisma {
   }, ExtArgs["result"]["noteTag"]>
 
   export type NoteTagSelectScalar = {
+    id?: boolean
     noteId?: boolean
     tagId?: boolean
   }
 
-  export type NoteTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"noteId" | "tagId", ExtArgs["result"]["noteTag"]>
+  export type NoteTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "noteId" | "tagId", ExtArgs["result"]["noteTag"]>
   export type NoteTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     note?: boolean | NoteDefaultArgs<ExtArgs>
     tag?: boolean | TagDefaultArgs<ExtArgs>
@@ -10254,6 +10250,7 @@ export namespace Prisma {
       tag: Prisma.$TagPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
+      id: string
       noteId: string
       tagId: string
     }, ExtArgs["result"]["noteTag"]>
@@ -10339,8 +10336,8 @@ export namespace Prisma {
      * // Get first 10 NoteTags
      * const noteTags = await prisma.noteTag.findMany({ take: 10 })
      * 
-     * // Only select the `noteId`
-     * const noteTagWithNoteIdOnly = await prisma.noteTag.findMany({ select: { noteId: true } })
+     * // Only select the `id`
+     * const noteTagWithIdOnly = await prisma.noteTag.findMany({ select: { id: true } })
      * 
      */
     findMany<T extends NoteTagFindManyArgs>(args?: SelectSubset<T, NoteTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -10384,9 +10381,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many NoteTags and only return the `noteId`
-     * const noteTagWithNoteIdOnly = await prisma.noteTag.createManyAndReturn({
-     *   select: { noteId: true },
+     * // Create many NoteTags and only return the `id`
+     * const noteTagWithIdOnly = await prisma.noteTag.createManyAndReturn({
+     *   select: { id: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -10475,9 +10472,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more NoteTags and only return the `noteId`
-     * const noteTagWithNoteIdOnly = await prisma.noteTag.updateManyAndReturn({
-     *   select: { noteId: true },
+     * // Update zero or more NoteTags and only return the `id`
+     * const noteTagWithIdOnly = await prisma.noteTag.updateManyAndReturn({
+     *   select: { id: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -10681,6 +10678,7 @@ export namespace Prisma {
    * Fields of the NoteTag model
    */
   interface NoteTagFieldRefs {
+    readonly id: FieldRef<"NoteTag", 'String'>
     readonly noteId: FieldRef<"NoteTag", 'String'>
     readonly tagId: FieldRef<"NoteTag", 'String'>
   }
@@ -11098,1027 +11096,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Template
-   */
-
-  export type AggregateTemplate = {
-    _count: TemplateCountAggregateOutputType | null
-    _min: TemplateMinAggregateOutputType | null
-    _max: TemplateMaxAggregateOutputType | null
-  }
-
-  export type TemplateMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    description: string | null
-    content: string | null
-    category: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type TemplateMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    description: string | null
-    content: string | null
-    category: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type TemplateCountAggregateOutputType = {
-    id: number
-    name: number
-    description: number
-    content: number
-    category: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type TemplateMinAggregateInputType = {
-    id?: true
-    name?: true
-    description?: true
-    content?: true
-    category?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type TemplateMaxAggregateInputType = {
-    id?: true
-    name?: true
-    description?: true
-    content?: true
-    category?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type TemplateCountAggregateInputType = {
-    id?: true
-    name?: true
-    description?: true
-    content?: true
-    category?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type TemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Template to aggregate.
-     */
-    where?: TemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Templates to fetch.
-     */
-    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: TemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Templates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Templates
-    **/
-    _count?: true | TemplateCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: TemplateMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: TemplateMaxAggregateInputType
-  }
-
-  export type GetTemplateAggregateType<T extends TemplateAggregateArgs> = {
-        [P in keyof T & keyof AggregateTemplate]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateTemplate[P]>
-      : GetScalarType<T[P], AggregateTemplate[P]>
-  }
-
-
-
-
-  export type TemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TemplateWhereInput
-    orderBy?: TemplateOrderByWithAggregationInput | TemplateOrderByWithAggregationInput[]
-    by: TemplateScalarFieldEnum[] | TemplateScalarFieldEnum
-    having?: TemplateScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: TemplateCountAggregateInputType | true
-    _min?: TemplateMinAggregateInputType
-    _max?: TemplateMaxAggregateInputType
-  }
-
-  export type TemplateGroupByOutputType = {
-    id: string
-    name: string
-    description: string | null
-    content: string
-    category: string
-    createdAt: Date
-    updatedAt: Date
-    _count: TemplateCountAggregateOutputType | null
-    _min: TemplateMinAggregateOutputType | null
-    _max: TemplateMaxAggregateOutputType | null
-  }
-
-  type GetTemplateGroupByPayload<T extends TemplateGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<TemplateGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof TemplateGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], TemplateGroupByOutputType[P]>
-            : GetScalarType<T[P], TemplateGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type TemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    description?: boolean
-    content?: boolean
-    category?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["template"]>
-
-  export type TemplateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    description?: boolean
-    content?: boolean
-    category?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["template"]>
-
-  export type TemplateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    description?: boolean
-    content?: boolean
-    category?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["template"]>
-
-  export type TemplateSelectScalar = {
-    id?: boolean
-    name?: boolean
-    description?: boolean
-    content?: boolean
-    category?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type TemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "content" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["template"]>
-
-  export type $TemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Template"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      description: string | null
-      content: string
-      category: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["template"]>
-    composites: {}
-  }
-
-  type TemplateGetPayload<S extends boolean | null | undefined | TemplateDefaultArgs> = $Result.GetResult<Prisma.$TemplatePayload, S>
-
-  type TemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<TemplateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: TemplateCountAggregateInputType | true
-    }
-
-  export interface TemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Template'], meta: { name: 'Template' } }
-    /**
-     * Find zero or one Template that matches the filter.
-     * @param {TemplateFindUniqueArgs} args - Arguments to find a Template
-     * @example
-     * // Get one Template
-     * const template = await prisma.template.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends TemplateFindUniqueArgs>(args: SelectSubset<T, TemplateFindUniqueArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Template that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {TemplateFindUniqueOrThrowArgs} args - Arguments to find a Template
-     * @example
-     * // Get one Template
-     * const template = await prisma.template.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends TemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, TemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Template that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateFindFirstArgs} args - Arguments to find a Template
-     * @example
-     * // Get one Template
-     * const template = await prisma.template.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends TemplateFindFirstArgs>(args?: SelectSubset<T, TemplateFindFirstArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Template that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateFindFirstOrThrowArgs} args - Arguments to find a Template
-     * @example
-     * // Get one Template
-     * const template = await prisma.template.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends TemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, TemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Templates that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Templates
-     * const templates = await prisma.template.findMany()
-     * 
-     * // Get first 10 Templates
-     * const templates = await prisma.template.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const templateWithIdOnly = await prisma.template.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends TemplateFindManyArgs>(args?: SelectSubset<T, TemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Template.
-     * @param {TemplateCreateArgs} args - Arguments to create a Template.
-     * @example
-     * // Create one Template
-     * const Template = await prisma.template.create({
-     *   data: {
-     *     // ... data to create a Template
-     *   }
-     * })
-     * 
-     */
-    create<T extends TemplateCreateArgs>(args: SelectSubset<T, TemplateCreateArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Templates.
-     * @param {TemplateCreateManyArgs} args - Arguments to create many Templates.
-     * @example
-     * // Create many Templates
-     * const template = await prisma.template.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends TemplateCreateManyArgs>(args?: SelectSubset<T, TemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Templates and returns the data saved in the database.
-     * @param {TemplateCreateManyAndReturnArgs} args - Arguments to create many Templates.
-     * @example
-     * // Create many Templates
-     * const template = await prisma.template.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Templates and only return the `id`
-     * const templateWithIdOnly = await prisma.template.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends TemplateCreateManyAndReturnArgs>(args?: SelectSubset<T, TemplateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Template.
-     * @param {TemplateDeleteArgs} args - Arguments to delete one Template.
-     * @example
-     * // Delete one Template
-     * const Template = await prisma.template.delete({
-     *   where: {
-     *     // ... filter to delete one Template
-     *   }
-     * })
-     * 
-     */
-    delete<T extends TemplateDeleteArgs>(args: SelectSubset<T, TemplateDeleteArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Template.
-     * @param {TemplateUpdateArgs} args - Arguments to update one Template.
-     * @example
-     * // Update one Template
-     * const template = await prisma.template.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends TemplateUpdateArgs>(args: SelectSubset<T, TemplateUpdateArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Templates.
-     * @param {TemplateDeleteManyArgs} args - Arguments to filter Templates to delete.
-     * @example
-     * // Delete a few Templates
-     * const { count } = await prisma.template.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends TemplateDeleteManyArgs>(args?: SelectSubset<T, TemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Templates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Templates
-     * const template = await prisma.template.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends TemplateUpdateManyArgs>(args: SelectSubset<T, TemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Templates and returns the data updated in the database.
-     * @param {TemplateUpdateManyAndReturnArgs} args - Arguments to update many Templates.
-     * @example
-     * // Update many Templates
-     * const template = await prisma.template.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Templates and only return the `id`
-     * const templateWithIdOnly = await prisma.template.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends TemplateUpdateManyAndReturnArgs>(args: SelectSubset<T, TemplateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Template.
-     * @param {TemplateUpsertArgs} args - Arguments to update or create a Template.
-     * @example
-     * // Update or create a Template
-     * const template = await prisma.template.upsert({
-     *   create: {
-     *     // ... data to create a Template
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Template we want to update
-     *   }
-     * })
-     */
-    upsert<T extends TemplateUpsertArgs>(args: SelectSubset<T, TemplateUpsertArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Templates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateCountArgs} args - Arguments to filter Templates to count.
-     * @example
-     * // Count the number of Templates
-     * const count = await prisma.template.count({
-     *   where: {
-     *     // ... the filter for the Templates we want to count
-     *   }
-     * })
-    **/
-    count<T extends TemplateCountArgs>(
-      args?: Subset<T, TemplateCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], TemplateCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Template.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends TemplateAggregateArgs>(args: Subset<T, TemplateAggregateArgs>): Prisma.PrismaPromise<GetTemplateAggregateType<T>>
-
-    /**
-     * Group by Template.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplateGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends TemplateGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: TemplateGroupByArgs['orderBy'] }
-        : { orderBy?: TemplateGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, TemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Template model
-   */
-  readonly fields: TemplateFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Template.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__TemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Template model
-   */
-  interface TemplateFieldRefs {
-    readonly id: FieldRef<"Template", 'String'>
-    readonly name: FieldRef<"Template", 'String'>
-    readonly description: FieldRef<"Template", 'String'>
-    readonly content: FieldRef<"Template", 'String'>
-    readonly category: FieldRef<"Template", 'String'>
-    readonly createdAt: FieldRef<"Template", 'DateTime'>
-    readonly updatedAt: FieldRef<"Template", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Template findUnique
-   */
-  export type TemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * Filter, which Template to fetch.
-     */
-    where: TemplateWhereUniqueInput
-  }
-
-  /**
-   * Template findUniqueOrThrow
-   */
-  export type TemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * Filter, which Template to fetch.
-     */
-    where: TemplateWhereUniqueInput
-  }
-
-  /**
-   * Template findFirst
-   */
-  export type TemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * Filter, which Template to fetch.
-     */
-    where?: TemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Templates to fetch.
-     */
-    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Templates.
-     */
-    cursor?: TemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Templates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Templates.
-     */
-    distinct?: TemplateScalarFieldEnum | TemplateScalarFieldEnum[]
-  }
-
-  /**
-   * Template findFirstOrThrow
-   */
-  export type TemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * Filter, which Template to fetch.
-     */
-    where?: TemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Templates to fetch.
-     */
-    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Templates.
-     */
-    cursor?: TemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Templates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Templates.
-     */
-    distinct?: TemplateScalarFieldEnum | TemplateScalarFieldEnum[]
-  }
-
-  /**
-   * Template findMany
-   */
-  export type TemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * Filter, which Templates to fetch.
-     */
-    where?: TemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Templates to fetch.
-     */
-    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Templates.
-     */
-    cursor?: TemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Templates.
-     */
-    skip?: number
-    distinct?: TemplateScalarFieldEnum | TemplateScalarFieldEnum[]
-  }
-
-  /**
-   * Template create
-   */
-  export type TemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * The data needed to create a Template.
-     */
-    data: XOR<TemplateCreateInput, TemplateUncheckedCreateInput>
-  }
-
-  /**
-   * Template createMany
-   */
-  export type TemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Templates.
-     */
-    data: TemplateCreateManyInput | TemplateCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Template createManyAndReturn
-   */
-  export type TemplateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * The data used to create many Templates.
-     */
-    data: TemplateCreateManyInput | TemplateCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Template update
-   */
-  export type TemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * The data needed to update a Template.
-     */
-    data: XOR<TemplateUpdateInput, TemplateUncheckedUpdateInput>
-    /**
-     * Choose, which Template to update.
-     */
-    where: TemplateWhereUniqueInput
-  }
-
-  /**
-   * Template updateMany
-   */
-  export type TemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Templates.
-     */
-    data: XOR<TemplateUpdateManyMutationInput, TemplateUncheckedUpdateManyInput>
-    /**
-     * Filter which Templates to update
-     */
-    where?: TemplateWhereInput
-    /**
-     * Limit how many Templates to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Template updateManyAndReturn
-   */
-  export type TemplateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * The data used to update Templates.
-     */
-    data: XOR<TemplateUpdateManyMutationInput, TemplateUncheckedUpdateManyInput>
-    /**
-     * Filter which Templates to update
-     */
-    where?: TemplateWhereInput
-    /**
-     * Limit how many Templates to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Template upsert
-   */
-  export type TemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * The filter to search for the Template to update in case it exists.
-     */
-    where: TemplateWhereUniqueInput
-    /**
-     * In case the Template found by the `where` argument doesn't exist, create a new Template with this data.
-     */
-    create: XOR<TemplateCreateInput, TemplateUncheckedCreateInput>
-    /**
-     * In case the Template was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<TemplateUpdateInput, TemplateUncheckedUpdateInput>
-  }
-
-  /**
-   * Template delete
-   */
-  export type TemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-    /**
-     * Filter which Template to delete.
-     */
-    where: TemplateWhereUniqueInput
-  }
-
-  /**
-   * Template deleteMany
-   */
-  export type TemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Templates to delete
-     */
-    where?: TemplateWhereInput
-    /**
-     * Limit how many Templates to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Template without action
-   */
-  export type TemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Template
-     */
-    select?: TemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Template
-     */
-    omit?: TemplateOmit<ExtArgs> | null
-  }
-
-
-  /**
    * Model DailyNote
    */
 
@@ -12132,7 +11109,7 @@ export namespace Prisma {
     id: string | null
     date: Date | null
     content: string | null
-    mood: $Enums.Mood | null
+    mood: string | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12142,7 +11119,7 @@ export namespace Prisma {
     id: string | null
     date: Date | null
     content: string | null
-    mood: $Enums.Mood | null
+    mood: string | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12267,7 +11244,7 @@ export namespace Prisma {
     id: string
     date: Date
     content: string
-    mood: $Enums.Mood | null
+    mood: string | null
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -12353,7 +11330,7 @@ export namespace Prisma {
       id: string
       date: Date
       content: string
-      mood: $Enums.Mood | null
+      mood: string | null
       userId: string
       createdAt: Date
       updatedAt: Date
@@ -12784,7 +11761,7 @@ export namespace Prisma {
     readonly id: FieldRef<"DailyNote", 'String'>
     readonly date: FieldRef<"DailyNote", 'DateTime'>
     readonly content: FieldRef<"DailyNote", 'String'>
-    readonly mood: FieldRef<"DailyNote", 'Mood'>
+    readonly mood: FieldRef<"DailyNote", 'String'>
     readonly userId: FieldRef<"DailyNote", 'String'>
     readonly createdAt: FieldRef<"DailyNote", 'DateTime'>
     readonly updatedAt: FieldRef<"DailyNote", 'DateTime'>
@@ -13215,6 +12192,7 @@ export namespace Prisma {
   export type TaskMinAggregateOutputType = {
     id: string | null
     title: string | null
+    description: string | null
     completed: boolean | null
     priority: $Enums.TaskPriority | null
     dueDate: Date | null
@@ -13227,6 +12205,7 @@ export namespace Prisma {
   export type TaskMaxAggregateOutputType = {
     id: string | null
     title: string | null
+    description: string | null
     completed: boolean | null
     priority: $Enums.TaskPriority | null
     dueDate: Date | null
@@ -13239,6 +12218,7 @@ export namespace Prisma {
   export type TaskCountAggregateOutputType = {
     id: number
     title: number
+    description: number
     completed: number
     priority: number
     dueDate: number
@@ -13253,6 +12233,7 @@ export namespace Prisma {
   export type TaskMinAggregateInputType = {
     id?: true
     title?: true
+    description?: true
     completed?: true
     priority?: true
     dueDate?: true
@@ -13265,6 +12246,7 @@ export namespace Prisma {
   export type TaskMaxAggregateInputType = {
     id?: true
     title?: true
+    description?: true
     completed?: true
     priority?: true
     dueDate?: true
@@ -13277,6 +12259,7 @@ export namespace Prisma {
   export type TaskCountAggregateInputType = {
     id?: true
     title?: true
+    description?: true
     completed?: true
     priority?: true
     dueDate?: true
@@ -13362,6 +12345,7 @@ export namespace Prisma {
   export type TaskGroupByOutputType = {
     id: string
     title: string
+    description: string | null
     completed: boolean
     priority: $Enums.TaskPriority
     dueDate: Date | null
@@ -13391,6 +12375,7 @@ export namespace Prisma {
   export type TaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -13398,13 +12383,14 @@ export namespace Prisma {
     projectId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | Task$projectArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -13412,13 +12398,14 @@ export namespace Prisma {
     projectId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | Task$projectArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -13426,13 +12413,14 @@ export namespace Prisma {
     projectId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | Task$projectArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectScalar = {
     id?: boolean
     title?: boolean
+    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -13442,29 +12430,30 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "completed" | "priority" | "dueDate" | "userId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "completed" | "priority" | "dueDate" | "userId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | Task$projectArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | Task$projectArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type TaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | Task$projectArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Task"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       project: Prisma.$ProjectPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
+      description: string | null
       completed: boolean
       priority: $Enums.TaskPriority
       dueDate: Date | null
@@ -13866,8 +12855,8 @@ export namespace Prisma {
    */
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     project<T extends Task$projectArgs<ExtArgs> = {}>(args?: Subset<T, Task$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13899,6 +12888,7 @@ export namespace Prisma {
   interface TaskFieldRefs {
     readonly id: FieldRef<"Task", 'String'>
     readonly title: FieldRef<"Task", 'String'>
+    readonly description: FieldRef<"Task", 'String'>
     readonly completed: FieldRef<"Task", 'Boolean'>
     readonly priority: FieldRef<"Task", 'TaskPriority'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
@@ -15501,6 +14491,1027 @@ export namespace Prisma {
 
 
   /**
+   * Model Template
+   */
+
+  export type AggregateTemplate = {
+    _count: TemplateCountAggregateOutputType | null
+    _min: TemplateMinAggregateOutputType | null
+    _max: TemplateMaxAggregateOutputType | null
+  }
+
+  export type TemplateMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    content: string | null
+    category: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TemplateMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    content: string | null
+    category: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TemplateCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    content: number
+    category: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TemplateMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    content?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TemplateMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    content?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TemplateCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    content?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Template to aggregate.
+     */
+    where?: TemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Templates to fetch.
+     */
+    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Templates
+    **/
+    _count?: true | TemplateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TemplateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TemplateMaxAggregateInputType
+  }
+
+  export type GetTemplateAggregateType<T extends TemplateAggregateArgs> = {
+        [P in keyof T & keyof AggregateTemplate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTemplate[P]>
+      : GetScalarType<T[P], AggregateTemplate[P]>
+  }
+
+
+
+
+  export type TemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TemplateWhereInput
+    orderBy?: TemplateOrderByWithAggregationInput | TemplateOrderByWithAggregationInput[]
+    by: TemplateScalarFieldEnum[] | TemplateScalarFieldEnum
+    having?: TemplateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TemplateCountAggregateInputType | true
+    _min?: TemplateMinAggregateInputType
+    _max?: TemplateMaxAggregateInputType
+  }
+
+  export type TemplateGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    content: string
+    category: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TemplateCountAggregateOutputType | null
+    _min: TemplateMinAggregateOutputType | null
+    _max: TemplateMaxAggregateOutputType | null
+  }
+
+  type GetTemplateGroupByPayload<T extends TemplateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TemplateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TemplateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TemplateGroupByOutputType[P]>
+            : GetScalarType<T[P], TemplateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    content?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["template"]>
+
+  export type TemplateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    content?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["template"]>
+
+  export type TemplateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    content?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["template"]>
+
+  export type TemplateSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    content?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "content" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["template"]>
+
+  export type $TemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Template"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      content: string
+      category: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["template"]>
+    composites: {}
+  }
+
+  type TemplateGetPayload<S extends boolean | null | undefined | TemplateDefaultArgs> = $Result.GetResult<Prisma.$TemplatePayload, S>
+
+  type TemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TemplateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TemplateCountAggregateInputType | true
+    }
+
+  export interface TemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Template'], meta: { name: 'Template' } }
+    /**
+     * Find zero or one Template that matches the filter.
+     * @param {TemplateFindUniqueArgs} args - Arguments to find a Template
+     * @example
+     * // Get one Template
+     * const template = await prisma.template.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TemplateFindUniqueArgs>(args: SelectSubset<T, TemplateFindUniqueArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Template that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TemplateFindUniqueOrThrowArgs} args - Arguments to find a Template
+     * @example
+     * // Get one Template
+     * const template = await prisma.template.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, TemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Template that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateFindFirstArgs} args - Arguments to find a Template
+     * @example
+     * // Get one Template
+     * const template = await prisma.template.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TemplateFindFirstArgs>(args?: SelectSubset<T, TemplateFindFirstArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Template that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateFindFirstOrThrowArgs} args - Arguments to find a Template
+     * @example
+     * // Get one Template
+     * const template = await prisma.template.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, TemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Templates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Templates
+     * const templates = await prisma.template.findMany()
+     * 
+     * // Get first 10 Templates
+     * const templates = await prisma.template.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const templateWithIdOnly = await prisma.template.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TemplateFindManyArgs>(args?: SelectSubset<T, TemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Template.
+     * @param {TemplateCreateArgs} args - Arguments to create a Template.
+     * @example
+     * // Create one Template
+     * const Template = await prisma.template.create({
+     *   data: {
+     *     // ... data to create a Template
+     *   }
+     * })
+     * 
+     */
+    create<T extends TemplateCreateArgs>(args: SelectSubset<T, TemplateCreateArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Templates.
+     * @param {TemplateCreateManyArgs} args - Arguments to create many Templates.
+     * @example
+     * // Create many Templates
+     * const template = await prisma.template.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TemplateCreateManyArgs>(args?: SelectSubset<T, TemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Templates and returns the data saved in the database.
+     * @param {TemplateCreateManyAndReturnArgs} args - Arguments to create many Templates.
+     * @example
+     * // Create many Templates
+     * const template = await prisma.template.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Templates and only return the `id`
+     * const templateWithIdOnly = await prisma.template.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TemplateCreateManyAndReturnArgs>(args?: SelectSubset<T, TemplateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Template.
+     * @param {TemplateDeleteArgs} args - Arguments to delete one Template.
+     * @example
+     * // Delete one Template
+     * const Template = await prisma.template.delete({
+     *   where: {
+     *     // ... filter to delete one Template
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TemplateDeleteArgs>(args: SelectSubset<T, TemplateDeleteArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Template.
+     * @param {TemplateUpdateArgs} args - Arguments to update one Template.
+     * @example
+     * // Update one Template
+     * const template = await prisma.template.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TemplateUpdateArgs>(args: SelectSubset<T, TemplateUpdateArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Templates.
+     * @param {TemplateDeleteManyArgs} args - Arguments to filter Templates to delete.
+     * @example
+     * // Delete a few Templates
+     * const { count } = await prisma.template.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TemplateDeleteManyArgs>(args?: SelectSubset<T, TemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Templates
+     * const template = await prisma.template.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TemplateUpdateManyArgs>(args: SelectSubset<T, TemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Templates and returns the data updated in the database.
+     * @param {TemplateUpdateManyAndReturnArgs} args - Arguments to update many Templates.
+     * @example
+     * // Update many Templates
+     * const template = await prisma.template.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Templates and only return the `id`
+     * const templateWithIdOnly = await prisma.template.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TemplateUpdateManyAndReturnArgs>(args: SelectSubset<T, TemplateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Template.
+     * @param {TemplateUpsertArgs} args - Arguments to update or create a Template.
+     * @example
+     * // Update or create a Template
+     * const template = await prisma.template.upsert({
+     *   create: {
+     *     // ... data to create a Template
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Template we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TemplateUpsertArgs>(args: SelectSubset<T, TemplateUpsertArgs<ExtArgs>>): Prisma__TemplateClient<$Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateCountArgs} args - Arguments to filter Templates to count.
+     * @example
+     * // Count the number of Templates
+     * const count = await prisma.template.count({
+     *   where: {
+     *     // ... the filter for the Templates we want to count
+     *   }
+     * })
+    **/
+    count<T extends TemplateCountArgs>(
+      args?: Subset<T, TemplateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TemplateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Template.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TemplateAggregateArgs>(args: Subset<T, TemplateAggregateArgs>): Prisma.PrismaPromise<GetTemplateAggregateType<T>>
+
+    /**
+     * Group by Template.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TemplateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TemplateGroupByArgs['orderBy'] }
+        : { orderBy?: TemplateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Template model
+   */
+  readonly fields: TemplateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Template.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Template model
+   */
+  interface TemplateFieldRefs {
+    readonly id: FieldRef<"Template", 'String'>
+    readonly name: FieldRef<"Template", 'String'>
+    readonly description: FieldRef<"Template", 'String'>
+    readonly content: FieldRef<"Template", 'String'>
+    readonly category: FieldRef<"Template", 'String'>
+    readonly createdAt: FieldRef<"Template", 'DateTime'>
+    readonly updatedAt: FieldRef<"Template", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Template findUnique
+   */
+  export type TemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * Filter, which Template to fetch.
+     */
+    where: TemplateWhereUniqueInput
+  }
+
+  /**
+   * Template findUniqueOrThrow
+   */
+  export type TemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * Filter, which Template to fetch.
+     */
+    where: TemplateWhereUniqueInput
+  }
+
+  /**
+   * Template findFirst
+   */
+  export type TemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * Filter, which Template to fetch.
+     */
+    where?: TemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Templates to fetch.
+     */
+    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Templates.
+     */
+    cursor?: TemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Templates.
+     */
+    distinct?: TemplateScalarFieldEnum | TemplateScalarFieldEnum[]
+  }
+
+  /**
+   * Template findFirstOrThrow
+   */
+  export type TemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * Filter, which Template to fetch.
+     */
+    where?: TemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Templates to fetch.
+     */
+    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Templates.
+     */
+    cursor?: TemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Templates.
+     */
+    distinct?: TemplateScalarFieldEnum | TemplateScalarFieldEnum[]
+  }
+
+  /**
+   * Template findMany
+   */
+  export type TemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * Filter, which Templates to fetch.
+     */
+    where?: TemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Templates to fetch.
+     */
+    orderBy?: TemplateOrderByWithRelationInput | TemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Templates.
+     */
+    cursor?: TemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Templates.
+     */
+    skip?: number
+    distinct?: TemplateScalarFieldEnum | TemplateScalarFieldEnum[]
+  }
+
+  /**
+   * Template create
+   */
+  export type TemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Template.
+     */
+    data: XOR<TemplateCreateInput, TemplateUncheckedCreateInput>
+  }
+
+  /**
+   * Template createMany
+   */
+  export type TemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Templates.
+     */
+    data: TemplateCreateManyInput | TemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Template createManyAndReturn
+   */
+  export type TemplateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * The data used to create many Templates.
+     */
+    data: TemplateCreateManyInput | TemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Template update
+   */
+  export type TemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Template.
+     */
+    data: XOR<TemplateUpdateInput, TemplateUncheckedUpdateInput>
+    /**
+     * Choose, which Template to update.
+     */
+    where: TemplateWhereUniqueInput
+  }
+
+  /**
+   * Template updateMany
+   */
+  export type TemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Templates.
+     */
+    data: XOR<TemplateUpdateManyMutationInput, TemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which Templates to update
+     */
+    where?: TemplateWhereInput
+    /**
+     * Limit how many Templates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Template updateManyAndReturn
+   */
+  export type TemplateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * The data used to update Templates.
+     */
+    data: XOR<TemplateUpdateManyMutationInput, TemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which Templates to update
+     */
+    where?: TemplateWhereInput
+    /**
+     * Limit how many Templates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Template upsert
+   */
+  export type TemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Template to update in case it exists.
+     */
+    where: TemplateWhereUniqueInput
+    /**
+     * In case the Template found by the `where` argument doesn't exist, create a new Template with this data.
+     */
+    create: XOR<TemplateCreateInput, TemplateUncheckedCreateInput>
+    /**
+     * In case the Template was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TemplateUpdateInput, TemplateUncheckedUpdateInput>
+  }
+
+  /**
+   * Template delete
+   */
+  export type TemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+    /**
+     * Filter which Template to delete.
+     */
+    where: TemplateWhereUniqueInput
+  }
+
+  /**
+   * Template deleteMany
+   */
+  export type TemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Templates to delete
+     */
+    where?: TemplateWhereInput
+    /**
+     * Limit how many Templates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Template without action
+   */
+  export type TemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Template
+     */
+    select?: TemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Template
+     */
+    omit?: TemplateOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model KnowledgeArticle
    */
 
@@ -15651,7 +15662,7 @@ export namespace Prisma {
     id: string
     title: string
     content: string
-    category: string
+    category: string | null
     tags: string[]
     userId: string
     createdAt: Date
@@ -15742,7 +15753,7 @@ export namespace Prisma {
       id: string
       title: string
       content: string
-      category: string
+      category: string | null
       tags: string[]
       userId: string
       createdAt: Date
@@ -16641,9 +16652,9 @@ export namespace Prisma {
     email: 'email',
     emailVerified: 'emailVerified',
     image: 'image',
-    password: 'password',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    password: 'password'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -16697,24 +16708,12 @@ export namespace Prisma {
 
 
   export const NoteTagScalarFieldEnum: {
+    id: 'id',
     noteId: 'noteId',
     tagId: 'tagId'
   };
 
   export type NoteTagScalarFieldEnum = (typeof NoteTagScalarFieldEnum)[keyof typeof NoteTagScalarFieldEnum]
-
-
-  export const TemplateScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    description: 'description',
-    content: 'content',
-    category: 'category',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type TemplateScalarFieldEnum = (typeof TemplateScalarFieldEnum)[keyof typeof TemplateScalarFieldEnum]
 
 
   export const DailyNoteScalarFieldEnum: {
@@ -16733,6 +16732,7 @@ export namespace Prisma {
   export const TaskScalarFieldEnum: {
     id: 'id',
     title: 'title',
+    description: 'description',
     completed: 'completed',
     priority: 'priority',
     dueDate: 'dueDate',
@@ -16757,6 +16757,19 @@ export namespace Prisma {
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+  export const TemplateScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    content: 'content',
+    category: 'category',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TemplateScalarFieldEnum = (typeof TemplateScalarFieldEnum)[keyof typeof TemplateScalarFieldEnum]
 
 
   export const KnowledgeArticleScalarFieldEnum: {
@@ -16855,20 +16868,6 @@ export namespace Prisma {
    * Reference to a field of type 'NoteStatus[]'
    */
   export type ListEnumNoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Mood'
-   */
-  export type EnumMoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Mood'>
-    
-
-
-  /**
-   * Reference to a field of type 'Mood[]'
-   */
-  export type ListEnumMoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Mood[]'>
     
 
 
@@ -17076,17 +17075,17 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
-    password?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    password?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
-    sessions?: SessionListRelationFilter
-    notes?: NoteListRelationFilter
     categories?: CategoryListRelationFilter
     dailyNotes?: DailyNoteListRelationFilter
-    tasks?: TaskListRelationFilter
-    projects?: ProjectListRelationFilter
     knowledgeArticles?: KnowledgeArticleListRelationFilter
+    notes?: NoteListRelationFilter
+    projects?: ProjectListRelationFilter
+    sessions?: SessionListRelationFilter
+    tasks?: TaskListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17095,17 +17094,17 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
-    password?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    password?: SortOrderInput | SortOrder
     accounts?: AccountOrderByRelationAggregateInput
-    sessions?: SessionOrderByRelationAggregateInput
-    notes?: NoteOrderByRelationAggregateInput
     categories?: CategoryOrderByRelationAggregateInput
     dailyNotes?: DailyNoteOrderByRelationAggregateInput
-    tasks?: TaskOrderByRelationAggregateInput
-    projects?: ProjectOrderByRelationAggregateInput
     knowledgeArticles?: KnowledgeArticleOrderByRelationAggregateInput
+    notes?: NoteOrderByRelationAggregateInput
+    projects?: ProjectOrderByRelationAggregateInput
+    sessions?: SessionOrderByRelationAggregateInput
+    tasks?: TaskOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -17117,17 +17116,17 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
-    password?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    password?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
-    sessions?: SessionListRelationFilter
-    notes?: NoteListRelationFilter
     categories?: CategoryListRelationFilter
     dailyNotes?: DailyNoteListRelationFilter
-    tasks?: TaskListRelationFilter
-    projects?: ProjectListRelationFilter
     knowledgeArticles?: KnowledgeArticleListRelationFilter
+    notes?: NoteListRelationFilter
+    projects?: ProjectListRelationFilter
+    sessions?: SessionListRelationFilter
+    tasks?: TaskListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -17136,9 +17135,9 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
-    password?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    password?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -17153,9 +17152,9 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
-    password?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    password?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type VerificationTokenWhereInput = {
@@ -17213,8 +17212,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Note"> | Date | string
     userId?: StringFilter<"Note"> | string
     categoryId?: StringNullableFilter<"Note"> | string | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     tags?: NoteTagListRelationFilter
   }
 
@@ -17227,8 +17226,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     userId?: SortOrder
     categoryId?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
     category?: CategoryOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
     tags?: NoteTagOrderByRelationAggregateInput
   }
 
@@ -17244,8 +17243,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Note"> | Date | string
     userId?: StringFilter<"Note"> | string
     categoryId?: StringNullableFilter<"Note"> | string | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     tags?: NoteTagListRelationFilter
   }, "id">
 
@@ -17405,6 +17404,7 @@ export namespace Prisma {
     AND?: NoteTagWhereInput | NoteTagWhereInput[]
     OR?: NoteTagWhereInput[]
     NOT?: NoteTagWhereInput | NoteTagWhereInput[]
+    id?: StringFilter<"NoteTag"> | string
     noteId?: StringFilter<"NoteTag"> | string
     tagId?: StringFilter<"NoteTag"> | string
     note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
@@ -17412,6 +17412,7 @@ export namespace Prisma {
   }
 
   export type NoteTagOrderByWithRelationInput = {
+    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
     note?: NoteOrderByWithRelationInput
@@ -17419,6 +17420,7 @@ export namespace Prisma {
   }
 
   export type NoteTagWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
     noteId_tagId?: NoteTagNoteIdTagIdCompoundUniqueInput
     AND?: NoteTagWhereInput | NoteTagWhereInput[]
     OR?: NoteTagWhereInput[]
@@ -17427,9 +17429,10 @@ export namespace Prisma {
     tagId?: StringFilter<"NoteTag"> | string
     note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
     tag?: XOR<TagScalarRelationFilter, TagWhereInput>
-  }, "noteId_tagId">
+  }, "id" | "noteId_tagId">
 
   export type NoteTagOrderByWithAggregationInput = {
+    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
     _count?: NoteTagCountOrderByAggregateInput
@@ -17441,70 +17444,9 @@ export namespace Prisma {
     AND?: NoteTagScalarWhereWithAggregatesInput | NoteTagScalarWhereWithAggregatesInput[]
     OR?: NoteTagScalarWhereWithAggregatesInput[]
     NOT?: NoteTagScalarWhereWithAggregatesInput | NoteTagScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NoteTag"> | string
     noteId?: StringWithAggregatesFilter<"NoteTag"> | string
     tagId?: StringWithAggregatesFilter<"NoteTag"> | string
-  }
-
-  export type TemplateWhereInput = {
-    AND?: TemplateWhereInput | TemplateWhereInput[]
-    OR?: TemplateWhereInput[]
-    NOT?: TemplateWhereInput | TemplateWhereInput[]
-    id?: StringFilter<"Template"> | string
-    name?: StringFilter<"Template"> | string
-    description?: StringNullableFilter<"Template"> | string | null
-    content?: StringFilter<"Template"> | string
-    category?: StringFilter<"Template"> | string
-    createdAt?: DateTimeFilter<"Template"> | Date | string
-    updatedAt?: DateTimeFilter<"Template"> | Date | string
-  }
-
-  export type TemplateOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    description?: SortOrderInput | SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type TemplateWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: TemplateWhereInput | TemplateWhereInput[]
-    OR?: TemplateWhereInput[]
-    NOT?: TemplateWhereInput | TemplateWhereInput[]
-    name?: StringFilter<"Template"> | string
-    description?: StringNullableFilter<"Template"> | string | null
-    content?: StringFilter<"Template"> | string
-    category?: StringFilter<"Template"> | string
-    createdAt?: DateTimeFilter<"Template"> | Date | string
-    updatedAt?: DateTimeFilter<"Template"> | Date | string
-  }, "id">
-
-  export type TemplateOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    description?: SortOrderInput | SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: TemplateCountOrderByAggregateInput
-    _max?: TemplateMaxOrderByAggregateInput
-    _min?: TemplateMinOrderByAggregateInput
-  }
-
-  export type TemplateScalarWhereWithAggregatesInput = {
-    AND?: TemplateScalarWhereWithAggregatesInput | TemplateScalarWhereWithAggregatesInput[]
-    OR?: TemplateScalarWhereWithAggregatesInput[]
-    NOT?: TemplateScalarWhereWithAggregatesInput | TemplateScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Template"> | string
-    name?: StringWithAggregatesFilter<"Template"> | string
-    description?: StringNullableWithAggregatesFilter<"Template"> | string | null
-    content?: StringWithAggregatesFilter<"Template"> | string
-    category?: StringWithAggregatesFilter<"Template"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Template"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Template"> | Date | string
   }
 
   export type DailyNoteWhereInput = {
@@ -17514,7 +17456,7 @@ export namespace Prisma {
     id?: StringFilter<"DailyNote"> | string
     date?: DateTimeFilter<"DailyNote"> | Date | string
     content?: StringFilter<"DailyNote"> | string
-    mood?: EnumMoodNullableFilter<"DailyNote"> | $Enums.Mood | null
+    mood?: StringNullableFilter<"DailyNote"> | string | null
     userId?: StringFilter<"DailyNote"> | string
     createdAt?: DateTimeFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeFilter<"DailyNote"> | Date | string
@@ -17539,7 +17481,7 @@ export namespace Prisma {
     OR?: DailyNoteWhereInput[]
     NOT?: DailyNoteWhereInput | DailyNoteWhereInput[]
     content?: StringFilter<"DailyNote"> | string
-    mood?: EnumMoodNullableFilter<"DailyNote"> | $Enums.Mood | null
+    mood?: StringNullableFilter<"DailyNote"> | string | null
     userId?: StringFilter<"DailyNote"> | string
     createdAt?: DateTimeFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeFilter<"DailyNote"> | Date | string
@@ -17566,7 +17508,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DailyNote"> | string
     date?: DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
     content?: StringWithAggregatesFilter<"DailyNote"> | string
-    mood?: EnumMoodNullableWithAggregatesFilter<"DailyNote"> | $Enums.Mood | null
+    mood?: StringNullableWithAggregatesFilter<"DailyNote"> | string | null
     userId?: StringWithAggregatesFilter<"DailyNote"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
@@ -17578,6 +17520,7 @@ export namespace Prisma {
     NOT?: TaskWhereInput | TaskWhereInput[]
     id?: StringFilter<"Task"> | string
     title?: StringFilter<"Task"> | string
+    description?: StringNullableFilter<"Task"> | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -17585,13 +17528,14 @@ export namespace Prisma {
     projectId?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type TaskOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrderInput | SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -17599,8 +17543,8 @@ export namespace Prisma {
     projectId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -17609,6 +17553,7 @@ export namespace Prisma {
     OR?: TaskWhereInput[]
     NOT?: TaskWhereInput | TaskWhereInput[]
     title?: StringFilter<"Task"> | string
+    description?: StringNullableFilter<"Task"> | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -17616,13 +17561,14 @@ export namespace Prisma {
     projectId?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrderInput | SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -17641,6 +17587,7 @@ export namespace Prisma {
     NOT?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Task"> | string
     title?: StringWithAggregatesFilter<"Task"> | string
+    description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     completed?: BoolWithAggregatesFilter<"Task"> | boolean
     priority?: EnumTaskPriorityWithAggregatesFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
@@ -17725,6 +17672,68 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
 
+  export type TemplateWhereInput = {
+    AND?: TemplateWhereInput | TemplateWhereInput[]
+    OR?: TemplateWhereInput[]
+    NOT?: TemplateWhereInput | TemplateWhereInput[]
+    id?: StringFilter<"Template"> | string
+    name?: StringFilter<"Template"> | string
+    description?: StringNullableFilter<"Template"> | string | null
+    content?: StringFilter<"Template"> | string
+    category?: StringNullableFilter<"Template"> | string | null
+    createdAt?: DateTimeFilter<"Template"> | Date | string
+    updatedAt?: DateTimeFilter<"Template"> | Date | string
+  }
+
+  export type TemplateOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    content?: SortOrder
+    category?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TemplateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TemplateWhereInput | TemplateWhereInput[]
+    OR?: TemplateWhereInput[]
+    NOT?: TemplateWhereInput | TemplateWhereInput[]
+    name?: StringFilter<"Template"> | string
+    description?: StringNullableFilter<"Template"> | string | null
+    content?: StringFilter<"Template"> | string
+    category?: StringNullableFilter<"Template"> | string | null
+    createdAt?: DateTimeFilter<"Template"> | Date | string
+    updatedAt?: DateTimeFilter<"Template"> | Date | string
+  }, "id">
+
+  export type TemplateOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    content?: SortOrder
+    category?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TemplateCountOrderByAggregateInput
+    _max?: TemplateMaxOrderByAggregateInput
+    _min?: TemplateMinOrderByAggregateInput
+  }
+
+  export type TemplateScalarWhereWithAggregatesInput = {
+    AND?: TemplateScalarWhereWithAggregatesInput | TemplateScalarWhereWithAggregatesInput[]
+    OR?: TemplateScalarWhereWithAggregatesInput[]
+    NOT?: TemplateScalarWhereWithAggregatesInput | TemplateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Template"> | string
+    name?: StringWithAggregatesFilter<"Template"> | string
+    description?: StringNullableWithAggregatesFilter<"Template"> | string | null
+    content?: StringWithAggregatesFilter<"Template"> | string
+    category?: StringNullableWithAggregatesFilter<"Template"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Template"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Template"> | Date | string
+  }
+
   export type KnowledgeArticleWhereInput = {
     AND?: KnowledgeArticleWhereInput | KnowledgeArticleWhereInput[]
     OR?: KnowledgeArticleWhereInput[]
@@ -17732,7 +17741,7 @@ export namespace Prisma {
     id?: StringFilter<"KnowledgeArticle"> | string
     title?: StringFilter<"KnowledgeArticle"> | string
     content?: StringFilter<"KnowledgeArticle"> | string
-    category?: StringFilter<"KnowledgeArticle"> | string
+    category?: StringNullableFilter<"KnowledgeArticle"> | string | null
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
@@ -17744,7 +17753,7 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    category?: SortOrder
+    category?: SortOrderInput | SortOrder
     tags?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -17759,7 +17768,7 @@ export namespace Prisma {
     NOT?: KnowledgeArticleWhereInput | KnowledgeArticleWhereInput[]
     title?: StringFilter<"KnowledgeArticle"> | string
     content?: StringFilter<"KnowledgeArticle"> | string
-    category?: StringFilter<"KnowledgeArticle"> | string
+    category?: StringNullableFilter<"KnowledgeArticle"> | string | null
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
@@ -17771,7 +17780,7 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    category?: SortOrder
+    category?: SortOrderInput | SortOrder
     tags?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -17788,7 +17797,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     title?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     content?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
-    category?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
+    category?: StringNullableWithAggregatesFilter<"KnowledgeArticle"> | string | null
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeWithAggregatesFilter<"KnowledgeArticle"> | Date | string
@@ -17953,17 +17962,17 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
     categories?: CategoryCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17972,17 +17981,17 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17991,17 +18000,17 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
     categories?: CategoryUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -18010,17 +18019,17 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18029,9 +18038,9 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -18040,9 +18049,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -18051,9 +18060,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VerificationTokenCreateInput = {
@@ -18105,8 +18114,8 @@ export namespace Prisma {
     status?: $Enums.NoteStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutNotesInput
     category?: CategoryCreateNestedOneWithoutNotesInput
+    user: UserCreateNestedOneWithoutNotesInput
     tags?: NoteTagCreateNestedManyWithoutNoteInput
   }
 
@@ -18129,8 +18138,8 @@ export namespace Prisma {
     status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutNotesNestedInput
     category?: CategoryUpdateOneWithoutNotesNestedInput
+    user?: UserUpdateOneRequiredWithoutNotesNestedInput
     tags?: NoteTagUpdateManyWithoutNoteNestedInput
   }
 
@@ -18311,114 +18320,50 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateInput = {
+    id?: string
     note: NoteCreateNestedOneWithoutTagsInput
     tag: TagCreateNestedOneWithoutNotesInput
   }
 
   export type NoteTagUncheckedCreateInput = {
+    id?: string
     noteId: string
     tagId: string
   }
 
   export type NoteTagUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     note?: NoteUpdateOneRequiredWithoutTagsNestedInput
     tag?: TagUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type NoteTagUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagCreateManyInput = {
+    id?: string
     noteId: string
     tagId: string
   }
 
   export type NoteTagUpdateManyMutationInput = {
-
+    id?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type TemplateCreateInput = {
-    id?: string
-    name: string
-    description?: string | null
-    content: string
-    category: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type TemplateUncheckedCreateInput = {
-    id?: string
-    name: string
-    description?: string | null
-    content: string
-    category: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type TemplateUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TemplateUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TemplateCreateManyInput = {
-    id?: string
-    name: string
-    description?: string | null
-    content: string
-    category: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type TemplateUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TemplateUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DailyNoteCreateInput = {
     id?: string
     date: Date | string
     content: string
-    mood?: $Enums.Mood | null
+    mood?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutDailyNotesInput
@@ -18428,7 +18373,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: $Enums.Mood | null
+    mood?: string | null
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18438,7 +18383,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDailyNotesNestedInput
@@ -18448,7 +18393,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18458,7 +18403,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: $Enums.Mood | null
+    mood?: string | null
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18468,7 +18413,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18477,7 +18422,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18486,18 +18431,20 @@ export namespace Prisma {
   export type TaskCreateInput = {
     id?: string
     title: string
+    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutTasksInput
     project?: ProjectCreateNestedOneWithoutTasksInput
+    user: UserCreateNestedOneWithoutTasksInput
   }
 
   export type TaskUncheckedCreateInput = {
     id?: string
     title: string
+    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -18510,18 +18457,20 @@ export namespace Prisma {
   export type TaskUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutTasksNestedInput
     project?: ProjectUpdateOneWithoutTasksNestedInput
+    user?: UserUpdateOneRequiredWithoutTasksNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18534,6 +18483,7 @@ export namespace Prisma {
   export type TaskCreateManyInput = {
     id?: string
     title: string
+    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -18546,6 +18496,7 @@ export namespace Prisma {
   export type TaskUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18556,6 +18507,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18645,11 +18597,81 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TemplateCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    content: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TemplateUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    content: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TemplateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TemplateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TemplateCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    content: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TemplateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TemplateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type KnowledgeArticleCreateInput = {
     id?: string
     title: string
     content: string
-    category: string
+    category?: string | null
     tags?: KnowledgeArticleCreatetagsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18660,7 +18682,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category: string
+    category?: string | null
     tags?: KnowledgeArticleCreatetagsInput | string[]
     userId: string
     createdAt?: Date | string
@@ -18671,7 +18693,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18682,7 +18704,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18693,7 +18715,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category: string
+    category?: string | null
     tags?: KnowledgeArticleCreatetagsInput | string[]
     userId: string
     createdAt?: Date | string
@@ -18704,7 +18726,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18714,7 +18736,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18945,18 +18967,6 @@ export namespace Prisma {
     none?: AccountWhereInput
   }
 
-  export type SessionListRelationFilter = {
-    every?: SessionWhereInput
-    some?: SessionWhereInput
-    none?: SessionWhereInput
-  }
-
-  export type NoteListRelationFilter = {
-    every?: NoteWhereInput
-    some?: NoteWhereInput
-    none?: NoteWhereInput
-  }
-
   export type CategoryListRelationFilter = {
     every?: CategoryWhereInput
     some?: CategoryWhereInput
@@ -18969,10 +18979,16 @@ export namespace Prisma {
     none?: DailyNoteWhereInput
   }
 
-  export type TaskListRelationFilter = {
-    every?: TaskWhereInput
-    some?: TaskWhereInput
-    none?: TaskWhereInput
+  export type KnowledgeArticleListRelationFilter = {
+    every?: KnowledgeArticleWhereInput
+    some?: KnowledgeArticleWhereInput
+    none?: KnowledgeArticleWhereInput
+  }
+
+  export type NoteListRelationFilter = {
+    every?: NoteWhereInput
+    some?: NoteWhereInput
+    none?: NoteWhereInput
   }
 
   export type ProjectListRelationFilter = {
@@ -18981,21 +18997,19 @@ export namespace Prisma {
     none?: ProjectWhereInput
   }
 
-  export type KnowledgeArticleListRelationFilter = {
-    every?: KnowledgeArticleWhereInput
-    some?: KnowledgeArticleWhereInput
-    none?: KnowledgeArticleWhereInput
+  export type SessionListRelationFilter = {
+    every?: SessionWhereInput
+    some?: SessionWhereInput
+    none?: SessionWhereInput
+  }
+
+  export type TaskListRelationFilter = {
+    every?: TaskWhereInput
+    some?: TaskWhereInput
+    none?: TaskWhereInput
   }
 
   export type AccountOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type SessionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type NoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19007,7 +19021,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type TaskOrderByRelationAggregateInput = {
+  export type KnowledgeArticleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19015,7 +19033,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type KnowledgeArticleOrderByRelationAggregateInput = {
+  export type SessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19025,9 +19047,9 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
-    password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    password?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -19036,9 +19058,9 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
-    password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    password?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -19047,9 +19069,9 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
-    password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    password?: SortOrder
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -19229,55 +19251,21 @@ export namespace Prisma {
   }
 
   export type NoteTagCountOrderByAggregateInput = {
+    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
   }
 
   export type NoteTagMaxOrderByAggregateInput = {
+    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
   }
 
   export type NoteTagMinOrderByAggregateInput = {
+    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
-  }
-
-  export type TemplateCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type TemplateMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type TemplateMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type EnumMoodNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
-    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMoodNullableFilter<$PrismaModel> | $Enums.Mood | null
   }
 
   export type DailyNoteCountOrderByAggregateInput = {
@@ -19310,16 +19298,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type EnumMoodNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
-    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMoodNullableWithAggregatesFilter<$PrismaModel> | $Enums.Mood | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumMoodNullableFilter<$PrismaModel>
-    _max?: NestedEnumMoodNullableFilter<$PrismaModel>
-  }
-
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -19340,6 +19318,7 @@ export namespace Prisma {
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrder
@@ -19352,6 +19331,7 @@ export namespace Prisma {
   export type TaskMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrder
@@ -19364,6 +19344,7 @@ export namespace Prisma {
   export type TaskMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrder
@@ -19476,6 +19457,36 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type TemplateCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TemplateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TemplateMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -19570,20 +19581,6 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
-  export type SessionCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-  }
-
-  export type NoteCreateNestedManyWithoutUserInput = {
-    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
-    createMany?: NoteCreateManyUserInputEnvelope
-    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-  }
-
   export type CategoryCreateNestedManyWithoutUserInput = {
     create?: XOR<CategoryCreateWithoutUserInput, CategoryUncheckedCreateWithoutUserInput> | CategoryCreateWithoutUserInput[] | CategoryUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutUserInput | CategoryCreateOrConnectWithoutUserInput[]
@@ -19598,11 +19595,18 @@ export namespace Prisma {
     connect?: DailyNoteWhereUniqueInput | DailyNoteWhereUniqueInput[]
   }
 
-  export type TaskCreateNestedManyWithoutUserInput = {
-    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
-    createMany?: TaskCreateManyUserInputEnvelope
-    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  export type KnowledgeArticleCreateNestedManyWithoutUserInput = {
+    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
+    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
+    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+  }
+
+  export type NoteCreateNestedManyWithoutUserInput = {
+    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
+    createMany?: NoteCreateManyUserInputEnvelope
+    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
   }
 
   export type ProjectCreateNestedManyWithoutUserInput = {
@@ -19612,11 +19616,18 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
-  export type KnowledgeArticleCreateNestedManyWithoutUserInput = {
-    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
-    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
-    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+  export type SessionCreateNestedManyWithoutUserInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
+  export type TaskCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
@@ -19624,20 +19635,6 @@ export namespace Prisma {
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
     createMany?: AccountCreateManyUserInputEnvelope
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-  }
-
-  export type SessionUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-  }
-
-  export type NoteUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
-    createMany?: NoteCreateManyUserInputEnvelope
-    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
   }
 
   export type CategoryUncheckedCreateNestedManyWithoutUserInput = {
@@ -19654,11 +19651,18 @@ export namespace Prisma {
     connect?: DailyNoteWhereUniqueInput | DailyNoteWhereUniqueInput[]
   }
 
-  export type TaskUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
-    createMany?: TaskCreateManyUserInputEnvelope
-    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  export type KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
+    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
+    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+  }
+
+  export type NoteUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
+    createMany?: NoteCreateManyUserInputEnvelope
+    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
   }
 
   export type ProjectUncheckedCreateNestedManyWithoutUserInput = {
@@ -19668,11 +19672,18 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
-  export type KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
-    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
-    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+  export type SessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
+  export type TaskUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -19691,34 +19702,6 @@ export namespace Prisma {
     update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
-  }
-
-  export type SessionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
-  }
-
-  export type NoteUpdateManyWithoutUserNestedInput = {
-    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
-    upsert?: NoteUpsertWithWhereUniqueWithoutUserInput | NoteUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: NoteCreateManyUserInputEnvelope
-    set?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    disconnect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    delete?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    update?: NoteUpdateWithWhereUniqueWithoutUserInput | NoteUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: NoteUpdateManyWithWhereWithoutUserInput | NoteUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
   }
 
   export type CategoryUpdateManyWithoutUserNestedInput = {
@@ -19749,18 +19732,32 @@ export namespace Prisma {
     deleteMany?: DailyNoteScalarWhereInput | DailyNoteScalarWhereInput[]
   }
 
-  export type TaskUpdateManyWithoutUserNestedInput = {
-    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
-    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: TaskCreateManyUserInputEnvelope
-    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  export type KnowledgeArticleUpdateManyWithoutUserNestedInput = {
+    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
+    upsert?: KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput | KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
+    set?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    disconnect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    delete?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    update?: KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput | KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: KnowledgeArticleUpdateManyWithWhereWithoutUserInput | KnowledgeArticleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
+  }
+
+  export type NoteUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
+    upsert?: NoteUpsertWithWhereUniqueWithoutUserInput | NoteUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NoteCreateManyUserInputEnvelope
+    set?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    disconnect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    delete?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    update?: NoteUpdateWithWhereUniqueWithoutUserInput | NoteUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NoteUpdateManyWithWhereWithoutUserInput | NoteUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
   }
 
   export type ProjectUpdateManyWithoutUserNestedInput = {
@@ -19777,18 +19774,32 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type KnowledgeArticleUpdateManyWithoutUserNestedInput = {
-    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
-    upsert?: KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput | KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
-    set?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    disconnect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    delete?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    update?: KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput | KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: KnowledgeArticleUpdateManyWithWhereWithoutUserInput | KnowledgeArticleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
+  export type SessionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  }
+
+  export type TaskUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
@@ -19803,34 +19814,6 @@ export namespace Prisma {
     update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
-  }
-
-  export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
-  }
-
-  export type NoteUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
-    upsert?: NoteUpsertWithWhereUniqueWithoutUserInput | NoteUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: NoteCreateManyUserInputEnvelope
-    set?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    disconnect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    delete?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
-    update?: NoteUpdateWithWhereUniqueWithoutUserInput | NoteUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: NoteUpdateManyWithWhereWithoutUserInput | NoteUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
   }
 
   export type CategoryUncheckedUpdateManyWithoutUserNestedInput = {
@@ -19861,18 +19844,32 @@ export namespace Prisma {
     deleteMany?: DailyNoteScalarWhereInput | DailyNoteScalarWhereInput[]
   }
 
-  export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
-    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: TaskCreateManyUserInputEnvelope
-    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  export type KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
+    upsert?: KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput | KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
+    set?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    disconnect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    delete?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
+    update?: KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput | KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: KnowledgeArticleUpdateManyWithWhereWithoutUserInput | KnowledgeArticleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
+  }
+
+  export type NoteUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput> | NoteCreateWithoutUserInput[] | NoteUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NoteCreateOrConnectWithoutUserInput | NoteCreateOrConnectWithoutUserInput[]
+    upsert?: NoteUpsertWithWhereUniqueWithoutUserInput | NoteUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NoteCreateManyUserInputEnvelope
+    set?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    disconnect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    delete?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    connect?: NoteWhereUniqueInput | NoteWhereUniqueInput[]
+    update?: NoteUpdateWithWhereUniqueWithoutUserInput | NoteUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NoteUpdateManyWithWhereWithoutUserInput | NoteUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NoteScalarWhereInput | NoteScalarWhereInput[]
   }
 
   export type ProjectUncheckedUpdateManyWithoutUserNestedInput = {
@@ -19889,30 +19886,44 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput> | KnowledgeArticleCreateWithoutUserInput[] | KnowledgeArticleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: KnowledgeArticleCreateOrConnectWithoutUserInput | KnowledgeArticleCreateOrConnectWithoutUserInput[]
-    upsert?: KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput | KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: KnowledgeArticleCreateManyUserInputEnvelope
-    set?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    disconnect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    delete?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    connect?: KnowledgeArticleWhereUniqueInput | KnowledgeArticleWhereUniqueInput[]
-    update?: KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput | KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: KnowledgeArticleUpdateManyWithWhereWithoutUserInput | KnowledgeArticleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
+  export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutNotesInput = {
-    create?: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutNotesInput
-    connect?: UserWhereUniqueInput
+  export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type CategoryCreateNestedOneWithoutNotesInput = {
     create?: XOR<CategoryCreateWithoutNotesInput, CategoryUncheckedCreateWithoutNotesInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutNotesInput
     connect?: CategoryWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutNotesInput = {
+    create?: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotesInput
+    connect?: UserWhereUniqueInput
   }
 
   export type NoteTagCreateNestedManyWithoutNoteInput = {
@@ -19933,14 +19944,6 @@ export namespace Prisma {
     set?: $Enums.NoteStatus
   }
 
-  export type UserUpdateOneRequiredWithoutNotesNestedInput = {
-    create?: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutNotesInput
-    upsert?: UserUpsertWithoutNotesInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotesInput, UserUpdateWithoutNotesInput>, UserUncheckedUpdateWithoutNotesInput>
-  }
-
   export type CategoryUpdateOneWithoutNotesNestedInput = {
     create?: XOR<CategoryCreateWithoutNotesInput, CategoryUncheckedCreateWithoutNotesInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutNotesInput
@@ -19949,6 +19952,14 @@ export namespace Prisma {
     delete?: CategoryWhereInput | boolean
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutNotesInput, CategoryUpdateWithoutNotesInput>, CategoryUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutNotesNestedInput = {
+    create?: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotesInput
+    upsert?: UserUpsertWithoutNotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotesInput, UserUpdateWithoutNotesInput>, UserUncheckedUpdateWithoutNotesInput>
   }
 
   export type NoteTagUpdateManyWithoutNoteNestedInput = {
@@ -20111,10 +20122,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableEnumMoodFieldUpdateOperationsInput = {
-    set?: $Enums.Mood | null
-  }
-
   export type UserUpdateOneRequiredWithoutDailyNotesNestedInput = {
     create?: XOR<UserCreateWithoutDailyNotesInput, UserUncheckedCreateWithoutDailyNotesInput>
     connectOrCreate?: UserCreateOrConnectWithoutDailyNotesInput
@@ -20123,16 +20130,16 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDailyNotesInput, UserUpdateWithoutDailyNotesInput>, UserUncheckedUpdateWithoutDailyNotesInput>
   }
 
-  export type UserCreateNestedOneWithoutTasksInput = {
-    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
-    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type ProjectCreateNestedOneWithoutTasksInput = {
     create?: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutTasksInput
     connect?: ProjectWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutTasksInput = {
+    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
+    connect?: UserWhereUniqueInput
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -20143,14 +20150,6 @@ export namespace Prisma {
     set?: $Enums.TaskPriority
   }
 
-  export type UserUpdateOneRequiredWithoutTasksNestedInput = {
-    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
-    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
-    upsert?: UserUpsertWithoutTasksInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTasksInput, UserUpdateWithoutTasksInput>, UserUncheckedUpdateWithoutTasksInput>
-  }
-
   export type ProjectUpdateOneWithoutTasksNestedInput = {
     create?: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutTasksInput
@@ -20159,6 +20158,14 @@ export namespace Prisma {
     delete?: ProjectWhereInput | boolean
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTasksInput, ProjectUpdateWithoutTasksInput>, ProjectUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutTasksNestedInput = {
+    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
+    upsert?: UserUpsertWithoutTasksInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTasksInput, UserUpdateWithoutTasksInput>, UserUncheckedUpdateWithoutTasksInput>
   }
 
   export type UserCreateNestedOneWithoutProjectsInput = {
@@ -20430,23 +20437,6 @@ export namespace Prisma {
     _max?: NestedEnumNoteStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumMoodNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
-    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMoodNullableFilter<$PrismaModel> | $Enums.Mood | null
-  }
-
-  export type NestedEnumMoodNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
-    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMoodNullableWithAggregatesFilter<$PrismaModel> | $Enums.Mood | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumMoodNullableFilter<$PrismaModel>
-    _max?: NestedEnumMoodNullableFilter<$PrismaModel>
-  }
-
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -20527,16 +20517,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
+    password?: string | null
     categories?: CategoryCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -20545,16 +20535,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    password?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -20579,16 +20569,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -20597,16 +20587,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -20615,16 +20605,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
     categories?: CategoryCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -20633,16 +20623,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -20667,16 +20657,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
     categories?: CategoryUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -20685,16 +20675,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -20735,25 +20725,91 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type SessionCreateWithoutUserInput = {
+  export type CategoryCreateWithoutUserInput = {
     id?: string
-    sessionToken: string
-    expires: Date | string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: NoteCreateNestedManyWithoutCategoryInput
   }
 
-  export type SessionUncheckedCreateWithoutUserInput = {
+  export type CategoryUncheckedCreateWithoutUserInput = {
     id?: string
-    sessionToken: string
-    expires: Date | string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    notes?: NoteUncheckedCreateNestedManyWithoutCategoryInput
   }
 
-  export type SessionCreateOrConnectWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  export type CategoryCreateOrConnectWithoutUserInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutUserInput, CategoryUncheckedCreateWithoutUserInput>
   }
 
-  export type SessionCreateManyUserInputEnvelope = {
-    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
+  export type CategoryCreateManyUserInputEnvelope = {
+    data: CategoryCreateManyUserInput | CategoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DailyNoteCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    content: string
+    mood?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyNoteUncheckedCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    content: string
+    mood?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyNoteCreateOrConnectWithoutUserInput = {
+    where: DailyNoteWhereUniqueInput
+    create: XOR<DailyNoteCreateWithoutUserInput, DailyNoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type DailyNoteCreateManyUserInputEnvelope = {
+    data: DailyNoteCreateManyUserInput | DailyNoteCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type KnowledgeArticleCreateWithoutUserInput = {
+    id?: string
+    title: string
+    content: string
+    category?: string | null
+    tags?: KnowledgeArticleCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type KnowledgeArticleUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    content: string
+    category?: string | null
+    tags?: KnowledgeArticleCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type KnowledgeArticleCreateOrConnectWithoutUserInput = {
+    where: KnowledgeArticleWhereUniqueInput
+    create: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput>
+  }
+
+  export type KnowledgeArticleCreateManyUserInputEnvelope = {
+    data: KnowledgeArticleCreateManyUserInput | KnowledgeArticleCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -20789,96 +20845,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CategoryCreateWithoutUserInput = {
-    id?: string
-    name: string
-    description?: string | null
-    color?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    notes?: NoteCreateNestedManyWithoutCategoryInput
-  }
-
-  export type CategoryUncheckedCreateWithoutUserInput = {
-    id?: string
-    name: string
-    description?: string | null
-    color?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    notes?: NoteUncheckedCreateNestedManyWithoutCategoryInput
-  }
-
-  export type CategoryCreateOrConnectWithoutUserInput = {
-    where: CategoryWhereUniqueInput
-    create: XOR<CategoryCreateWithoutUserInput, CategoryUncheckedCreateWithoutUserInput>
-  }
-
-  export type CategoryCreateManyUserInputEnvelope = {
-    data: CategoryCreateManyUserInput | CategoryCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type DailyNoteCreateWithoutUserInput = {
-    id?: string
-    date: Date | string
-    content: string
-    mood?: $Enums.Mood | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DailyNoteUncheckedCreateWithoutUserInput = {
-    id?: string
-    date: Date | string
-    content: string
-    mood?: $Enums.Mood | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DailyNoteCreateOrConnectWithoutUserInput = {
-    where: DailyNoteWhereUniqueInput
-    create: XOR<DailyNoteCreateWithoutUserInput, DailyNoteUncheckedCreateWithoutUserInput>
-  }
-
-  export type DailyNoteCreateManyUserInputEnvelope = {
-    data: DailyNoteCreateManyUserInput | DailyNoteCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type TaskCreateWithoutUserInput = {
-    id?: string
-    title: string
-    completed?: boolean
-    priority?: $Enums.TaskPriority
-    dueDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    project?: ProjectCreateNestedOneWithoutTasksInput
-  }
-
-  export type TaskUncheckedCreateWithoutUserInput = {
-    id?: string
-    title: string
-    completed?: boolean
-    priority?: $Enums.TaskPriority
-    dueDate?: Date | string | null
-    projectId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type TaskCreateOrConnectWithoutUserInput = {
-    where: TaskWhereUniqueInput
-    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
-  }
-
-  export type TaskCreateManyUserInputEnvelope = {
-    data: TaskCreateManyUserInput | TaskCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ProjectCreateWithoutUserInput = {
     id?: string
     name: string
@@ -20911,33 +20877,59 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type KnowledgeArticleCreateWithoutUserInput = {
+  export type SessionCreateWithoutUserInput = {
+    id?: string
+    sessionToken: string
+    expires: Date | string
+  }
+
+  export type SessionUncheckedCreateWithoutUserInput = {
+    id?: string
+    sessionToken: string
+    expires: Date | string
+  }
+
+  export type SessionCreateOrConnectWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SessionCreateManyUserInputEnvelope = {
+    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskCreateWithoutUserInput = {
     id?: string
     title: string
-    content: string
-    category: string
-    tags?: KnowledgeArticleCreatetagsInput | string[]
+    description?: string | null
+    completed?: boolean
+    priority?: $Enums.TaskPriority
+    dueDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project?: ProjectCreateNestedOneWithoutTasksInput
+  }
+
+  export type TaskUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description?: string | null
+    completed?: boolean
+    priority?: $Enums.TaskPriority
+    dueDate?: Date | string | null
+    projectId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type KnowledgeArticleUncheckedCreateWithoutUserInput = {
-    id?: string
-    title: string
-    content: string
-    category: string
-    tags?: KnowledgeArticleCreatetagsInput | string[]
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type TaskCreateOrConnectWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
   }
 
-  export type KnowledgeArticleCreateOrConnectWithoutUserInput = {
-    where: KnowledgeArticleWhereUniqueInput
-    create: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput>
-  }
-
-  export type KnowledgeArticleCreateManyUserInputEnvelope = {
-    data: KnowledgeArticleCreateManyUserInput | KnowledgeArticleCreateManyUserInput[]
+  export type TaskCreateManyUserInputEnvelope = {
+    data: TaskCreateManyUserInput | TaskCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -20973,62 +20965,6 @@ export namespace Prisma {
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
     session_state?: StringNullableFilter<"Account"> | string | null
-  }
-
-  export type SessionUpsertWithWhereUniqueWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
-    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
-  }
-
-  export type SessionUpdateWithWhereUniqueWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    data: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
-  }
-
-  export type SessionUpdateManyWithWhereWithoutUserInput = {
-    where: SessionScalarWhereInput
-    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type SessionScalarWhereInput = {
-    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    OR?: SessionScalarWhereInput[]
-    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    id?: StringFilter<"Session"> | string
-    sessionToken?: StringFilter<"Session"> | string
-    userId?: StringFilter<"Session"> | string
-    expires?: DateTimeFilter<"Session"> | Date | string
-  }
-
-  export type NoteUpsertWithWhereUniqueWithoutUserInput = {
-    where: NoteWhereUniqueInput
-    update: XOR<NoteUpdateWithoutUserInput, NoteUncheckedUpdateWithoutUserInput>
-    create: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput>
-  }
-
-  export type NoteUpdateWithWhereUniqueWithoutUserInput = {
-    where: NoteWhereUniqueInput
-    data: XOR<NoteUpdateWithoutUserInput, NoteUncheckedUpdateWithoutUserInput>
-  }
-
-  export type NoteUpdateManyWithWhereWithoutUserInput = {
-    where: NoteScalarWhereInput
-    data: XOR<NoteUpdateManyMutationInput, NoteUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type NoteScalarWhereInput = {
-    AND?: NoteScalarWhereInput | NoteScalarWhereInput[]
-    OR?: NoteScalarWhereInput[]
-    NOT?: NoteScalarWhereInput | NoteScalarWhereInput[]
-    id?: StringFilter<"Note"> | string
-    title?: StringFilter<"Note"> | string
-    content?: StringFilter<"Note"> | string
-    status?: EnumNoteStatusFilter<"Note"> | $Enums.NoteStatus
-    createdAt?: DateTimeFilter<"Note"> | Date | string
-    updatedAt?: DateTimeFilter<"Note"> | Date | string
-    userId?: StringFilter<"Note"> | string
-    categoryId?: StringNullableFilter<"Note"> | string | null
   }
 
   export type CategoryUpsertWithWhereUniqueWithoutUserInput = {
@@ -21083,41 +21019,70 @@ export namespace Prisma {
     id?: StringFilter<"DailyNote"> | string
     date?: DateTimeFilter<"DailyNote"> | Date | string
     content?: StringFilter<"DailyNote"> | string
-    mood?: EnumMoodNullableFilter<"DailyNote"> | $Enums.Mood | null
+    mood?: StringNullableFilter<"DailyNote"> | string | null
     userId?: StringFilter<"DailyNote"> | string
     createdAt?: DateTimeFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeFilter<"DailyNote"> | Date | string
   }
 
-  export type TaskUpsertWithWhereUniqueWithoutUserInput = {
-    where: TaskWhereUniqueInput
-    update: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
-    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  export type KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput = {
+    where: KnowledgeArticleWhereUniqueInput
+    update: XOR<KnowledgeArticleUpdateWithoutUserInput, KnowledgeArticleUncheckedUpdateWithoutUserInput>
+    create: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput>
   }
 
-  export type TaskUpdateWithWhereUniqueWithoutUserInput = {
-    where: TaskWhereUniqueInput
-    data: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+  export type KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput = {
+    where: KnowledgeArticleWhereUniqueInput
+    data: XOR<KnowledgeArticleUpdateWithoutUserInput, KnowledgeArticleUncheckedUpdateWithoutUserInput>
   }
 
-  export type TaskUpdateManyWithWhereWithoutUserInput = {
-    where: TaskScalarWhereInput
-    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutUserInput>
+  export type KnowledgeArticleUpdateManyWithWhereWithoutUserInput = {
+    where: KnowledgeArticleScalarWhereInput
+    data: XOR<KnowledgeArticleUpdateManyMutationInput, KnowledgeArticleUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type TaskScalarWhereInput = {
-    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
-    OR?: TaskScalarWhereInput[]
-    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
-    id?: StringFilter<"Task"> | string
-    title?: StringFilter<"Task"> | string
-    completed?: BoolFilter<"Task"> | boolean
-    priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
-    dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
-    userId?: StringFilter<"Task"> | string
-    projectId?: StringNullableFilter<"Task"> | string | null
-    createdAt?: DateTimeFilter<"Task"> | Date | string
-    updatedAt?: DateTimeFilter<"Task"> | Date | string
+  export type KnowledgeArticleScalarWhereInput = {
+    AND?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
+    OR?: KnowledgeArticleScalarWhereInput[]
+    NOT?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
+    id?: StringFilter<"KnowledgeArticle"> | string
+    title?: StringFilter<"KnowledgeArticle"> | string
+    content?: StringFilter<"KnowledgeArticle"> | string
+    category?: StringNullableFilter<"KnowledgeArticle"> | string | null
+    tags?: StringNullableListFilter<"KnowledgeArticle">
+    userId?: StringFilter<"KnowledgeArticle"> | string
+    createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
+    updatedAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
+  }
+
+  export type NoteUpsertWithWhereUniqueWithoutUserInput = {
+    where: NoteWhereUniqueInput
+    update: XOR<NoteUpdateWithoutUserInput, NoteUncheckedUpdateWithoutUserInput>
+    create: XOR<NoteCreateWithoutUserInput, NoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type NoteUpdateWithWhereUniqueWithoutUserInput = {
+    where: NoteWhereUniqueInput
+    data: XOR<NoteUpdateWithoutUserInput, NoteUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NoteUpdateManyWithWhereWithoutUserInput = {
+    where: NoteScalarWhereInput
+    data: XOR<NoteUpdateManyMutationInput, NoteUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NoteScalarWhereInput = {
+    AND?: NoteScalarWhereInput | NoteScalarWhereInput[]
+    OR?: NoteScalarWhereInput[]
+    NOT?: NoteScalarWhereInput | NoteScalarWhereInput[]
+    id?: StringFilter<"Note"> | string
+    title?: StringFilter<"Note"> | string
+    content?: StringFilter<"Note"> | string
+    status?: EnumNoteStatusFilter<"Note"> | $Enums.NoteStatus
+    createdAt?: DateTimeFilter<"Note"> | Date | string
+    updatedAt?: DateTimeFilter<"Note"> | Date | string
+    userId?: StringFilter<"Note"> | string
+    categoryId?: StringNullableFilter<"Note"> | string | null
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutUserInput = {
@@ -21150,75 +21115,62 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
 
-  export type KnowledgeArticleUpsertWithWhereUniqueWithoutUserInput = {
-    where: KnowledgeArticleWhereUniqueInput
-    update: XOR<KnowledgeArticleUpdateWithoutUserInput, KnowledgeArticleUncheckedUpdateWithoutUserInput>
-    create: XOR<KnowledgeArticleCreateWithoutUserInput, KnowledgeArticleUncheckedCreateWithoutUserInput>
+  export type SessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
   }
 
-  export type KnowledgeArticleUpdateWithWhereUniqueWithoutUserInput = {
-    where: KnowledgeArticleWhereUniqueInput
-    data: XOR<KnowledgeArticleUpdateWithoutUserInput, KnowledgeArticleUncheckedUpdateWithoutUserInput>
+  export type SessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    data: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
   }
 
-  export type KnowledgeArticleUpdateManyWithWhereWithoutUserInput = {
-    where: KnowledgeArticleScalarWhereInput
-    data: XOR<KnowledgeArticleUpdateManyMutationInput, KnowledgeArticleUncheckedUpdateManyWithoutUserInput>
+  export type SessionUpdateManyWithWhereWithoutUserInput = {
+    where: SessionScalarWhereInput
+    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type KnowledgeArticleScalarWhereInput = {
-    AND?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
-    OR?: KnowledgeArticleScalarWhereInput[]
-    NOT?: KnowledgeArticleScalarWhereInput | KnowledgeArticleScalarWhereInput[]
-    id?: StringFilter<"KnowledgeArticle"> | string
-    title?: StringFilter<"KnowledgeArticle"> | string
-    content?: StringFilter<"KnowledgeArticle"> | string
-    category?: StringFilter<"KnowledgeArticle"> | string
-    tags?: StringNullableListFilter<"KnowledgeArticle">
-    userId?: StringFilter<"KnowledgeArticle"> | string
-    createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
-    updatedAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
+  export type SessionScalarWhereInput = {
+    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    OR?: SessionScalarWhereInput[]
+    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    id?: StringFilter<"Session"> | string
+    sessionToken?: StringFilter<"Session"> | string
+    userId?: StringFilter<"Session"> | string
+    expires?: DateTimeFilter<"Session"> | Date | string
   }
 
-  export type UserCreateWithoutNotesInput = {
-    id?: string
-    name?: string | null
-    email: string
-    emailVerified?: Date | string | null
-    image?: string | null
-    password?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    categories?: CategoryCreateNestedManyWithoutUserInput
-    dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
-    knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+  export type TaskUpsertWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
   }
 
-  export type UserUncheckedCreateWithoutNotesInput = {
-    id?: string
-    name?: string | null
-    email: string
-    emailVerified?: Date | string | null
-    image?: string | null
-    password?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
-    dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
-    knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+  export type TaskUpdateWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserCreateOrConnectWithoutNotesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+  export type TaskUpdateManyWithWhereWithoutUserInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TaskScalarWhereInput = {
+    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    OR?: TaskScalarWhereInput[]
+    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    id?: StringFilter<"Task"> | string
+    title?: StringFilter<"Task"> | string
+    description?: StringNullableFilter<"Task"> | string | null
+    completed?: BoolFilter<"Task"> | boolean
+    priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
+    dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
+    userId?: StringFilter<"Task"> | string
+    projectId?: StringNullableFilter<"Task"> | string | null
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
   }
 
   export type CategoryCreateWithoutNotesInput = {
@@ -21246,11 +21198,54 @@ export namespace Prisma {
     create: XOR<CategoryCreateWithoutNotesInput, CategoryUncheckedCreateWithoutNotesInput>
   }
 
+  export type UserCreateWithoutNotesInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    password?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    categories?: CategoryCreateNestedManyWithoutUserInput
+    dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
+    knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutNotesInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    password?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
+    dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
+    knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutNotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+  }
+
   export type NoteTagCreateWithoutNoteInput = {
+    id?: string
     tag: TagCreateNestedOneWithoutNotesInput
   }
 
   export type NoteTagUncheckedCreateWithoutNoteInput = {
+    id?: string
     tagId: string
   }
 
@@ -21262,53 +21257,6 @@ export namespace Prisma {
   export type NoteTagCreateManyNoteInputEnvelope = {
     data: NoteTagCreateManyNoteInput | NoteTagCreateManyNoteInput[]
     skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithoutNotesInput = {
-    update: XOR<UserUpdateWithoutNotesInput, UserUncheckedUpdateWithoutNotesInput>
-    create: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutNotesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutNotesInput, UserUncheckedUpdateWithoutNotesInput>
-  }
-
-  export type UserUpdateWithoutNotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    categories?: CategoryUpdateManyWithoutUserNestedInput
-    dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
-    knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutNotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
-    dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
-    knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryUpsertWithoutNotesInput = {
@@ -21342,6 +21290,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserUpsertWithoutNotesInput = {
+    update: XOR<UserUpdateWithoutNotesInput, UserUncheckedUpdateWithoutNotesInput>
+    create: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotesInput, UserUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type UserUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    categories?: CategoryUpdateManyWithoutUserNestedInput
+    dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
+    knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
+    dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+    knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type NoteTagUpsertWithWhereUniqueWithoutNoteInput = {
     where: NoteTagWhereUniqueInput
     update: XOR<NoteTagUpdateWithoutNoteInput, NoteTagUncheckedUpdateWithoutNoteInput>
@@ -21362,6 +21357,7 @@ export namespace Prisma {
     AND?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
     OR?: NoteTagScalarWhereInput[]
     NOT?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
+    id?: StringFilter<"NoteTag"> | string
     noteId?: StringFilter<"NoteTag"> | string
     tagId?: StringFilter<"NoteTag"> | string
   }
@@ -21372,16 +21368,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCategoriesInput = {
@@ -21390,16 +21386,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCategoriesInput = {
@@ -21456,16 +21452,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCategoriesInput = {
@@ -21474,16 +21470,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type NoteUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -21503,10 +21499,12 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateWithoutTagInput = {
+    id?: string
     note: NoteCreateNestedOneWithoutTagsInput
   }
 
   export type NoteTagUncheckedCreateWithoutTagInput = {
+    id?: string
     noteId: string
   }
 
@@ -21543,8 +21541,8 @@ export namespace Prisma {
     status?: $Enums.NoteStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutNotesInput
     category?: CategoryCreateNestedOneWithoutNotesInput
+    user: UserCreateNestedOneWithoutNotesInput
   }
 
   export type NoteUncheckedCreateWithoutTagsInput = {
@@ -21602,8 +21600,8 @@ export namespace Prisma {
     status?: EnumNoteStatusFieldUpdateOperationsInput | $Enums.NoteStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutNotesNestedInput
     category?: CategoryUpdateOneWithoutNotesNestedInput
+    user?: UserUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type NoteUncheckedUpdateWithoutTagsInput = {
@@ -21650,16 +21648,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
     categories?: CategoryCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDailyNotesInput = {
@@ -21668,16 +21666,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDailyNotesInput = {
@@ -21702,16 +21700,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
     categories?: CategoryUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyNotesInput = {
@@ -21720,57 +21718,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutTasksInput = {
-    id?: string
-    name?: string | null
-    email: string
-    emailVerified?: Date | string | null
-    image?: string | null
-    password?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
-    categories?: CategoryCreateNestedManyWithoutUserInput
-    dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    projects?: ProjectCreateNestedManyWithoutUserInput
-    knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutTasksInput = {
-    id?: string
-    name?: string | null
-    email: string
-    emailVerified?: Date | string | null
-    image?: string | null
-    password?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
-    dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
-    knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutTasksInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -21800,51 +21757,45 @@ export namespace Prisma {
     create: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
   }
 
-  export type UserUpsertWithoutTasksInput = {
-    update: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+  export type UserCreateWithoutTasksInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    password?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    categories?: CategoryCreateNestedManyWithoutUserInput
+    dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
+    knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTasksInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    password?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
+    dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
+    knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTasksInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutTasksInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
-  }
-
-  export type UserUpdateWithoutTasksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
-    categories?: CategoryUpdateManyWithoutUserNestedInput
-    dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    projects?: ProjectUpdateManyWithoutUserNestedInput
-    knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutTasksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
-    dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
-    knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectUpsertWithoutTasksInput = {
@@ -21880,22 +21831,69 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserUpsertWithoutTasksInput = {
+    update: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+    create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTasksInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    categories?: CategoryUpdateManyWithoutUserNestedInput
+    dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
+    knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
+    dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
+    knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutProjectsInput = {
     id?: string
     name?: string | null
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
     categories?: CategoryCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsInput = {
@@ -21904,16 +21902,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     knowledgeArticles?: KnowledgeArticleUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsInput = {
@@ -21924,6 +21922,7 @@ export namespace Prisma {
   export type TaskCreateWithoutProjectInput = {
     id?: string
     title: string
+    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -21935,6 +21934,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutProjectInput = {
     id?: string
     title: string
+    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -21970,16 +21970,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
     categories?: CategoryUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -21988,16 +21988,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     knowledgeArticles?: KnowledgeArticleUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutProjectInput = {
@@ -22022,16 +22022,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    notes?: NoteCreateNestedManyWithoutUserInput
     categories?: CategoryCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteCreateNestedManyWithoutUserInput
-    tasks?: TaskCreateNestedManyWithoutUserInput
+    notes?: NoteCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutKnowledgeArticlesInput = {
@@ -22040,16 +22040,16 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
-    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    password?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     categories?: CategoryUncheckedCreateNestedManyWithoutUserInput
     dailyNotes?: DailyNoteUncheckedCreateNestedManyWithoutUserInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    notes?: NoteUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutKnowledgeArticlesInput = {
@@ -22074,16 +22074,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    notes?: NoteUpdateManyWithoutUserNestedInput
     categories?: CategoryUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUpdateManyWithoutUserNestedInput
-    tasks?: TaskUpdateManyWithoutUserNestedInput
+    notes?: NoteUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutKnowledgeArticlesInput = {
@@ -22092,16 +22092,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutUserNestedInput
     dailyNotes?: DailyNoteUncheckedUpdateManyWithoutUserNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -22118,22 +22118,6 @@ export namespace Prisma {
     session_state?: string | null
   }
 
-  export type SessionCreateManyUserInput = {
-    id?: string
-    sessionToken: string
-    expires: Date | string
-  }
-
-  export type NoteCreateManyUserInput = {
-    id?: string
-    title: string
-    content: string
-    status?: $Enums.NoteStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    categoryId?: string | null
-  }
-
   export type CategoryCreateManyUserInput = {
     id?: string
     name: string
@@ -22147,20 +22131,29 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: $Enums.Mood | null
+    mood?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type TaskCreateManyUserInput = {
+  export type KnowledgeArticleCreateManyUserInput = {
     id?: string
     title: string
-    completed?: boolean
-    priority?: $Enums.TaskPriority
-    dueDate?: Date | string | null
-    projectId?: string | null
+    content: string
+    category?: string | null
+    tags?: KnowledgeArticleCreatetagsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type NoteCreateManyUserInput = {
+    id?: string
+    title: string
+    content: string
+    status?: $Enums.NoteStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    categoryId?: string | null
   }
 
   export type ProjectCreateManyUserInput = {
@@ -22173,12 +22166,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type KnowledgeArticleCreateManyUserInput = {
+  export type SessionCreateManyUserInput = {
+    id?: string
+    sessionToken: string
+    expires: Date | string
+  }
+
+  export type TaskCreateManyUserInput = {
     id?: string
     title: string
-    content: string
-    category: string
-    tags?: KnowledgeArticleCreatetagsInput | string[]
+    description?: string | null
+    completed?: boolean
+    priority?: $Enums.TaskPriority
+    dueDate?: Date | string | null
+    projectId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22225,22 +22226,90 @@ export namespace Prisma {
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type SessionUpdateWithoutUserInput = {
+  export type CategoryUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sessionToken?: StringFieldUpdateOperationsInput | string
-    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: NoteUpdateManyWithoutCategoryNestedInput
   }
 
-  export type SessionUncheckedUpdateWithoutUserInput = {
+  export type CategoryUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sessionToken?: StringFieldUpdateOperationsInput | string
-    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: NoteUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
-  export type SessionUncheckedUpdateManyWithoutUserInput = {
+  export type CategoryUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sessionToken?: StringFieldUpdateOperationsInput | string
-    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyNoteUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    content?: StringFieldUpdateOperationsInput | string
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyNoteUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    content?: StringFieldUpdateOperationsInput | string
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyNoteUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    content?: StringFieldUpdateOperationsInput | string
+    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type KnowledgeArticleUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: KnowledgeArticleUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type KnowledgeArticleUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: KnowledgeArticleUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type KnowledgeArticleUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: KnowledgeArticleUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NoteUpdateWithoutUserInput = {
@@ -22275,95 +22344,6 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type CategoryUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    notes?: NoteUpdateManyWithoutCategoryNestedInput
-  }
-
-  export type CategoryUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    notes?: NoteUncheckedUpdateManyWithoutCategoryNestedInput
-  }
-
-  export type CategoryUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DailyNoteUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DailyNoteUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DailyNoteUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TaskUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneWithoutTasksNestedInput
-  }
-
-  export type TaskUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    projectId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TaskUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    projectId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ProjectUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -22396,49 +22376,77 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type KnowledgeArticleUpdateWithoutUserInput = {
+  export type SessionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionToken?: StringFieldUpdateOperationsInput | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionToken?: StringFieldUpdateOperationsInput | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionToken?: StringFieldUpdateOperationsInput | string
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    tags?: KnowledgeArticleUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneWithoutTasksNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type KnowledgeArticleUncheckedUpdateWithoutUserInput = {
+  export type TaskUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    tags?: KnowledgeArticleUpdatetagsInput | string[]
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type KnowledgeArticleUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    tags?: KnowledgeArticleUpdatetagsInput | string[]
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NoteTagCreateManyNoteInput = {
+    id?: string
     tagId: string
   }
 
   export type NoteTagUpdateWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
     tag?: TagUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type NoteTagUncheckedUpdateWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagUncheckedUpdateManyWithoutNoteInput = {
+    id?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -22485,24 +22493,29 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateManyTagInput = {
+    id?: string
     noteId: string
   }
 
   export type NoteTagUpdateWithoutTagInput = {
+    id?: StringFieldUpdateOperationsInput | string
     note?: NoteUpdateOneRequiredWithoutTagsNestedInput
   }
 
   export type NoteTagUncheckedUpdateWithoutTagInput = {
+    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagUncheckedUpdateManyWithoutTagInput = {
+    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TaskCreateManyProjectInput = {
     id?: string
     title: string
+    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -22514,6 +22527,7 @@ export namespace Prisma {
   export type TaskUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22525,6 +22539,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22536,6 +22551,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

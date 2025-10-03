@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "My Awesome Notes - Productivity Hub",
-  description: "Your all-in-one productivity hub for notes, tasks, projects, and knowledge management",
+  title: "My Notes App",
+  description: "Your note-taking workspace is ready",
   keywords: ["notes", "tasks", "productivity", "project management", "knowledge base"],
-  authors: [{ name: "My Awesome Notes" }],
+  authors: [{ name: "My Notes App" }],
   openGraph: {
-    title: "My Awesome Notes - Productivity Hub",
-    description: "Your all-in-one productivity hub for notes, tasks, projects, and knowledge management",
+    title: "My Notes App",
+    description: "Your note-taking workspace is ready",
     type: "website",
   },
 };
@@ -32,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-app-background`}
       >
         <AuthProvider>
           <AppLayout>{children}</AppLayout>

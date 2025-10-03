@@ -1,79 +1,172 @@
 import { Metadata } from 'next'
 import { PrismaClient } from '@/generated/prisma'
-import { FileText, FolderOpen, CheckSquare, TrendingUp } from 'lucide-react'
+import { FileText, FolderOpen, CheckSquare, TrendingUp, Plus, Eye } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
+import { formatDistanceToNow } from 'date-fns'
 
 export const metadata: Metadata = {
-  title: 'Dashboard - My Awesome Notes',
-  description: 'Overview of your notes, tasks, and projects',
+  title: 'Dashboard - My Notes App',
+  description: 'View your notes dashboard with recent activity and statistics',
 }
 
 const prisma = new PrismaClient()
 
 async function getDashboardData() {
-  // TODO: In production, filter by actual user ID from session
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@example.com' },
-  })
+  try {
+    // Get demo user (in production, this would come from session/auth)
+    const demoUser = await prisma.user.findUnique({
+      where: { email: 'demo@myawesomeapp.com' },
+    })
 
-  if (!demoUser) {
+    if (!demoUser) {
+      return {
+        stats: {
+          totalNotes: 0,
+          notesByStatus: { DRAFT: 0, PUBLISHED: 0, ARCHIVED: 0 },
+          totalCategories: 0,
+          totalTasks: 0,
+          completedTasks: 0,
+          activeProjects: 0,
+        },
+        recentNotes: [],
+        hasData: false,
+      }
+    }
+
+    // Get all required data in parallel
+    const [
+      totalNotes,
+      notesByStatus,
+      totalCategories,
+      totalTasks,
+      completedTasks,
+      activeProjects,
+      recentNotes,
+    ] = await Promise.all([
+      // Total note count
+      prisma.note.count({ where: { userId: demoUser.id } }),
+      
+      // Notes by status (group count)
+      prisma.note.groupBy({
+        by: ['status'],
+        where: { userId: demoUser.id },
+        _count: { status: true },
+      }),
+      
+      // Total categories count
+      prisma.category.count({ where: { userId: demoUser.id } }),
+      
+      // Total tasks count
+      prisma.task.count({ where: { userId: demoUser.id } }),
+      
+      // Completed tasks count
+      prisma.task.count({ 
+        where: { 
+          userId: demoUser.id,
+          completed: true 
+        } 
+      }),
+      
+      // Active projects count
+      prisma.project.count({ 
+        where: { 
+          userId: demoUser.id,
+          status: 'IN_PROGRESS' 
+        } 
+      }),
+      
+      // Recent 5 notes with category
+      prisma.note.findMany({
+        where: { userId: demoUser.id },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        include: {
+          category: true,
+        },
+      }),
+    ])
+
+    // Transform notes by status into object
+    const statusCounts = notesByStatus.reduce((acc, item) => {
+      acc[item.status] = item._count.status
+      return acc
+    }, {} as Record<string, number>)
+
     return {
-      stats: { notes: 0, projects: 0, tasks: 0, categories: 0 },
+      stats: {
+        totalNotes,
+        notesByStatus: {
+          DRAFT: statusCounts.DRAFT || 0,
+          PUBLISHED: statusCounts.PUBLISHED || 0,
+          ARCHIVED: statusCounts.ARCHIVED || 0,
+        },
+        totalCategories,
+        totalTasks,
+        completedTasks,
+        activeProjects,
+      },
+      recentNotes,
+      hasData: totalNotes > 0,
+    }
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error)
+    return {
+      stats: {
+        totalNotes: 0,
+        notesByStatus: { DRAFT: 0, PUBLISHED: 0, ARCHIVED: 0 },
+        totalCategories: 0,
+        totalTasks: 0,
+        completedTasks: 0,
+        activeProjects: 0,
+      },
       recentNotes: [],
-      projects: [],
-      upcomingTasks: [],
+      hasData: false,
     }
   }
+}
 
-  const [notes, projects, tasks, categories, recentNotes, upcomingTasks] = await Promise.all([
-    prisma.note.count({ where: { userId: demoUser.id } }),
-    prisma.project.count({ where: { userId: demoUser.id } }),
-    prisma.task.count({ where: { userId: demoUser.id } }),
-    prisma.category.count({ where: { userId: demoUser.id } }),
-    prisma.note.findMany({
-      where: { userId: demoUser.id },
-      orderBy: { updatedAt: 'desc' },
-      take: 5,
-      include: {
-        category: true,
-      },
-    }),
-    prisma.task.findMany({
-      where: {
-        userId: demoUser.id,
-        completed: false,
-        dueDate: { gte: new Date() },
-      },
-      orderBy: { dueDate: 'asc' },
-      take: 5,
-      include: {
-        project: true,
-      },
-    }),
-  ])
+function getStatusBadgeVariant(status: string) {
+  switch (status) {
+    case 'DRAFT':
+      return 'bg-warning-orange text-white'
+    case 'PUBLISHED':
+      return 'bg-primary-blue text-white'
+    case 'ARCHIVED':
+      return 'bg-accent-cyan text-white'
+    default:
+      return 'bg-gray-500 text-white'
+  }
+}
 
-  const projectsList = await prisma.project.findMany({
-    where: { userId: demoUser.id },
-    orderBy: { updatedAt: 'desc' },
-    take: 4,
-  })
-
-  return {
-    stats: { notes, projects, tasks, categories },
-    recentNotes,
-    projects: projectsList,
-    upcomingTasks,
+function formatDate(date: Date) {
+  const now = new Date()
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
+  
+  if (diffInDays === 0) {
+    return 'Today'
+  } else if (diffInDays === 1) {
+    return 'Yesterday'
+  } else if (diffInDays < 7) {
+    return `${diffInDays} days ago`
+  } else {
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    })
   }
 }
 
 export default async function DashboardPage() {
-  const { stats, recentNotes, projects, upcomingTasks } = await getDashboardData()
+  const { stats, recentNotes, hasData } = await getDashboardData()
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-8 p-4 md:p-6 lg:p-8">
+      {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
         <p className="text-muted-foreground">
@@ -81,261 +174,220 @@ export default async function DashboardPage() {
         </p>
       </div>
 
+      {/* Empty State */}
+      {!hasData && (
+        <Alert className="border-warning-orange/20 bg-warning-orange/5">
+          <AlertDescription className="text-center py-8">
+            <div className="space-y-4">
+              <p className="text-lg font-medium">No notes yet. Create your first note!</p>
+              <p className="text-muted-foreground">
+                Get started by creating your first note to organize your thoughts and ideas.
+              </p>
+              <Button asChild className="bg-primary-blue hover:bg-primary-blue/90 text-white">
+                <Link href="/notes">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create New Note
+                </Link>
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border-l-4 border-l-primary">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+        {/* Total Notes */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <FileText className="w-4 h-4 text-primary-blue" />
               Total Notes
             </CardTitle>
-            <FileText className="w-4 h-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{stats.notes}</div>
+            <div className="text-3xl font-bold text-primary-blue">{stats.totalNotes}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Across {stats.categories} categories
+              Across {stats.totalCategories} categories
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-secondary">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        {/* Notes by Status - Draft */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active Projects
+              Draft Notes
             </CardTitle>
-            <FolderOpen className="w-4 h-4 text-secondary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{stats.projects}</div>
+            <div className="text-3xl font-bold text-warning-orange">{stats.notesByStatus.DRAFT}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              In progress & planning
+              In progress
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-warning">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        {/* Notes by Status - Published */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
+              Published Notes
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-primary-blue">{stats.notesByStatus.PUBLISHED}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Ready to share
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Notes by Status - Archived */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Archived Notes
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-accent-cyan">{stats.notesByStatus.ARCHIVED}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Stored away
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Total Categories */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <FolderOpen className="w-4 h-4 text-accent-cyan" />
+              Total Categories
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-accent-cyan">{stats.totalCategories}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Organized content
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Total Tasks */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <CheckSquare className="w-4 h-4 text-warning-orange" />
               Total Tasks
             </CardTitle>
-            <CheckSquare className="w-4 h-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{stats.tasks}</div>
+            <div className="text-3xl font-bold text-warning-orange">{stats.totalTasks}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {upcomingTasks.length} upcoming
+              {stats.completedTasks} completed
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-chart-4">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Productivity
+        {/* Active Projects */}
+        <Card className="bg-white shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary-blue" />
+              Active Projects
             </CardTitle>
-            <TrendingUp className="w-4 h-4 text-chart-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">85%</div>
+            <div className="text-3xl font-bold text-primary-blue">{stats.activeProjects}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              +12% from last week
+              In progress
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Notes */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Recent Notes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {recentNotes.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                No notes yet. Create your first note to get started!
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {recentNotes.map((note) => (
-                  <Link
-                    key={note.id}
-                    href={`/notes/${note.id}`}
-                    className="block p-3 rounded-lg hover:bg-accent transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-foreground truncate">
-                          {note.title}
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(note.updatedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {note.category && (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs"
-                            style={{ backgroundColor: note.category.color + '20', color: note.category.color }}
-                          >
-                            {note.category.name}
-                          </Badge>
-                        )}
-                        <Badge
-                          variant={
-                            note.status === 'PUBLISHED'
-                              ? 'default'
-                              : note.status === 'DRAFT'
-                              ? 'outline'
-                              : 'secondary'
-                          }
-                          className="text-xs"
-                        >
-                          {note.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-            <Link
-              href="/notes"
-              className="block text-center text-sm text-primary hover:text-primary/80 mt-4 font-medium"
-            >
-              View all notes →
-            </Link>
-          </CardContent>
-        </Card>
-
-        {/* Upcoming Tasks */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Upcoming Tasks</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {upcomingTasks.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                No upcoming tasks. You're all caught up! 🎉
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {upcomingTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mt-1 rounded border-input"
-                      defaultChecked={task.completed}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm text-foreground">
-                        {task.title}
-                      </h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        {task.dueDate && (
-                          <span className="text-xs text-muted-foreground">
-                            Due: {new Date(task.dueDate).toLocaleDateString()}
-                          </span>
-                        )}
-                        {task.project && (
-                          <Badge variant="outline" className="text-xs">
-                            {task.project.name}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <Badge
-                      variant={
-                        task.priority === 'HIGH'
-                          ? 'destructive'
-                          : task.priority === 'MEDIUM'
-                          ? 'default'
-                          : 'secondary'
-                      }
-                      className="text-xs"
-                    >
-                      {task.priority}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            )}
-            <Link
-              href="/tasks"
-              className="block text-center text-sm text-primary hover:text-primary/80 mt-4 font-medium"
-            >
-              View all tasks →
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Projects Overview */}
-      <Card>
+      {/* Recent Notes Section */}
+      <Card className="bg-white shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg">Active Projects</CardTitle>
+          <h2 className="text-xl font-semibold text-foreground">Recent Notes</h2>
         </CardHeader>
         <CardContent>
-          {projects.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              No projects yet. Start organizing your work into projects!
-            </p>
+          {recentNotes.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground mb-4">No notes yet. Create your first note!</p>
+              <Button asChild className="bg-primary-blue hover:bg-primary-blue/90 text-white">
+                <Link href="/notes">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create New Note
+                </Link>
+              </Button>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {projects.map((project) => (
+            <div className="space-y-4">
+              {recentNotes.map((note) => (
                 <Link
-                  key={project.id}
-                  href={`/projects/${project.id}`}
-                  className="block p-4 border border-border rounded-lg hover:border-primary hover:bg-accent/50 transition-colors"
+                  key={note.id}
+                  href={`/notes/${note.id}`}
+                  className="block p-4 rounded-lg border border-gray-200 hover:border-primary-blue hover:bg-primary-blue/5 transition-all duration-200"
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <h4 className="font-semibold text-foreground">{project.name}</h4>
-                    <Badge
-                      variant={
-                        project.status === 'COMPLETED'
-                          ? 'default'
-                          : project.status === 'IN_PROGRESS'
-                          ? 'secondary'
-                          : 'outline'
-                      }
-                    >
-                      {project.status.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                  {project.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                      {project.description}
-                    </p>
-                  )}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>Progress</span>
-                      <span className="font-medium">{project.progress}%</span>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-foreground text-base mb-1 line-clamp-1">
+                        {note.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(note.createdAt)}
+                      </p>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div
-                        className="bg-primary h-2 rounded-full transition-all"
-                        style={{ width: `${project.progress}%` }}
-                      />
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {note.category && (
+                        <Badge
+                          variant="outline"
+                          className="text-xs"
+                          style={{ 
+                            borderColor: note.category.color,
+                            color: note.category.color 
+                          }}
+                        >
+                          {note.category.name}
+                        </Badge>
+                      )}
+                      <Badge
+                        className={`text-xs ${getStatusBadgeVariant(note.status)}`}
+                      >
+                        {note.status}
+                      </Badge>
                     </div>
                   </div>
                 </Link>
               ))}
             </div>
           )}
-          <Link
-            href="/projects"
-            className="block text-center text-sm text-primary hover:text-primary/80 mt-4 font-medium"
-          >
-            View all projects →
-          </Link>
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <Card className="bg-white shadow-sm">
+        <CardHeader>
+          <h2 className="text-xl font-semibold text-foreground">Quick Actions</h2>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button asChild className="bg-primary-blue hover:bg-primary-blue/90 text-white flex-1">
+              <Link href="/notes">
+                <Plus className="w-4 h-4 mr-2" />
+                Create New Note
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="flex-1">
+              <Link href="/notes">
+                <Eye className="w-4 h-4 mr-2" />
+                View All Notes
+              </Link>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
   )
 }
-
