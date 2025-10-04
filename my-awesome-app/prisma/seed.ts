@@ -37,7 +37,7 @@ async function main() {
       prisma.category.create({
         data: {
           name: 'Work', 
-          description: 'Professional work-related notes, projects, and tasks',
+          
           color: '#0046FF', // primary-blue
         userId: user.id,
       },
@@ -45,7 +45,7 @@ async function main() {
       prisma.category.create({
         data: {
           name: 'Personal', 
-          description: 'Personal notes, thoughts, and life organization',
+          
           color: '#73C8D2', // accent-cyan
           userId: user.id,
         },
@@ -53,7 +53,7 @@ async function main() {
       prisma.category.create({
         data: {
           name: 'Ideas',
-          description: 'Brainstorming, creative ideas, and innovation notes',
+          
           color: '#FF9013', // warning-orange
         userId: user.id,
       },
@@ -61,7 +61,7 @@ async function main() {
       prisma.category.create({
         data: {
           name: 'Learning', 
-          description: 'Educational content, tutorials, and skill development',
+          
           color: '#10B981', // green
           userId: user.id,
         },
@@ -69,7 +69,7 @@ async function main() {
       prisma.category.create({
         data: {
           name: 'Projects',
-          description: 'Project documentation, planning, and progress tracking',
+          
           color: '#8B5CF6', // purple
         userId: user.id,
       },
@@ -610,7 +610,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
       data: {
           name: 'Meeting Notes',
-          description: 'Structured template for capturing meeting discussions and action items',
+          
           content: `# Meeting Notes
 
 **Date:** [Date]
@@ -652,7 +652,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
       data: {
           name: 'Daily Standup',
-          description: 'Template for daily team standup meetings',
+          
           content: `# Daily Standup - [Date]
 
 ## Team Updates
@@ -695,7 +695,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
       data: {
           name: 'Project Plan',
-          description: 'Comprehensive project planning template',
+          
           content: `# Project Plan: [Project Name]
 
 ## Project Overview
@@ -747,7 +747,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
       data: {
           name: 'Bug Report',
-          description: 'Structured template for reporting and tracking bugs',
+          
           content: `# Bug Report
 
 ## Bug Information
@@ -793,7 +793,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
       data: {
           name: 'Weekly Review',
-          description: 'Template for weekly personal and professional reviews',
+          
           content: `# Weekly Review - Week of [Date]
 
 ## This Week's Accomplishments
@@ -846,7 +846,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
       data: {
           name: 'Brainstorming',
-          description: 'Template for creative brainstorming sessions',
+          
           content: `# Brainstorming Session
 
 **Topic:** [What we're brainstorming about]
@@ -904,7 +904,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
         data: {
           name: 'Research Notes',
-          description: 'Template for organizing research findings and insights',
+          
           content: `# Research Notes: [Topic]
 
 **Research Date:** [Date]
@@ -972,7 +972,7 @@ This archive serves as a reference for understanding the evolution of our applic
       prisma.template.create({
         data: {
           name: 'Decision Log',
-          description: 'Template for documenting important decisions and their rationale',
+          
           content: `# Decision Log
 
 ## Decision: [Decision Title]
@@ -1068,7 +1068,7 @@ Key accomplishments:
 - Received positive feedback on the new navigation structure
 
 The mood today was energized and focused. The collaborative environment really helped push through some challenging design decisions. Looking forward to continuing this momentum tomorrow.`,
-          mood: 'energized',
+          mood: 'GOOD',
           userId: user.id,
         },
       }),
@@ -1084,7 +1084,7 @@ Challenges faced:
 - Team communication gaps
 
 Despite the setbacks, managed to resolve the critical authentication bug by end of day. The debugging process was frustrating but ultimately rewarding when we found the root cause.`,
-          mood: 'stressed',
+          mood: 'BAD',
           userId: user.id,
         },
       }),
@@ -1100,7 +1100,7 @@ Highlights:
 - Team collaboration was excellent
 
 The afternoon was dedicated to coding, and I managed to implement three new API endpoints with proper error handling and validation. The code review process went smoothly, and the team provided valuable feedback.`,
-          mood: 'productive',
+          mood: 'GREAT',
           userId: user.id,
         },
       }),
@@ -1116,7 +1116,7 @@ Learning highlights:
 - Updated personal development plan
 
 The conference was inspiring and provided fresh perspectives on our current projects. Implemented some of the new techniques in a small side project to practice. Feeling motivated to apply these learnings to our main application.`,
-          mood: 'happy',
+          mood: 'GREAT',
           userId: user.id,
         },
       }),
@@ -1132,7 +1132,7 @@ Tasks completed:
 - Team one-on-one meetings
 
 The day felt balanced and steady. No major breakthroughs, but solid progress on foundational work. Sometimes these quieter days are just as important as the high-energy ones for maintaining project momentum.`,
-          mood: 'neutral',
+          mood: 'NEUTRAL',
           userId: user.id,
         },
       }),
@@ -1148,7 +1148,7 @@ Accomplishments:
 - Updated project timeline
 
 The retrospective was particularly valuable - we identified several process improvements that could help the team work more efficiently. Looking forward to implementing these changes next week.`,
-          mood: 'tired',
+          mood: 'BAD',
           userId: user.id,
         },
       }),
@@ -1164,7 +1164,7 @@ Deep work session:
 - Wrote comprehensive tests
 
 The focused work session was incredibly satisfying. There's something rewarding about diving deep into a complex problem and emerging with a solution. The performance improvements will have a significant impact on user experience.`,
-          mood: 'focused',
+          mood: 'GOOD',
           userId: user.id,
         },
       }),
@@ -1177,7 +1177,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.project.create({
         data: {
           name: 'Website Redesign',
-          description: 'Complete redesign of the company website with modern UI/UX principles, improved performance, and mobile responsiveness. This project aims to increase user engagement and conversion rates.',
+          
           status: 'IN_PROGRESS',
           progress: 65,
           userId: user.id,
@@ -1187,7 +1187,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.project.create({
         data: {
           name: 'Mobile App V2',
-          description: 'Development of the second version of our mobile application with enhanced features, improved user interface, and better performance. Includes new authentication system and offline capabilities.',
+          
           status: 'IN_PROGRESS',
           progress: 35,
           userId: user.id,
@@ -1197,7 +1197,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.project.create({
         data: {
           name: 'Documentation Overhaul',
-          description: 'Comprehensive update of all technical documentation, API references, and user guides. Includes migration to new documentation platform and implementation of interactive examples.',
+          
           status: 'COMPLETED',
           progress: 100,
           userId: user.id,
@@ -1207,7 +1207,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.project.create({
         data: {
           name: 'Q1 Marketing Campaign',
-          description: 'Launch of comprehensive marketing campaign for Q1 including social media strategy, content creation, email marketing automation, and analytics implementation.',
+          
           status: 'IN_PROGRESS',
           progress: 20,
           userId: user.id,
@@ -1223,7 +1223,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Review pull request #42',
-          description: 'Review the authentication system refactor pull request and provide feedback on code quality, security considerations, and testing coverage.',
+          
           completed: false,
           priority: 'HIGH',
           dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Due tomorrow
@@ -1234,7 +1234,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Update documentation',
-          description: 'Update API documentation to reflect the new authentication endpoints and include examples for common use cases.',
+          
           completed: true,
           priority: 'MEDIUM',
           dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // Overdue (completed)
@@ -1245,7 +1245,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Design mobile wireframes',
-          description: 'Create wireframes for the new mobile app interface focusing on user experience and accessibility.',
+          
           completed: false,
           priority: 'MEDIUM',
           dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Due in 3 days
@@ -1256,7 +1256,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Set up analytics tracking',
-          description: 'Implement Google Analytics and custom event tracking for the website redesign project.',
+          
           completed: false,
           priority: 'LOW',
           dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Due in 1 week
@@ -1267,7 +1267,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Create social media content',
-          description: 'Develop content calendar and create initial posts for the Q1 marketing campaign across all platforms.',
+          
           completed: false,
           priority: 'HIGH',
           dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // Due in 2 days
@@ -1278,7 +1278,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Fix responsive layout issues',
-          description: 'Address mobile responsiveness problems identified during user testing of the website redesign.',
+          
           completed: true,
           priority: 'HIGH',
           dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // Overdue (completed)
@@ -1289,7 +1289,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Write unit tests',
-          description: 'Add comprehensive unit tests for the new authentication module to ensure code quality and reliability.',
+          
           completed: false,
           priority: 'MEDIUM',
           dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // Due in 5 days
@@ -1300,7 +1300,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Schedule team meeting',
-          description: 'Organize weekly team standup meeting and send calendar invites to all team members.',
+          
           completed: true,
           priority: 'LOW',
           dueDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // Overdue (completed)
@@ -1310,7 +1310,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Research competitor analysis',
-          description: 'Conduct comprehensive analysis of competitor websites and mobile apps for the marketing campaign.',
+          
           completed: false,
           priority: 'MEDIUM',
           dueDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // Due in 10 days
@@ -1321,7 +1321,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Optimize database queries',
-          description: 'Review and optimize slow database queries identified in the performance monitoring dashboard.',
+          
           completed: false,
           priority: 'LOW',
           dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // Due in 2 weeks
@@ -1331,7 +1331,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Deploy staging environment',
-          description: 'Set up and configure staging environment for the website redesign with proper CI/CD pipeline.',
+          
           completed: true,
           priority: 'HIGH',
           dueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // Overdue (completed)
@@ -1342,7 +1342,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Create user onboarding flow',
-          description: 'Design and implement improved user onboarding experience for new mobile app users.',
+          
           completed: false,
           priority: 'MEDIUM',
           dueDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000), // Due in 6 days
@@ -1353,7 +1353,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Update email templates',
-          description: 'Refresh email templates for the marketing campaign with new branding and improved copy.',
+          
           completed: false,
           priority: 'LOW',
           dueDate: null, // No due date
@@ -1364,7 +1364,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Conduct security audit',
-          description: 'Perform comprehensive security audit of the authentication system and identify potential vulnerabilities.',
+          
           completed: false,
           priority: 'HIGH',
           dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // Due in 4 days
@@ -1374,7 +1374,7 @@ The focused work session was incredibly satisfying. There's something rewarding 
       prisma.task.create({
         data: {
           title: 'Backup documentation',
-          description: 'Create backup copies of all documentation and store in secure cloud storage.',
+          
           completed: true,
           priority: 'LOW',
           dueDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Overdue (completed)

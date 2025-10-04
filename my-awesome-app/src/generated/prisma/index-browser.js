@@ -189,7 +189,6 @@ exports.Prisma.TagScalarFieldEnum = {
 };
 
 exports.Prisma.NoteTagScalarFieldEnum = {
-  id: 'id',
   noteId: 'noteId',
   tagId: 'tagId'
 };
@@ -207,7 +206,6 @@ exports.Prisma.DailyNoteScalarFieldEnum = {
 exports.Prisma.TaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  description: 'description',
   completed: 'completed',
   priority: 'priority',
   dueDate: 'dueDate',
@@ -267,6 +265,14 @@ exports.NoteStatus = exports.$Enums.NoteStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
+};
+
+exports.Mood = exports.$Enums.Mood = {
+  GREAT: 'GREAT',
+  GOOD: 'GOOD',
+  NEUTRAL: 'NEUTRAL',
+  BAD: 'BAD',
+  TERRIBLE: 'TERRIBLE'
 };
 
 exports.TaskPriority = exports.$Enums.TaskPriority = {

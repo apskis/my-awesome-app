@@ -1,5 +1,7 @@
-import { Metadata } from 'next'
-import { PrismaClient } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -7,59 +9,94 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Search, Eye, FileText, Plus } from 'lucide-react'
+import { Search, Eye, FileText, Plus, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Templates - My Notes App',
-  description: 'Browse and use note templates',
+interface Template {
+  id: string
+  name: string
+  description?: string
+  content: string
+  category?: string
+  createdAt: string
+  updatedAt: string
 }
 
-const prisma = new PrismaClient()
+export default function TemplatesPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [templates, setTemplates] = useState<Template[]>([])
+  const [categories, setCategories] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState(searchParams.get('search') || '')
+  const [category, setCategory] = useState(searchParams.get('category') || 'all')
+  const [usingTemplate, setUsingTemplate] = useState<string | null>(null)
 
-interface TemplatesPageProps {
-  searchParams: {
-    search?: string
-    category?: string
+  // Fetch templates
+  useEffect(() => {
+    fetchTemplates()
+  }, [category])
+
+  const fetchTemplates = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (category !== 'all') {
+        params.set('category', category)
+      }
+
+      const response = await fetch(`/api/templates?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setTemplates(data.data.templates)
+        
+        // Extract unique categories
+        const uniqueCategories = [...new Set(
+          data.data.templates
+            .map((t: Template) => t.category)
+            .filter(Boolean)
+        )].sort()
+        setCategories(uniqueCategories)
+      }
+    } catch (error) {
+      console.error('Error fetching templates:', error)
+      toast.error('Failed to load templates')
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
-async function getTemplatesData(search?: string, category?: string) {
-  // Build where clause
-  const where: any = {}
+  const handleUseTemplate = async (templateId: string) => {
+    try {
+      setUsingTemplate(templateId)
+      const response = await fetch(`/api/templates/${templateId}/use`, {
+        method: 'POST',
+      })
 
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: 'insensitive' } },
-      { description: { contains: search, mode: 'insensitive' } },
-    ]
+      if (response.ok) {
+        const data = await response.json()
+        toast.success('Note created from template!')
+        router.push(`/notes/${data.data.id}/edit`)
+      } else {
+        const error = await response.json()
+        toast.error(error.message || 'Failed to create note from template')
+      }
+    } catch (error) {
+      console.error('Error using template:', error)
+      toast.error('Failed to create note from template')
+    } finally {
+      setUsingTemplate(null)
+    }
   }
 
-  if (category && category !== 'all') {
-    where.category = category
-  }
-
-  const templates = await prisma.template.findMany({
-    where,
-    orderBy: { name: 'asc' },
+  const filteredTemplates = templates.filter(template => {
+    if (search && !template.name.toLowerCase().includes(search.toLowerCase()) && 
+        !template.description?.toLowerCase().includes(search.toLowerCase())) {
+      return false
+    }
+    return true
   })
-
-  // Get unique categories for filter dropdown
-  const allTemplates = await prisma.template.findMany({
-    select: { category: true },
-    distinct: ['category'],
-  })
-
-  const categories = allTemplates
-    .map(t => t.category)
-    .filter(Boolean)
-    .sort()
-
-  return {
-    templates,
-    categories,
-  }
-}
 
 function getCategoryColor(category: string | null) {
   const colors: Record<string, string> = {
@@ -81,11 +118,13 @@ function getCategoryBadgeColor(category: string | null) {
   }
 }
 
-export default async function TemplatesPage({ searchParams }: TemplatesPageProps) {
-  const search = searchParams.search
-  const category = searchParams.category
-
-  const { templates, categories } = await getTemplatesData(search, category)
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-primary-blue" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -94,9 +133,9 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
         <div>
           <h1 className="text-3xl font-bold text-foreground">Templates</h1>
           <p className="text-muted-foreground mt-1">
-            {templates.length === 0 
+            {filteredTemplates.length === 0 
               ? 'No templates available' 
-              : `${templates.length} template${templates.length === 1 ? '' : 's'} found`
+              : `${filteredTemplates.length} template${filteredTemplates.length === 1 ? '' : 's'} found`
             }
           </p>
         </div>
@@ -121,15 +160,15 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   placeholder="Search templates..."
-                  defaultValue={search}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="pl-10"
-                  name="search"
                 />
               </div>
             </div>
 
             {/* Category Filter */}
-            <Select name="category" defaultValue={category || 'all'}>
+            <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -142,17 +181,12 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
                 ))}
               </SelectContent>
             </Select>
-
-            {/* Apply Filters Button */}
-            <Button type="submit" variant="outline" className="w-full sm:w-auto">
-              Apply Filters
-            </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Templates Grid */}
-      {templates.length === 0 ? (
+      {filteredTemplates.length === 0 ? (
         <Alert className="text-center py-8">
           <AlertTitle>
             {search || category ? 'No templates match your search' : 'No templates available'}
@@ -166,7 +200,7 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
         </Alert>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {templates.map((template) => (
+          {filteredTemplates.map((template) => (
             <Card 
               key={template.id} 
               className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
@@ -244,25 +278,35 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
                       
                       <DialogFooter>
                         <Button variant="outline">Close</Button>
-                        <Link href={`/notes/new?template=${template.id}`}>
-                          <Button className="bg-primary-blue hover:bg-primary-blue/90">
+                        <Button 
+                          className="bg-primary-blue hover:bg-primary-blue/90"
+                          onClick={() => handleUseTemplate(template.id)}
+                          disabled={usingTemplate === template.id}
+                        >
+                          {usingTemplate === template.id ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
                             <FileText className="w-4 h-4 mr-2" />
-                            Use Template
-                          </Button>
-                        </Link>
+                          )}
+                          Use Template
+                        </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
 
-                  <Link href={`/notes/new?template=${template.id}`}>
-                    <Button 
-                      size="sm" 
-                      className="flex-1 bg-primary-blue hover:bg-primary-blue/90"
-                    >
+                  <Button 
+                    size="sm" 
+                    className="flex-1 bg-primary-blue hover:bg-primary-blue/90"
+                    onClick={() => handleUseTemplate(template.id)}
+                    disabled={usingTemplate === template.id}
+                  >
+                    {usingTemplate === template.id ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
                       <FileText className="w-4 h-4 mr-2" />
-                      Use Template
-                    </Button>
-                  </Link>
+                    )}
+                    Use Template
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -271,7 +315,7 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
       )}
 
       {/* Summary Stats */}
-      {templates.length > 0 && (
+      {filteredTemplates.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Summary</CardTitle>
@@ -280,7 +324,7 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">
-                  {templates.length}
+                  {filteredTemplates.length}
                 </div>
                 <div className="text-sm text-muted-foreground">Total Templates</div>
               </div>
@@ -292,7 +336,7 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">
-                  {templates.filter(t => t.description).length}
+                  {filteredTemplates.filter(t => t.description).length}
                 </div>
                 <div className="text-sm text-muted-foreground">With Descriptions</div>
               </div>

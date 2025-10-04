@@ -1,119 +1,151 @@
-import { Metadata } from 'next'
-import { PrismaClient } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Plus, Calendar, CheckCircle2, Clock, Target } from 'lucide-react'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { Plus, Calendar, CheckCircle2, Clock, Target, Edit, Trash2, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Projects - My Notes App',
-  description: 'Track your projects and progress',
+interface Project {
+  id: string
+  name: string
+  description?: string
+  status: 'PLANNING' | 'IN_PROGRESS' | 'ON_HOLD' | 'COMPLETED' | 'CANCELLED'
+  progress: number
+  userId: string
+  createdAt: string
+  updatedAt: string
+  taskCount: number
+  completedTaskCount: number
 }
 
-const prisma = new PrismaClient()
+export default function ProjectsPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  const [projects, setProjects] = useState<Project[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  
+  // Filter state
+  const [status, setStatus] = useState(searchParams.get('status') || 'all')
 
-interface ProjectsPageProps {
-  searchParams: {
-    status?: string
-  }
-}
+  // Load projects
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setIsLoading(true)
+        
+        // Build query params
+        const params = new URLSearchParams()
+        if (status !== 'all') params.set('status', status)
 
-async function getProjectsData(status?: string) {
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@myawesomeapp.com' },
-  })
+        const response = await fetch(`/api/projects?${params.toString()}`)
 
-  if (!demoUser) {
-    return []
-  }
+        if (response.ok) {
+          const data = await response.json()
+          setProjects(data.projects || [])
+        } else {
+          toast.error('Failed to load projects')
+        }
+      } catch (error) {
+        console.error('Failed to fetch projects:', error)
+        toast.error('Failed to load projects')
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-  // Build where clause
-  const where: any = {
-    userId: demoUser.id,
-  }
+    fetchProjects()
+  }, [status])
 
-  if (status && status !== 'all') {
-    where.status = status
-  }
-
-  const projects = await prisma.project.findMany({
-    where,
-    include: {
-      _count: {
-        select: {
-          tasks: true,
-        },
-      },
-    },
-    orderBy: [
-      { status: 'asc' }, // Active projects first
-      { progress: 'desc' }, // Then by progress
-    ],
-  })
-
-  // Get completed task count for each project
-  const projectsWithTaskCounts = await Promise.all(
-    projects.map(async (project) => {
-      const completedTasks = await prisma.task.count({
-        where: {
-          projectId: project.id,
-          completed: true,
-        },
+  const handleDeleteProject = async (projectId: string) => {
+    try {
+      setIsDeleting(projectId)
+      
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: 'DELETE',
       })
 
-      return {
-        ...project,
-        completedTasks,
+      if (response.ok) {
+        // Remove the project from local state
+        setProjects(prevProjects => prevProjects.filter(project => project.id !== projectId))
+        toast.success('Project deleted successfully!')
+      } else {
+        const errorData = await response.json()
+        toast.error(errorData.error || 'Failed to delete project')
       }
-    })
-  )
-
-  return projectsWithTaskCounts
-}
-
-function getStatusBadgeColor(status: string) {
-  switch (status.toLowerCase()) {
-    case 'active':
-    case 'in_progress':
-      return 'bg-primary-blue text-white'
-    case 'completed':
-    case 'done':
-      return 'bg-green-500 text-white'
-    case 'on_hold':
-    case 'on hold':
-      return 'bg-gray-400 text-white'
-    case 'planning':
-      return 'bg-yellow-500 text-white'
-    default:
-      return 'bg-gray-500 text-white'
+    } catch (error) {
+      console.error('Error deleting project:', error)
+      toast.error('Failed to delete project')
+    } finally {
+      setIsDeleting(null)
+    }
   }
-}
 
-function getProgressColor(progress: number) {
-  if (progress >= 80) return 'bg-green-500'
-  if (progress >= 60) return 'bg-primary-blue'
-  if (progress >= 40) return 'bg-yellow-500'
-  if (progress >= 20) return 'bg-orange-500'
-  return 'bg-red-500'
-}
+  const updateUrl = () => {
+    const params = new URLSearchParams()
+    if (status !== 'all') params.set('status', status)
+    
+    const newUrl = params.toString() ? `?${params.toString()}` : ''
+    router.push(`/projects${newUrl}`, { scroll: false })
+  }
 
-export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
-  const status = searchParams.status
-
-  const projects = await getProjectsData(status)
+  // Update URL when filter changes
+  useEffect(() => {
+    updateUrl()
+  }, [status])
 
   const hasProjects = projects.length > 0
-  const hasFilters = status && status !== 'all'
+  const hasFilters = status !== 'all'
 
-  const activeProjects = projects.filter(p => p.status.toLowerCase() === 'active' || p.status.toLowerCase() === 'in_progress')
-  const completedProjects = projects.filter(p => p.status.toLowerCase() === 'completed' || p.status.toLowerCase() === 'done')
-  const totalTasks = projects.reduce((sum, p) => sum + p._count.tasks, 0)
-  const completedTasks = projects.reduce((sum, p) => sum + p.completedTasks, 0)
+  const activeProjects = projects.filter(p => p.status === 'IN_PROGRESS')
+  const completedProjects = projects.filter(p => p.status === 'COMPLETED')
+  const totalTasks = projects.reduce((sum, p) => sum + p.taskCount, 0)
+  const completedTasks = projects.reduce((sum, p) => sum + p.completedTaskCount, 0)
+
+  function getStatusBadgeColor(status: string) {
+    switch (status) {
+      case 'IN_PROGRESS':
+        return 'bg-primary-blue text-white'
+      case 'COMPLETED':
+        return 'bg-green-500 text-white'
+      case 'ON_HOLD':
+        return 'bg-gray-400 text-white'
+      case 'PLANNING':
+        return 'bg-yellow-500 text-white'
+      case 'CANCELLED':
+        return 'bg-red-500 text-white'
+      default:
+        return 'bg-gray-500 text-white'
+    }
+  }
+
+  function getProgressColor(progress: number) {
+    if (progress >= 80) return 'bg-green-500'
+    if (progress >= 60) return 'bg-primary-blue'
+    if (progress >= 40) return 'bg-yellow-500'
+    if (progress >= 20) return 'bg-orange-500'
+    return 'bg-red-500'
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -192,17 +224,17 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           <CardTitle className="text-lg">Filter by Status</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select name="status" defaultValue={status || 'all'}>
+          <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="on_hold">On Hold</SelectItem>
-              <SelectItem value="planning">Planning</SelectItem>
+              <SelectItem value="PLANNING">Planning</SelectItem>
+              <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+              <SelectItem value="ON_HOLD">On Hold</SelectItem>
+              <SelectItem value="COMPLETED">Completed</SelectItem>
+              <SelectItem value="CANCELLED">Cancelled</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
@@ -230,8 +262,8 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => {
-            const taskCompletionRate = project._count.tasks > 0 
-              ? Math.round((project.completedTasks / project._count.tasks) * 100)
+            const taskCompletionRate = project.taskCount > 0 
+              ? Math.round((project.completedTaskCount / project.taskCount) * 100)
               : 0
 
             return (
@@ -241,9 +273,13 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg truncate">{project.name}</CardTitle>
+                    <Link href={`/projects/${project.id}`} className="flex-1">
+                      <CardTitle className="text-lg truncate hover:text-primary-blue cursor-pointer">
+                        {project.name}
+                      </CardTitle>
+                    </Link>
                     <Badge className={getStatusBadgeColor(project.status)}>
-                      {project.status}
+                      {project.status.replace('_', ' ')}
                     </Badge>
                   </div>
                   {project.description && (
@@ -274,10 +310,10 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Tasks</span>
                       <span className="font-medium text-foreground">
-                        {project.completedTasks} of {project._count.tasks} completed
+                        {project.completedTaskCount} of {project.taskCount} completed
                       </span>
                     </div>
-                    {project._count.tasks > 0 && (
+                    {project.taskCount > 0 && (
                       <div className="mt-1">
                         <Progress 
                           value={taskCompletionRate} 
@@ -291,9 +327,62 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
                   </div>
 
                   {/* Created Date */}
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
                     <Calendar className="w-3 h-3" />
                     <span>Created {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}</span>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-between">
+                    <Link href={`/projects/${project.id}/edit`}>
+                      <Button variant="outline" size="sm">
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                    </Link>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-red-600 hover:text-red-700"
+                          disabled={isDeleting === project.id}
+                        >
+                          {isDeleting === project.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <>
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete
+                            </>
+                          )}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Project</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete "{project.name}"? This action cannot be undone.
+                            {project.taskCount > 0 && (
+                              <span className="block mt-2 text-red-600 font-medium">
+                                This project has {project.taskCount} task{project.taskCount === 1 ? '' : 's'}. 
+                                You must delete or reassign all tasks before deleting the project.
+                              </span>
+                            )}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteProject(project.id)}
+                            className="bg-red-600 hover:bg-red-700"
+                            disabled={project.taskCount > 0}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </CardContent>
               </Card>
@@ -324,7 +413,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">
-                  {projects.length > 0 ? Math.round(projects.reduce((sum, p) => sum + p._count.tasks, 0) / projects.length) : 0}
+                  {projects.length > 0 ? Math.round(projects.reduce((sum, p) => sum + p.taskCount, 0) / projects.length) : 0}
                 </div>
                 <div className="text-sm text-muted-foreground">Avg Tasks/Project</div>
               </div>

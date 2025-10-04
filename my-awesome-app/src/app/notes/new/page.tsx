@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,13 +12,21 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { ArrowLeft, Save, Loader2 } from 'lucide-react'
+import { ArrowLeft, Save, Loader2, X, Plus } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 interface Category {
   id: string
   name: string
+}
+
+interface Tag {
+  id: string
+  name: string
+  color: string
 }
 
 export default function CreateNotePage() {
@@ -26,6 +34,9 @@ export default function CreateNotePage() {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [showTagSelect, setShowTagSelect] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(CreateNoteSchema),
@@ -37,26 +48,47 @@ export default function CreateNotePage() {
     }
   })
 
-  // Fetch categories on component mount
-  useState(() => {
-    const fetchCategories = async () => {
+  // Fetch categories and tags on component mount
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/categories')
-        if (response.ok) {
-          const data = await response.json()
-          setCategories(data.categories || [])
+        const [categoriesResponse, tagsResponse] = await Promise.all([
+          fetch('/api/categories'),
+          fetch('/api/tags')
+        ])
+        
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json()
+          setCategories(categoriesData.categories || [])
+        }
+        
+        if (tagsResponse.ok) {
+          const tagsData = await tagsResponse.json()
+          setTags(tagsData.tags || [])
         }
       } catch (error) {
-        console.error('Error fetching categories:', error)
+        console.error('Error fetching data:', error)
       }
     }
-    fetchCategories()
-  })
+    fetchData()
+  }, [])
+
+  const handleAddTag = (tag: Tag) => {
+    if (!selectedTags.find(t => t.id === tag.id)) {
+      setSelectedTags([...selectedTags, tag])
+    }
+    setShowTagSelect(false)
+  }
+
+  const handleRemoveTag = (tagId: string) => {
+    setSelectedTags(selectedTags.filter(t => t.id !== tagId))
+  }
 
   const onSubmit = async (data: CreateNote) => {
     setIsLoading(true)
     
     try {
+      // First create the note
       const response = await fetch('/api/notes', {
         method: 'POST',
         headers: {
@@ -71,6 +103,23 @@ export default function CreateNotePage() {
       }
 
       const note = await response.json()
+      
+      // Then add tags to the note
+      if (selectedTags.length > 0) {
+        for (const tag of selectedTags) {
+          try {
+            await fetch(`/api/notes/${note.id}/tags`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ tagId: tag.id }),
+            })
+          } catch (error) {
+            console.error('Error adding tag:', error)
+          }
+        }
+      }
       
       toast({
         title: 'Success',
@@ -202,6 +251,85 @@ export default function CreateNotePage() {
                   </FormItem>
                 )}
               />
+
+              {/* Tags */}
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <div className="space-y-3">
+                  {/* Selected Tags */}
+                  {selectedTags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedTags.map((tag) => (
+                        <Badge
+                          key={tag.id}
+                          className="flex items-center gap-1"
+                          style={{ backgroundColor: tag.color, color: 'white' }}
+                        >
+                          {tag.name}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveTag(tag.id)}
+                            className="ml-1 hover:bg-black/20 rounded-full p-0.5"
+                            disabled={isLoading}
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add Tag Button */}
+                  <div className="relative">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowTagSelect(!showTagSelect)}
+                      disabled={isLoading}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Tag
+                    </Button>
+
+                    {/* Tag Selection Dropdown */}
+                    {showTagSelect && (
+                      <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-10 max-h-48 overflow-y-auto">
+                        <div className="p-2">
+                          {tags.filter(tag => !selectedTags.find(st => st.id === tag.id)).map((tag) => (
+                            <button
+                              key={tag.id}
+                              type="button"
+                              onClick={() => handleAddTag(tag)}
+                              className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded-md flex items-center gap-2"
+                            >
+                              <div
+                                className="w-3 h-3 rounded-full"
+                                style={{ backgroundColor: tag.color }}
+                              />
+                              {tag.name}
+                            </button>
+                          ))}
+                          {tags.filter(tag => !selectedTags.find(st => st.id === tag.id)).length === 0 && (
+                            <div className="px-3 py-2 text-sm text-gray-500">
+                              No available tags
+                            </div>
+                          )}
+                        </div>
+                        <div className="border-t border-gray-200 p-2">
+                          <Link href="/tags/new">
+                            <Button variant="ghost" size="sm" className="w-full">
+                              <Plus className="w-4 h-4 mr-2" />
+                              Create New Tag
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </FormItem>
 
               {/* Submit Button */}
               <div className="flex justify-end gap-3">

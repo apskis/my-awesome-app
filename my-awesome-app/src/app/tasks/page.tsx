@@ -1,5 +1,7 @@
-import { Metadata } from 'next'
-import { PrismaClient, TaskPriority } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -7,144 +9,213 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Plus, Calendar, AlertTriangle, Clock, CheckCircle2 } from 'lucide-react'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { Plus, Calendar, AlertTriangle, Clock, CheckCircle2, Edit, Trash2, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { format, isToday, isTomorrow, isPast, addDays } from 'date-fns'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Tasks - My Notes App',
-  description: 'Manage your tasks and to-dos',
+interface Task {
+  id: string
+  title: string
+  description?: string
+  completed: boolean
+  priority: 'LOW' | 'MEDIUM' | 'HIGH'
+  dueDate?: string
+  projectId?: string
+  project?: {
+    id: string
+    name: string
+  }
+  createdAt: string
+  updatedAt: string
 }
 
-const prisma = new PrismaClient()
-
-interface TasksPageProps {
-  searchParams: {
-    completion?: string
-    priority?: string
-    project?: string
-    sort?: string
-  }
+interface Project {
+  id: string
+  name: string
 }
 
-async function getTasksData(completion?: string, priority?: string, project?: string, sort?: string) {
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@myawesomeapp.com' },
-  })
-
-  if (!demoUser) {
-    return {
-      tasks: [],
-      projects: [],
-    }
-  }
-
-  // Build where clause
-  const where: any = {
-    userId: demoUser.id,
-  }
-
-  if (completion && completion !== 'all') {
-    where.completed = completion === 'completed'
-  }
-
-  if (priority && priority !== 'all') {
-    where.priority = priority as TaskPriority
-  }
-
-  if (project && project !== 'all') {
-    where.projectId = project
-  }
-
-  // Build orderBy clause
-  let orderBy: any = {}
-  switch (sort) {
-    case 'dueDate':
-      orderBy = { dueDate: 'asc' }
-      break
-    case 'priority':
-      orderBy = { priority: 'desc' }
-      break
-    case 'created':
-      orderBy = { createdAt: 'desc' }
-      break
-    default:
-      // Default: incomplete first, then by due date, then by priority
-      orderBy = [
-        { completed: 'asc' },
-        { dueDate: 'asc' },
-        { priority: 'desc' },
-      ]
-  }
-
-  const [tasks, projects] = await Promise.all([
-    prisma.task.findMany({
-      where,
-      include: {
-        project: true,
-      },
-      orderBy,
-    }),
-    prisma.project.findMany({
-      where: { userId: demoUser.id },
-      select: { id: true, name: true },
-      orderBy: { name: 'asc' },
-    }),
-  ])
-
-  return {
-    tasks,
-    projects,
-  }
-}
-
-function getPriorityBadgeColor(priority: TaskPriority) {
-  switch (priority) {
-    case TaskPriority.LOW:
-      return 'bg-accent-cyan text-white'
-    case TaskPriority.MEDIUM:
-      return 'bg-warning-orange text-white'
-    case TaskPriority.HIGH:
-      return 'bg-primary-blue text-white'
-    default:
-      return 'bg-gray-500 text-white'
-  }
-}
-
-function getDueDateStatus(dueDate: Date | null, completed: boolean) {
-  if (!dueDate) return { status: 'none', text: '', color: '' }
-  if (completed) return { status: 'completed', text: 'Completed', color: 'text-green-600' }
+export default function TasksPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   
-  if (isPast(dueDate)) {
-    return { status: 'overdue', text: 'Overdue', color: 'text-red-600' }
-  } else if (isToday(dueDate)) {
-    return { status: 'today', text: 'Due today', color: 'text-orange-600' }
-  } else if (isTomorrow(dueDate)) {
-    return { status: 'tomorrow', text: 'Due tomorrow', color: 'text-yellow-600' }
-  } else {
-    const daysUntil = Math.ceil((dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
-    if (daysUntil <= 3) {
-      return { status: 'soon', text: `Due in ${daysUntil} days`, color: 'text-yellow-600' }
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isToggling, setIsToggling] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  
+  // Filter states
+  const [completion, setCompletion] = useState(searchParams.get('completion') || 'all')
+  const [priority, setPriority] = useState(searchParams.get('priority') || 'all')
+  const [project, setProject] = useState(searchParams.get('project') || 'all')
+  const [sort, setSort] = useState(searchParams.get('sort') || 'default')
+
+  // Load tasks and projects
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        
+        // Build query params
+        const params = new URLSearchParams()
+        if (completion !== 'all') {
+          if (completion === 'completed') params.set('completed', 'true')
+          if (completion === 'incomplete') params.set('completed', 'false')
+        }
+        if (priority !== 'all') params.set('priority', priority)
+        if (project !== 'all') params.set('projectId', project)
+        if (sort !== 'default') params.set('sort', sort)
+
+        const [tasksResponse, projectsResponse] = await Promise.all([
+          fetch(`/api/tasks?${params.toString()}`),
+          fetch('/api/projects')
+        ])
+
+        if (tasksResponse.ok) {
+          const tasksData = await tasksResponse.json()
+          setTasks(tasksData.tasks || [])
+        }
+
+        if (projectsResponse.ok) {
+          const projectsData = await projectsResponse.json()
+          setProjects(projectsData.projects || [])
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+        toast.error('Failed to load tasks')
+      } finally {
+        setIsLoading(false)
+      }
     }
-    return { status: 'future', text: format(dueDate, 'MMM d'), color: 'text-gray-600' }
+
+    fetchData()
+  }, [completion, priority, project, sort])
+
+  const handleToggleTask = async (taskId: string, currentCompleted: boolean) => {
+    try {
+      setIsToggling(taskId)
+      
+      const response = await fetch(`/api/tasks/${taskId}/toggle`, {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        const updatedTask = await response.json()
+        
+        // Update the task in the local state
+        setTasks(prevTasks => 
+          prevTasks.map(task => 
+            task.id === taskId 
+              ? { ...task, completed: !currentCompleted }
+              : task
+          )
+        )
+        
+        toast.success(
+          !currentCompleted ? 'Task marked as complete!' : 'Task marked as incomplete!'
+        )
+      } else {
+        toast.error('Failed to update task')
+      }
+    } catch (error) {
+      console.error('Error toggling task:', error)
+      toast.error('Failed to update task')
+    } finally {
+      setIsToggling(null)
+    }
   }
-}
 
-export default async function TasksPage({ searchParams }: TasksPageProps) {
-  const completion = searchParams.completion
-  const priority = searchParams.priority
-  const project = searchParams.project
-  const sort = searchParams.sort
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      setIsDeleting(taskId)
+      
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+      })
 
-  const { tasks, projects } = await getTasksData(completion, priority, project, sort)
+      if (response.ok) {
+        // Remove the task from local state
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId))
+        toast.success('Task deleted successfully!')
+      } else {
+        toast.error('Failed to delete task')
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error)
+      toast.error('Failed to delete task')
+    } finally {
+      setIsDeleting(null)
+    }
+  }
+
+  const updateUrl = () => {
+    const params = new URLSearchParams()
+    if (completion !== 'all') params.set('completion', completion)
+    if (priority !== 'all') params.set('priority', priority)
+    if (project !== 'all') params.set('project', project)
+    if (sort !== 'default') params.set('sort', sort)
+    
+    const newUrl = params.toString() ? `?${params.toString()}` : ''
+    router.push(`/tasks${newUrl}`, { scroll: false })
+  }
+
+  // Update URL when filters change
+  useEffect(() => {
+    updateUrl()
+  }, [completion, priority, project, sort])
 
   const hasTasks = tasks.length > 0
-  const hasFilters = completion || priority || project || sort
+  const hasFilters = completion !== 'all' || priority !== 'all' || project !== 'all' || sort !== 'default'
 
   const completedCount = tasks.filter(t => t.completed).length
   const overdueCount = tasks.filter(t => 
-    t.dueDate && isPast(t.dueDate) && !t.completed
+    t.dueDate && isPast(new Date(t.dueDate)) && !t.completed
   ).length
+
+  function getPriorityBadgeColor(priority: string) {
+    switch (priority) {
+      case 'LOW':
+        return 'bg-accent-cyan text-white'
+      case 'MEDIUM':
+        return 'bg-warning-orange text-white'
+      case 'HIGH':
+        return 'bg-primary-blue text-white'
+      default:
+        return 'bg-gray-500 text-white'
+    }
+  }
+
+  function getDueDateStatus(dueDate: string | null, completed: boolean) {
+    if (!dueDate) return { status: 'none', text: '', color: '' }
+    if (completed) return { status: 'completed', text: 'Completed', color: 'text-green-600' }
+    
+    const due = new Date(dueDate)
+    if (isPast(due)) {
+      return { status: 'overdue', text: 'Overdue', color: 'text-red-600' }
+    } else if (isToday(due)) {
+      return { status: 'today', text: 'Due today', color: 'text-orange-600' }
+    } else if (isTomorrow(due)) {
+      return { status: 'tomorrow', text: 'Due tomorrow', color: 'text-yellow-600' }
+    } else {
+      const daysUntil = Math.ceil((due.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+      if (daysUntil <= 3) {
+        return { status: 'soon', text: `Due in ${daysUntil} days`, color: 'text-yellow-600' }
+      }
+      return { status: 'future', text: format(due, 'MMM d'), color: 'text-gray-600' }
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -216,7 +287,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
             {/* Completion Filter */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">Status</label>
-              <Select name="completion" defaultValue={completion || 'all'}>
+              <Select value={completion} onValueChange={setCompletion}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Tasks" />
                 </SelectTrigger>
@@ -231,7 +302,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
             {/* Priority Filter */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">Priority</label>
-              <Select name="priority" defaultValue={priority || 'all'}>
+              <Select value={priority} onValueChange={setPriority}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Priorities" />
                 </SelectTrigger>
@@ -247,7 +318,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
             {/* Project Filter */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">Project</label>
-              <Select name="project" defaultValue={project || 'all'}>
+              <Select value={project} onValueChange={setProject}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Projects" />
                 </SelectTrigger>
@@ -265,7 +336,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
             {/* Sort */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">Sort By</label>
-              <Select name="sort" defaultValue={sort || 'default'}>
+              <Select value={sort} onValueChange={setSort}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sort By" />
                 </SelectTrigger>
@@ -317,11 +388,20 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
                     {/* Checkbox */}
-                    <Checkbox
-                      checked={task.completed}
-                      className="mt-1"
-                      aria-label={`Mark task "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
-                    />
+                    <div className="relative">
+                      <Checkbox
+                        checked={task.completed}
+                        onCheckedChange={() => handleToggleTask(task.id, task.completed)}
+                        disabled={isToggling === task.id}
+                        className="mt-1"
+                        aria-label={`Mark task "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
+                      />
+                      {isToggling === task.id && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        </div>
+                      )}
+                    </div>
                     
                     {/* Task Content */}
                     <div className="flex-1 min-w-0">
@@ -364,6 +444,48 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
                           </div>
                         )}
                       </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Link href={`/tasks/${task.id}/edit`}>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700"
+                            disabled={isDeleting === task.id}
+                          >
+                            {isDeleting === task.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Task</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete "{task.title}"? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteTask(task.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </CardContent>

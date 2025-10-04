@@ -1,5 +1,7 @@
-import { Metadata } from 'next'
-import { PrismaClient } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,114 +11,159 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Calendar as CalendarIcon, Plus, Edit, Smile } from 'lucide-react'
-import { format, isToday, isSameDay, parseISO } from 'date-fns'
+import { Calendar as CalendarIcon, Plus, Edit, Smile, Loader2 } from 'lucide-react'
+import { format, isToday, isSameDay, parseISO, startOfDay } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CreateDailyNoteSchema } from '@/lib/validations/daily-note'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Daily Notes - My Notes App',
-  description: 'Your daily journal entries',
+interface DailyNote {
+  id: string
+  date: string
+  content: string
+  mood?: string
+  userId: string
+  createdAt: string
+  updatedAt: string
 }
 
-const prisma = new PrismaClient()
+const MOODS = [
+  { value: 'Happy', emoji: '😊', color: 'bg-green-500' },
+  { value: 'Productive', emoji: '💪', color: 'bg-primary-blue' },
+  { value: 'Neutral', emoji: '😐', color: 'bg-gray-500' },
+  { value: 'Tired', emoji: '😴', color: 'bg-orange-500' },
+  { value: 'Energized', emoji: '⚡', color: 'bg-yellow-500' },
+  { value: 'Focused', emoji: '🎯', color: 'bg-purple-500' },
+  { value: 'Stressed', emoji: '😰', color: 'bg-red-500' },
+  { value: 'Excited', emoji: '🤩', color: 'bg-pink-500' },
+  { value: 'Calm', emoji: '😌', color: 'bg-blue-500' },
+  { value: 'Motivated', emoji: '🚀', color: 'bg-indigo-500' },
+]
 
-interface DailyNotesPageProps {
-  searchParams: {
-    date?: string
-    range?: string
-  }
-}
+export default function DailyNotesPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [dailyNotes, setDailyNotes] = useState<DailyNote[]>([])
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [selectedEntry, setSelectedEntry] = useState<DailyNote | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [range, setRange] = useState('all')
 
-async function getDailyNotesData(range?: string) {
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@myawesomeapp.com' },
+  const form = useForm({
+    resolver: zodResolver(CreateDailyNoteSchema),
+    defaultValues: {
+      date: format(new Date(), 'yyyy-MM-dd'),
+      content: '',
+      mood: '',
+    },
   })
 
-  if (!demoUser) {
-    return []
-  }
+  // Fetch daily notes
+  useEffect(() => {
+    fetchDailyNotes()
+  }, [range])
 
-  let whereClause: any = {
-    userId: demoUser.id,
-  }
-
-  // Apply date range filter
-  if (range && range !== 'all') {
-    const now = new Date()
-    let startDate: Date
-
-    switch (range) {
-      case '7days':
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-        break
-      case '30days':
-        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-        break
-      case 'month':
-        startDate = new Date(now.getFullYear(), now.getMonth(), 1)
-        break
-      default:
-        startDate = new Date(0)
+  // Check for selected date from URL params
+  useEffect(() => {
+    const dateParam = searchParams.get('date')
+    if (dateParam) {
+      const date = parseISO(dateParam)
+      setSelectedDate(date)
+      form.setValue('date', format(date, 'yyyy-MM-dd'))
     }
+  }, [searchParams, form])
 
-    whereClause.date = {
-      gte: startDate,
+  // Check for entry on selected date
+  useEffect(() => {
+    if (dailyNotes.length > 0) {
+      const entry = dailyNotes.find(note => 
+        isSameDay(new Date(note.date), selectedDate)
+      )
+      setSelectedEntry(entry || null)
+    }
+  }, [dailyNotes, selectedDate])
+
+  const fetchDailyNotes = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (range !== 'all') {
+        const now = new Date()
+        let startDate: Date
+
+        switch (range) {
+          case '7days':
+            startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+            break
+          case '30days':
+            startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+            break
+          case 'month':
+            startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+            break
+          default:
+            startDate = new Date(0)
+        }
+
+        params.set('startDate', format(startDate, 'yyyy-MM-dd'))
+      }
+
+      const response = await fetch(`/api/daily-notes?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setDailyNotes(data.data.dailyNotes)
+      }
+    } catch (error) {
+      console.error('Error fetching daily notes:', error)
+      toast.error('Failed to load daily notes')
+    } finally {
+      setLoading(false)
     }
   }
 
-  const dailyNotes = await prisma.dailyNote.findMany({
-    where: whereClause,
-    orderBy: { date: 'desc' },
-  })
+  const onSubmit = async (data: any) => {
+    try {
+      setSubmitting(true)
+      const response = await fetch('/api/daily-notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
 
-  return dailyNotes
-}
-
-function getMoodEmoji(mood: string | null) {
-  const moodMap: Record<string, string> = {
-    Happy: '😊',
-    Productive: '💪',
-    Neutral: '😐',
-    Tired: '😴',
-    Energized: '⚡',
-    Focused: '🎯',
-    Stressed: '😰',
-    Excited: '🤩',
-    Calm: '😌',
-    Motivated: '🚀',
+      if (response.ok) {
+        const newNote = await response.json()
+        setDailyNotes(prev => [newNote.data, ...prev])
+        setSelectedEntry(newNote.data)
+        form.reset()
+        toast.success('Daily entry saved!')
+      } else {
+        const error = await response.json()
+        toast.error(error.message || 'Failed to save entry')
+      }
+    } catch (error) {
+      console.error('Error saving daily note:', error)
+      toast.error('Failed to save entry')
+    } finally {
+      setSubmitting(false)
+    }
   }
-  return moodMap[mood || ''] || '😐'
-}
 
-function getMoodColor(mood: string | null) {
-  const colorMap: Record<string, string> = {
-    Happy: 'bg-green-500',
-    Productive: 'bg-primary-blue',
-    Neutral: 'bg-gray-500',
-    Tired: 'bg-orange-500',
-    Energized: 'bg-yellow-500',
-    Focused: 'bg-purple-500',
-    Stressed: 'bg-red-500',
-    Excited: 'bg-pink-500',
-    Calm: 'bg-blue-500',
-    Motivated: 'bg-indigo-500',
+  const getMoodEmoji = (mood: string | null) => {
+    const moodObj = MOODS.find(m => m.value === mood)
+    return moodObj?.emoji || '😐'
   }
-  return colorMap[mood || ''] || 'bg-gray-500'
-}
 
-export default async function DailyNotesPage({ searchParams }: DailyNotesPageProps) {
-  const selectedDate = searchParams.date ? parseISO(searchParams.date) : new Date()
-  const range = searchParams.range
-
-  const dailyNotes = await getDailyNotesData(range)
-  
-  // Find entry for selected date
-  const selectedEntry = dailyNotes.find(note => 
-    isSameDay(new Date(note.date), selectedDate)
-  )
+  const getMoodColor = (mood: string | null) => {
+    const moodObj = MOODS.find(m => m.value === mood)
+    return moodObj?.color || 'bg-gray-500'
+  }
 
   // Get dates with entries for calendar highlighting
   const datesWithEntries = dailyNotes.map(note => new Date(note.date))
-
   const hasEntries = dailyNotes.length > 0
   const hasSelectedEntry = !!selectedEntry
 
@@ -133,7 +180,14 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
             }
           </p>
         </div>
-        <Button className="bg-primary-blue hover:bg-primary-blue/90">
+        <Button 
+          className="bg-primary-blue hover:bg-primary-blue/90"
+          onClick={() => {
+            setSelectedDate(new Date())
+            form.setValue('date', format(new Date(), 'yyyy-MM-dd'))
+            setSelectedEntry(null)
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Create Entry
         </Button>
@@ -145,7 +199,7 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
           <CardTitle className="text-lg">Filter by Date Range</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select name="range" defaultValue={range || 'all'}>
+          <Select value={range} onValueChange={setRange}>
             <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder="Date Range" />
             </SelectTrigger>
@@ -165,7 +219,14 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
           <AlertDescription className="mt-2">
             Start writing today! Your daily notes help you reflect and track your progress.
           </AlertDescription>
-          <Button className="mt-4 bg-primary-blue hover:bg-primary-blue/90">
+          <Button 
+            className="mt-4 bg-primary-blue hover:bg-primary-blue/90"
+            onClick={() => {
+              setSelectedDate(new Date())
+              form.setValue('date', format(new Date(), 'yyyy-MM-dd'))
+              setSelectedEntry(null)
+            }}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Create Entry
           </Button>
@@ -184,6 +245,12 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
               <Calendar
                 mode="single"
                 selected={selectedDate}
+                onSelect={(date) => {
+                  if (date) {
+                    setSelectedDate(date)
+                    form.setValue('date', format(date, 'yyyy-MM-dd'))
+                  }
+                }}
                 className="rounded-md border"
                 modifiers={{
                   hasEntry: datesWithEntries,
@@ -231,7 +298,11 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
                           {selectedEntry.mood}
                         </Badge>
                       )}
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => router.push(`/daily-notes/${selectedEntry.id}/edit`)}
+                      >
                         <Edit className="w-4 h-4 mr-2" />
                         Edit
                       </Button>
@@ -258,56 +329,83 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">
-                        Date
-                      </label>
-                      <Input
-                        type="date"
-                        defaultValue={format(selectedDate, 'yyyy-MM-dd')}
-                        className="w-full"
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="date"
+                                {...field}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </div>
 
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">
-                        Mood
-                      </label>
-                      <Select defaultValue="">
-                        <SelectTrigger>
-                          <SelectValue placeholder="How are you feeling?" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Happy">😊 Happy</SelectItem>
-                          <SelectItem value="Productive">💪 Productive</SelectItem>
-                          <SelectItem value="Neutral">😐 Neutral</SelectItem>
-                          <SelectItem value="Tired">😴 Tired</SelectItem>
-                          <SelectItem value="Energized">⚡ Energized</SelectItem>
-                          <SelectItem value="Focused">🎯 Focused</SelectItem>
-                          <SelectItem value="Stressed">😰 Stressed</SelectItem>
-                          <SelectItem value="Excited">🤩 Excited</SelectItem>
-                          <SelectItem value="Calm">😌 Calm</SelectItem>
-                          <SelectItem value="Motivated">🚀 Motivated</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">
-                        What's on your mind?
-                      </label>
-                      <Textarea
-                        placeholder="Write about your day, thoughts, goals, or anything else..."
-                        className="min-h-32"
+                      <FormField
+                        control={form.control}
+                        name="mood"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mood</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="How are you feeling?" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {MOODS.map((mood) => (
+                                  <SelectItem key={mood.value} value={mood.value}>
+                                    {mood.emoji} {mood.value}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </div>
 
-                    <Button className="w-full bg-primary-blue hover:bg-primary-blue/90">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Save Entry
-                    </Button>
-                  </div>
+                      <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>What's on your mind?</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Write about your day, thoughts, goals, or anything else..."
+                                className="min-h-32"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button 
+                        type="submit" 
+                        className="w-full bg-primary-blue hover:bg-primary-blue/90"
+                        disabled={submitting}
+                      >
+                        {submitting ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : (
+                          <Plus className="w-4 h-4 mr-2" />
+                        )}
+                        Save Entry
+                      </Button>
+                    </form>
+                  </Form>
                 </CardContent>
               </Card>
             )}
@@ -327,6 +425,10 @@ export default async function DailyNotesPage({ searchParams }: DailyNotesPagePro
                           ? 'bg-primary-blue/10 border-primary-blue'
                           : 'hover:bg-accent-cyan/10'
                       }`}
+                      onClick={() => {
+                        setSelectedDate(new Date(note.date))
+                        form.setValue('date', format(new Date(note.date), 'yyyy-MM-dd'))
+                      }}
                     >
                       <div className="flex items-center justify-between">
                         <div>

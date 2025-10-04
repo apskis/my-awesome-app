@@ -1,53 +1,95 @@
-import { Metadata } from 'next'
-import { PrismaClient } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Plus, Pencil, Trash2, FileText } from 'lucide-react'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { Plus, Pencil, Trash2, FileText, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Categories - My Notes App',
-  description: 'Manage your note categories',
+interface Category {
+  id: string
+  name: string
+  description?: string
+  color: string
+  noteCount: number
 }
 
-const prisma = new PrismaClient()
+export default function CategoriesPage() {
+  const router = useRouter()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
-async function getCategoriesData() {
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@myawesomeapp.com' },
-  })
+  // Load categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true)
+        const response = await fetch('/api/categories')
+        
+        if (response.ok) {
+          const data = await response.json()
+          setCategories(data.categories || [])
+        } else {
+          toast.error('Failed to load categories')
+        }
+      } catch (error) {
+        console.error('Failed to fetch categories:', error)
+        toast.error('Failed to load categories')
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-  if (!demoUser) {
-    return []
+    fetchCategories()
+  }, [])
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    try {
+      setIsDeleting(categoryId)
+      
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        // Remove the category from local state
+        setCategories(prevCategories => prevCategories.filter(category => category.id !== categoryId))
+        toast.success('Category deleted successfully!')
+      } else {
+        const errorData = await response.json()
+        toast.error(errorData.error || 'Failed to delete category')
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error)
+      toast.error('Failed to delete category')
+    } finally {
+      setIsDeleting(null)
+    }
   }
 
-  const categories = await prisma.category.findMany({
-    where: { userId: demoUser.id },
-    include: {
-      _count: {
-        select: {
-          notes: true,
-        },
-      },
-    },
-    orderBy: { name: 'asc' },
-  })
-
-  return categories
-}
-
-function getCategoryColorStyle(color: string) {
-  return {
-    backgroundColor: color + '20',
-    color: color,
-    borderColor: color + '40',
+  function getCategoryColorStyle(color: string) {
+    return {
+      backgroundColor: color + '20',
+      color: color,
+      borderColor: color + '40',
+    }
   }
-}
 
-export default async function CategoriesPage() {
-  const categories = await getCategoriesData()
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -116,7 +158,7 @@ export default async function CategoriesPage() {
                 <div className="flex items-center gap-2 mb-4">
                   <FileText className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    {category._count.notes} note{category._count.notes === 1 ? '' : 's'}
+                    {category.noteCount} note{category.noteCount === 1 ? '' : 's'}
                   </span>
                 </div>
 
@@ -130,24 +172,59 @@ export default async function CategoriesPage() {
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1"
-                    aria-label={`Edit category ${category.name}`}
-                  >
-                    <Pencil className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    aria-label={`Delete category ${category.name}`}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </Button>
+                  <Link href={`/categories/${category.id}/edit`}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1"
+                      aria-label={`Edit category ${category.name}`}
+                    >
+                      <Pencil className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  </Link>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        aria-label={`Delete category ${category.name}`}
+                        disabled={isDeleting === category.id}
+                      >
+                        {isDeleting === category.id ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4 mr-2" />
+                        )}
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{category.name}"? This action cannot be undone.
+                          {category.noteCount > 0 && (
+                            <span className="block mt-2 text-red-600 font-medium">
+                              This category has {category.noteCount} note{category.noteCount === 1 ? '' : 's'}. 
+                              You must reassign or delete these notes before deleting the category.
+                            </span>
+                          )}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteCategory(category.id)}
+                          className="bg-red-600 hover:bg-red-700"
+                          disabled={category.noteCount > 0}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>
@@ -171,14 +248,14 @@ export default async function CategoriesPage() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">
-                  {categories.reduce((sum, cat) => sum + cat._count.notes, 0)}
+                  {categories.reduce((sum, cat) => sum + cat.noteCount, 0)}
                 </div>
                 <div className="text-sm text-muted-foreground">Total Notes</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">
                   {categories.length > 0 
-                    ? Math.round(categories.reduce((sum, cat) => sum + cat._count.notes, 0) / categories.length)
+                    ? Math.round(categories.reduce((sum, cat) => sum + cat.noteCount, 0) / categories.length)
                     : 0
                   }
                 </div>

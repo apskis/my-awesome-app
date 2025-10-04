@@ -1,76 +1,92 @@
-import { Metadata } from 'next'
-import { PrismaClient } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Search, BookOpen, Tag, Calendar } from 'lucide-react'
+import { Search, BookOpen, Tag, Calendar, Plus, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Knowledge Hub - My Notes App',
-  description: 'Browse documentation and guides',
+interface KnowledgeArticle {
+  id: string
+  title: string
+  content: string
+  category?: string
+  tags: string[]
+  userId: string
+  createdAt: string
+  updatedAt: string
 }
 
-const prisma = new PrismaClient()
+export default function KnowledgeHubPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [articles, setArticles] = useState<KnowledgeArticle[]>([])
+  const [categories, setCategories] = useState<string[]>([])
+  const [allTags, setAllTags] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState(searchParams.get('search') || '')
+  const [category, setCategory] = useState(searchParams.get('category') || 'all')
+  const [tag, setTag] = useState(searchParams.get('tag') || 'all')
 
-interface KnowledgeHubPageProps {
-  searchParams: {
-    search?: string
-    category?: string
-    tag?: string
-  }
-}
+  // Fetch articles
+  useEffect(() => {
+    fetchArticles()
+  }, [category, tag])
 
-async function getKnowledgeArticlesData(search?: string, category?: string, tag?: string) {
-  // Build where clause
-  const where: any = {}
+  const fetchArticles = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (search) {
+        params.set('search', search)
+      }
+      if (category !== 'all') {
+        params.set('category', category)
+      }
+      if (tag !== 'all') {
+        params.set('tag', tag)
+      }
 
-  if (search) {
-    where.OR = [
-      { title: { contains: search, mode: 'insensitive' } },
-      { content: { contains: search, mode: 'insensitive' } },
-    ]
-  }
+      const response = await fetch(`/api/knowledge-articles?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setArticles(data.data.articles)
+        
+        // Extract unique categories and tags
+        const uniqueCategories = [...new Set(
+          data.data.articles
+            .map((a: KnowledgeArticle) => a.category)
+            .filter(Boolean)
+        )].sort()
+        setCategories(uniqueCategories)
 
-  if (category && category !== 'all') {
-    where.category = category
-  }
-
-  if (tag && tag !== 'all') {
-    where.tags = {
-      has: tag,
+        const uniqueTags = [...new Set(
+          data.data.articles.flatMap((a: KnowledgeArticle) => a.tags)
+        )].sort()
+        setAllTags(uniqueTags)
+      }
+    } catch (error) {
+      console.error('Error fetching knowledge articles:', error)
+      toast.error('Failed to load articles')
+    } finally {
+      setLoading(false)
     }
   }
 
-  const articles = await prisma.knowledgeArticle.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
+  const filteredArticles = articles.filter(article => {
+    if (search && !article.title.toLowerCase().includes(search.toLowerCase()) && 
+        !article.content.toLowerCase().includes(search.toLowerCase())) {
+      return false
+    }
+    return true
   })
-
-  // Get unique categories and tags for filters
-  const allArticles = await prisma.knowledgeArticle.findMany({
-    select: { category: true, tags: true },
-  })
-
-  const categories = Array.from(new Set(
-    allArticles.map(a => a.category).filter(Boolean)
-  )).sort()
-
-  const allTags = Array.from(new Set(
-    allArticles.flatMap(a => a.tags)
-  )).sort()
-
-  return {
-    articles,
-    categories,
-    allTags,
-  }
-}
 
 function getCategoryColor(category: string | null) {
   const colors: Record<string, string> = {
@@ -92,15 +108,16 @@ function getCategoryBadgeColor(category: string | null) {
   }
 }
 
-export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPageProps) {
-  const search = searchParams.search
-  const category = searchParams.category
-  const tag = searchParams.tag
-
-  const { articles, categories, allTags } = await getKnowledgeArticlesData(search, category, tag)
-
-  const hasArticles = articles.length > 0
+  const hasArticles = filteredArticles.length > 0
   const hasFilters = search || (category && category !== 'all') || (tag && tag !== 'all')
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-primary-blue" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -109,12 +126,18 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
         <div>
           <h1 className="text-3xl font-bold text-foreground">Knowledge Hub</h1>
           <p className="text-muted-foreground mt-1">
-            {articles.length === 0 
+            {filteredArticles.length === 0 
               ? 'No articles found' 
-              : `${articles.length} article${articles.length === 1 ? '' : 's'} found`
+              : `${filteredArticles.length} article${filteredArticles.length === 1 ? '' : 's'} found`
             }
           </p>
         </div>
+        <Link href="/knowledge-hub/new">
+          <Button className="bg-primary-blue hover:bg-primary-blue/90">
+            <Plus className="w-4 h-4 mr-2" />
+            Create Article
+          </Button>
+        </Link>
       </div>
 
       {/* Search and Filters */}
@@ -129,9 +152,9 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search articles..."
-                defaultValue={search}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
-                name="search"
               />
             </div>
 
@@ -144,6 +167,7 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
                     variant={category === 'all' || !category ? "default" : "outline"}
                     size="sm"
                     className={category === 'all' || !category ? "bg-primary-blue" : ""}
+                    onClick={() => setCategory('all')}
                   >
                     All
                   </Button>
@@ -154,6 +178,7 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
                       size="sm"
                       className={category === cat ? "bg-primary-blue" : ""}
                       style={category === cat ? {} : getCategoryBadgeColor(cat)}
+                      onClick={() => setCategory(cat)}
                     >
                       {cat}
                     </Button>
@@ -170,6 +195,7 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
                     variant={tag === 'all' || !tag ? "default" : "outline"}
                     size="sm"
                     className={tag === 'all' || !tag ? "bg-primary-blue" : ""}
+                    onClick={() => setTag('all')}
                   >
                     All Tags
                   </Button>
@@ -179,6 +205,7 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
                       variant={tag === tagName ? "default" : "outline"}
                       size="sm"
                       className={tag === tagName ? "bg-primary-blue" : ""}
+                      onClick={() => setTag(tagName)}
                     >
                       <Tag className="w-3 h-3 mr-1" />
                       {tagName}
@@ -222,7 +249,7 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {articles.map((article, index) => (
+                  {filteredArticles.map((article, index) => (
                     <Link
                       key={article.id}
                       href={`#article-${index}`}
@@ -255,7 +282,7 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
           {/* Articles Content - Main area */}
           <div className="lg:col-span-2">
             <div className="space-y-6">
-              {articles.map((article, index) => (
+              {filteredArticles.map((article, index) => (
                 <Card key={article.id} id={`article-${index}`}>
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2">
@@ -324,10 +351,10 @@ export default async function KnowledgeHubPage({ searchParams }: KnowledgeHubPag
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {articles.slice(0, 6).map((article) => (
+              {filteredArticles.slice(0, 6).map((article) => (
                 <Link
                   key={article.id}
-                  href={`#article-${articles.indexOf(article)}`}
+                  href={`#article-${filteredArticles.indexOf(article)}`}
                   className="block p-3 rounded-lg hover:bg-accent-cyan/10 transition-colors group"
                 >
                   <div className="font-medium text-sm text-foreground group-hover:text-primary-blue mb-1">

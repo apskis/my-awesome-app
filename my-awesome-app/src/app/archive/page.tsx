@@ -1,125 +1,148 @@
-import { Metadata } from 'next'
-import { PrismaClient, NoteStatus } from '@/generated/prisma'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Search, ArchiveRestore, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, ArchiveRestore, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
 
-export const metadata: Metadata = {
-  title: 'Archive - My Notes App',
-  description: 'View archived notes',
+interface Note {
+  id: string
+  title: string
+  content: string
+  status: string
+  userId: string
+  categoryId?: string
+  createdAt: string
+  updatedAt: string
+  category?: {
+    id: string
+    name: string
+    color: string
+  }
+  tags: Array<{
+    tag: {
+      id: string
+      name: string
+      color: string
+    }
+  }>
 }
 
-const prisma = new PrismaClient()
+export default function ArchivePage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [notes, setNotes] = useState<Note[]>([])
+  const [loading, setLoading] = useState(true)
+  const [restoring, setRestoring] = useState<string | null>(null)
+  const [search, setSearch] = useState(searchParams.get('search') || '')
+  const [dateFilter, setDateFilter] = useState(searchParams.get('dateFilter') || 'all')
+  const [page, setPage] = useState(parseInt(searchParams.get('page') || '1'))
+  const [totalCount, setTotalCount] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
 
-interface ArchivePageProps {
-  searchParams: {
-    page?: string
-    search?: string
-    dateFilter?: string
-  }
-}
+  // Fetch archived notes
+  useEffect(() => {
+    fetchArchivedNotes()
+  }, [page, dateFilter])
 
-async function getArchivedNotesData(page: number = 1, search?: string, dateFilter?: string) {
-  const demoUser = await prisma.user.findUnique({
-    where: { email: 'demo@myawesomeapp.com' },
-  })
+  const fetchArchivedNotes = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      params.set('status', 'ARCHIVED')
+      params.set('page', page.toString())
+      
+      if (search) {
+        params.set('search', search)
+      }
+      
+      if (dateFilter !== 'all') {
+        const now = new Date()
+        let dateThreshold: Date
 
-  if (!demoUser) {
-    return {
-      notes: [],
-      totalCount: 0,
-      totalPages: 0,
+        switch (dateFilter) {
+          case '7days':
+            dateThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+            break
+          case '30days':
+            dateThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+            break
+          case '90days':
+            dateThreshold = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+            break
+          default:
+            dateThreshold = new Date(0)
+        }
+
+        params.set('startDate', dateThreshold.toISOString())
+      }
+
+      const response = await fetch(`/api/notes?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setNotes(data.data.notes)
+        setTotalCount(data.data.total)
+        setTotalPages(Math.ceil(data.data.total / 10))
+      }
+    } catch (error) {
+      console.error('Error fetching archived notes:', error)
+      toast.error('Failed to load archived notes')
+    } finally {
+      setLoading(false)
     }
   }
 
-  const pageSize = 10
-  const skip = (page - 1) * pageSize
-
-  // Build where clause
-  const where: any = {
-    userId: demoUser.id,
-    status: NoteStatus.ARCHIVED,
-  }
-
-  if (search) {
-    where.title = {
-      contains: search,
-      mode: 'insensitive',
-    }
-  }
-
-  // Date filter
-  if (dateFilter && dateFilter !== 'all') {
-    const now = new Date()
-    let dateThreshold: Date
-
-    switch (dateFilter) {
-      case '7days':
-        dateThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-        break
-      case '30days':
-        dateThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-        break
-      case '90days':
-        dateThreshold = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
-        break
-      default:
-        dateThreshold = new Date(0) // All time
-    }
-
-    where.updatedAt = {
-      gte: dateThreshold,
-    }
-  }
-
-  const [notes, totalCount] = await Promise.all([
-    prisma.note.findMany({
-      where,
-      include: {
-        category: true,
-        tags: {
-          include: {
-            tag: true,
-          },
+  const handleRestore = async (noteId: string, status: 'PUBLISHED' | 'DRAFT') => {
+    try {
+      setRestoring(noteId)
+      const response = await fetch(`/api/notes/${noteId}/unarchive`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      },
-      orderBy: { updatedAt: 'desc' },
-      skip,
-      take: pageSize,
-    }),
-    prisma.note.count({ where }),
-  ])
+        body: JSON.stringify({ status }),
+      })
 
-  const totalPages = Math.ceil(totalCount / pageSize)
-
-  return {
-    notes,
-    totalCount,
-    totalPages,
+      if (response.ok) {
+        toast.success('Note restored!')
+        fetchArchivedNotes() // Refresh the list
+      } else {
+        const error = await response.json()
+        toast.error(error.message || 'Failed to restore note')
+      }
+    } catch (error) {
+      console.error('Error restoring note:', error)
+      toast.error('Failed to restore note')
+    } finally {
+      setRestoring(null)
+    }
   }
-}
 
 function truncateText(text: string, maxLength: number = 100) {
   if (text.length <= maxLength) return text
   return text.substring(0, maxLength) + '...'
 }
 
-export default async function ArchivePage({ searchParams }: ArchivePageProps) {
-  const page = parseInt(searchParams.page || '1')
-  const search = searchParams.search
-  const dateFilter = searchParams.dateFilter
-
-  const { notes, totalCount, totalPages } = await getArchivedNotesData(page, search, dateFilter)
-
   const hasNotes = notes.length > 0
   const hasFilters = search || (dateFilter && dateFilter !== 'all')
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-primary-blue" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -149,15 +172,15 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   placeholder="Search archived notes..."
-                  defaultValue={search}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="pl-10"
-                  name="search"
                 />
               </div>
             </div>
 
             {/* Date Filter */}
-            <Select name="dateFilter" defaultValue={dateFilter || 'all'}>
+            <Select value={dateFilter} onValueChange={setDateFilter}>
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Date Range" />
               </SelectTrigger>
@@ -168,11 +191,6 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                 <SelectItem value="90days">Last 90 Days</SelectItem>
               </SelectContent>
             </Select>
-
-            {/* Apply Filters Button */}
-            <Button type="submit" variant="outline" className="w-full sm:w-auto">
-              Apply Filters
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -255,15 +273,46 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                       {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-accent-cyan hover:text-accent-cyan/80"
-                        aria-label={`Restore note ${note.title}`}
-                      >
-                        <ArchiveRestore className="w-4 h-4 mr-2" />
-                        Restore
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-accent-cyan hover:text-accent-cyan/80"
+                            disabled={restoring === note.id}
+                          >
+                            {restoring === note.id ? (
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : (
+                              <ArchiveRestore className="w-4 h-4 mr-2" />
+                            )}
+                            Restore
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Restore Note</DialogTitle>
+                            <DialogDescription>
+                              Choose how you want to restore "{note.title}":
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button
+                              variant="outline"
+                              onClick={() => handleRestore(note.id, 'DRAFT')}
+                              disabled={restoring === note.id}
+                            >
+                              Restore as Draft
+                            </Button>
+                            <Button
+                              onClick={() => handleRestore(note.id, 'PUBLISHED')}
+                              disabled={restoring === note.id}
+                            >
+                              Restore as Published
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -327,15 +376,46 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                     <div className="text-xs text-muted-foreground">
                       Archived {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-accent-cyan hover:text-accent-cyan/80"
-                      aria-label={`Restore note ${note.title}`}
-                    >
-                      <ArchiveRestore className="w-4 h-4 mr-2" />
-                      Restore
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-accent-cyan hover:text-accent-cyan/80"
+                          disabled={restoring === note.id}
+                        >
+                          {restoring === note.id ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <ArchiveRestore className="w-4 h-4 mr-2" />
+                          )}
+                          Restore
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Restore Note</DialogTitle>
+                          <DialogDescription>
+                            Choose how you want to restore "{note.title}":
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <Button
+                            variant="outline"
+                            onClick={() => handleRestore(note.id, 'DRAFT')}
+                            disabled={restoring === note.id}
+                          >
+                            Restore as Draft
+                          </Button>
+                          <Button
+                            onClick={() => handleRestore(note.id, 'PUBLISHED')}
+                            disabled={restoring === note.id}
+                          >
+                            Restore as Published
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </CardContent>
               </Card>
@@ -356,6 +436,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                       variant="outline"
                       size="sm"
                       disabled={page === 1}
+                      onClick={() => setPage(page - 1)}
                       aria-label="Previous page"
                     >
                       <ChevronLeft className="w-4 h-4" />
@@ -369,6 +450,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                           variant={pageNum === page ? "default" : "outline"}
                           size="sm"
                           className={pageNum === page ? "bg-primary-blue" : ""}
+                          onClick={() => setPage(pageNum)}
                           aria-label={`Go to page ${pageNum}`}
                           aria-current={pageNum === page ? "page" : undefined}
                         >
@@ -381,6 +463,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
                       variant="outline"
                       size="sm"
                       disabled={page === totalPages}
+                      onClick={() => setPage(page + 1)}
                       aria-label="Next page"
                     >
                       <ChevronRight className="w-4 h-4" />

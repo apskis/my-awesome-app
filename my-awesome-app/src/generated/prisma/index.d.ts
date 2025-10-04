@@ -111,6 +111,17 @@ export const ProjectStatus: {
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 
+
+export const Mood: {
+  GREAT: 'GREAT',
+  GOOD: 'GOOD',
+  NEUTRAL: 'NEUTRAL',
+  BAD: 'BAD',
+  TERRIBLE: 'TERRIBLE'
+};
+
+export type Mood = (typeof Mood)[keyof typeof Mood]
+
 }
 
 export type NoteStatus = $Enums.NoteStatus
@@ -124,6 +135,10 @@ export const TaskPriority: typeof $Enums.TaskPriority
 export type ProjectStatus = $Enums.ProjectStatus
 
 export const ProjectStatus: typeof $Enums.ProjectStatus
+
+export type Mood = $Enums.Mood
+
+export const Mood: typeof $Enums.Mood
 
 /**
  * ##  Prisma Client ʲˢ
@@ -10066,19 +10081,16 @@ export namespace Prisma {
   }
 
   export type NoteTagMinAggregateOutputType = {
-    id: string | null
     noteId: string | null
     tagId: string | null
   }
 
   export type NoteTagMaxAggregateOutputType = {
-    id: string | null
     noteId: string | null
     tagId: string | null
   }
 
   export type NoteTagCountAggregateOutputType = {
-    id: number
     noteId: number
     tagId: number
     _all: number
@@ -10086,19 +10098,16 @@ export namespace Prisma {
 
 
   export type NoteTagMinAggregateInputType = {
-    id?: true
     noteId?: true
     tagId?: true
   }
 
   export type NoteTagMaxAggregateInputType = {
-    id?: true
     noteId?: true
     tagId?: true
   }
 
   export type NoteTagCountAggregateInputType = {
-    id?: true
     noteId?: true
     tagId?: true
     _all?: true
@@ -10177,7 +10186,6 @@ export namespace Prisma {
   }
 
   export type NoteTagGroupByOutputType = {
-    id: string
     noteId: string
     tagId: string
     _count: NoteTagCountAggregateOutputType | null
@@ -10200,7 +10208,6 @@ export namespace Prisma {
 
 
   export type NoteTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
     noteId?: boolean
     tagId?: boolean
     note?: boolean | NoteDefaultArgs<ExtArgs>
@@ -10208,7 +10215,6 @@ export namespace Prisma {
   }, ExtArgs["result"]["noteTag"]>
 
   export type NoteTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
     noteId?: boolean
     tagId?: boolean
     note?: boolean | NoteDefaultArgs<ExtArgs>
@@ -10216,7 +10222,6 @@ export namespace Prisma {
   }, ExtArgs["result"]["noteTag"]>
 
   export type NoteTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
     noteId?: boolean
     tagId?: boolean
     note?: boolean | NoteDefaultArgs<ExtArgs>
@@ -10224,12 +10229,11 @@ export namespace Prisma {
   }, ExtArgs["result"]["noteTag"]>
 
   export type NoteTagSelectScalar = {
-    id?: boolean
     noteId?: boolean
     tagId?: boolean
   }
 
-  export type NoteTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "noteId" | "tagId", ExtArgs["result"]["noteTag"]>
+  export type NoteTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"noteId" | "tagId", ExtArgs["result"]["noteTag"]>
   export type NoteTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     note?: boolean | NoteDefaultArgs<ExtArgs>
     tag?: boolean | TagDefaultArgs<ExtArgs>
@@ -10250,7 +10254,6 @@ export namespace Prisma {
       tag: Prisma.$TagPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
       noteId: string
       tagId: string
     }, ExtArgs["result"]["noteTag"]>
@@ -10336,8 +10339,8 @@ export namespace Prisma {
      * // Get first 10 NoteTags
      * const noteTags = await prisma.noteTag.findMany({ take: 10 })
      * 
-     * // Only select the `id`
-     * const noteTagWithIdOnly = await prisma.noteTag.findMany({ select: { id: true } })
+     * // Only select the `noteId`
+     * const noteTagWithNoteIdOnly = await prisma.noteTag.findMany({ select: { noteId: true } })
      * 
      */
     findMany<T extends NoteTagFindManyArgs>(args?: SelectSubset<T, NoteTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoteTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -10381,9 +10384,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many NoteTags and only return the `id`
-     * const noteTagWithIdOnly = await prisma.noteTag.createManyAndReturn({
-     *   select: { id: true },
+     * // Create many NoteTags and only return the `noteId`
+     * const noteTagWithNoteIdOnly = await prisma.noteTag.createManyAndReturn({
+     *   select: { noteId: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -10472,9 +10475,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more NoteTags and only return the `id`
-     * const noteTagWithIdOnly = await prisma.noteTag.updateManyAndReturn({
-     *   select: { id: true },
+     * // Update zero or more NoteTags and only return the `noteId`
+     * const noteTagWithNoteIdOnly = await prisma.noteTag.updateManyAndReturn({
+     *   select: { noteId: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -10678,7 +10681,6 @@ export namespace Prisma {
    * Fields of the NoteTag model
    */
   interface NoteTagFieldRefs {
-    readonly id: FieldRef<"NoteTag", 'String'>
     readonly noteId: FieldRef<"NoteTag", 'String'>
     readonly tagId: FieldRef<"NoteTag", 'String'>
   }
@@ -11109,7 +11111,7 @@ export namespace Prisma {
     id: string | null
     date: Date | null
     content: string | null
-    mood: string | null
+    mood: $Enums.Mood | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -11119,7 +11121,7 @@ export namespace Prisma {
     id: string | null
     date: Date | null
     content: string | null
-    mood: string | null
+    mood: $Enums.Mood | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -11244,7 +11246,7 @@ export namespace Prisma {
     id: string
     date: Date
     content: string
-    mood: string | null
+    mood: $Enums.Mood | null
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -11330,7 +11332,7 @@ export namespace Prisma {
       id: string
       date: Date
       content: string
-      mood: string | null
+      mood: $Enums.Mood | null
       userId: string
       createdAt: Date
       updatedAt: Date
@@ -11761,7 +11763,7 @@ export namespace Prisma {
     readonly id: FieldRef<"DailyNote", 'String'>
     readonly date: FieldRef<"DailyNote", 'DateTime'>
     readonly content: FieldRef<"DailyNote", 'String'>
-    readonly mood: FieldRef<"DailyNote", 'String'>
+    readonly mood: FieldRef<"DailyNote", 'Mood'>
     readonly userId: FieldRef<"DailyNote", 'String'>
     readonly createdAt: FieldRef<"DailyNote", 'DateTime'>
     readonly updatedAt: FieldRef<"DailyNote", 'DateTime'>
@@ -12192,7 +12194,6 @@ export namespace Prisma {
   export type TaskMinAggregateOutputType = {
     id: string | null
     title: string | null
-    description: string | null
     completed: boolean | null
     priority: $Enums.TaskPriority | null
     dueDate: Date | null
@@ -12205,7 +12206,6 @@ export namespace Prisma {
   export type TaskMaxAggregateOutputType = {
     id: string | null
     title: string | null
-    description: string | null
     completed: boolean | null
     priority: $Enums.TaskPriority | null
     dueDate: Date | null
@@ -12218,7 +12218,6 @@ export namespace Prisma {
   export type TaskCountAggregateOutputType = {
     id: number
     title: number
-    description: number
     completed: number
     priority: number
     dueDate: number
@@ -12233,7 +12232,6 @@ export namespace Prisma {
   export type TaskMinAggregateInputType = {
     id?: true
     title?: true
-    description?: true
     completed?: true
     priority?: true
     dueDate?: true
@@ -12246,7 +12244,6 @@ export namespace Prisma {
   export type TaskMaxAggregateInputType = {
     id?: true
     title?: true
-    description?: true
     completed?: true
     priority?: true
     dueDate?: true
@@ -12259,7 +12256,6 @@ export namespace Prisma {
   export type TaskCountAggregateInputType = {
     id?: true
     title?: true
-    description?: true
     completed?: true
     priority?: true
     dueDate?: true
@@ -12345,7 +12341,6 @@ export namespace Prisma {
   export type TaskGroupByOutputType = {
     id: string
     title: string
-    description: string | null
     completed: boolean
     priority: $Enums.TaskPriority
     dueDate: Date | null
@@ -12375,7 +12370,6 @@ export namespace Prisma {
   export type TaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
-    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -12390,7 +12384,6 @@ export namespace Prisma {
   export type TaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
-    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -12405,7 +12398,6 @@ export namespace Prisma {
   export type TaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
-    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -12420,7 +12412,6 @@ export namespace Prisma {
   export type TaskSelectScalar = {
     id?: boolean
     title?: boolean
-    description?: boolean
     completed?: boolean
     priority?: boolean
     dueDate?: boolean
@@ -12430,7 +12421,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "completed" | "priority" | "dueDate" | "userId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "completed" | "priority" | "dueDate" | "userId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | Task$projectArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -12453,7 +12444,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
-      description: string | null
       completed: boolean
       priority: $Enums.TaskPriority
       dueDate: Date | null
@@ -12888,7 +12878,6 @@ export namespace Prisma {
   interface TaskFieldRefs {
     readonly id: FieldRef<"Task", 'String'>
     readonly title: FieldRef<"Task", 'String'>
-    readonly description: FieldRef<"Task", 'String'>
     readonly completed: FieldRef<"Task", 'Boolean'>
     readonly priority: FieldRef<"Task", 'TaskPriority'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
@@ -14640,7 +14629,7 @@ export namespace Prisma {
     name: string
     description: string | null
     content: string
-    category: string | null
+    category: string
     createdAt: Date
     updatedAt: Date
     _count: TemplateCountAggregateOutputType | null
@@ -14712,7 +14701,7 @@ export namespace Prisma {
       name: string
       description: string | null
       content: string
-      category: string | null
+      category: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["template"]>
@@ -15662,7 +15651,7 @@ export namespace Prisma {
     id: string
     title: string
     content: string
-    category: string | null
+    category: string
     tags: string[]
     userId: string
     createdAt: Date
@@ -15753,7 +15742,7 @@ export namespace Prisma {
       id: string
       title: string
       content: string
-      category: string | null
+      category: string
       tags: string[]
       userId: string
       createdAt: Date
@@ -16708,7 +16697,6 @@ export namespace Prisma {
 
 
   export const NoteTagScalarFieldEnum: {
-    id: 'id',
     noteId: 'noteId',
     tagId: 'tagId'
   };
@@ -16732,7 +16720,6 @@ export namespace Prisma {
   export const TaskScalarFieldEnum: {
     id: 'id',
     title: 'title',
-    description: 'description',
     completed: 'completed',
     priority: 'priority',
     dueDate: 'dueDate',
@@ -16868,6 +16855,20 @@ export namespace Prisma {
    * Reference to a field of type 'NoteStatus[]'
    */
   export type ListEnumNoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoteStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Mood'
+   */
+  export type EnumMoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Mood'>
+    
+
+
+  /**
+   * Reference to a field of type 'Mood[]'
+   */
+  export type ListEnumMoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Mood[]'>
     
 
 
@@ -17404,7 +17405,6 @@ export namespace Prisma {
     AND?: NoteTagWhereInput | NoteTagWhereInput[]
     OR?: NoteTagWhereInput[]
     NOT?: NoteTagWhereInput | NoteTagWhereInput[]
-    id?: StringFilter<"NoteTag"> | string
     noteId?: StringFilter<"NoteTag"> | string
     tagId?: StringFilter<"NoteTag"> | string
     note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
@@ -17412,7 +17412,6 @@ export namespace Prisma {
   }
 
   export type NoteTagOrderByWithRelationInput = {
-    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
     note?: NoteOrderByWithRelationInput
@@ -17420,7 +17419,6 @@ export namespace Prisma {
   }
 
   export type NoteTagWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
     noteId_tagId?: NoteTagNoteIdTagIdCompoundUniqueInput
     AND?: NoteTagWhereInput | NoteTagWhereInput[]
     OR?: NoteTagWhereInput[]
@@ -17429,10 +17427,9 @@ export namespace Prisma {
     tagId?: StringFilter<"NoteTag"> | string
     note?: XOR<NoteScalarRelationFilter, NoteWhereInput>
     tag?: XOR<TagScalarRelationFilter, TagWhereInput>
-  }, "id" | "noteId_tagId">
+  }, "noteId_tagId">
 
   export type NoteTagOrderByWithAggregationInput = {
-    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
     _count?: NoteTagCountOrderByAggregateInput
@@ -17444,7 +17441,6 @@ export namespace Prisma {
     AND?: NoteTagScalarWhereWithAggregatesInput | NoteTagScalarWhereWithAggregatesInput[]
     OR?: NoteTagScalarWhereWithAggregatesInput[]
     NOT?: NoteTagScalarWhereWithAggregatesInput | NoteTagScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"NoteTag"> | string
     noteId?: StringWithAggregatesFilter<"NoteTag"> | string
     tagId?: StringWithAggregatesFilter<"NoteTag"> | string
   }
@@ -17456,7 +17452,7 @@ export namespace Prisma {
     id?: StringFilter<"DailyNote"> | string
     date?: DateTimeFilter<"DailyNote"> | Date | string
     content?: StringFilter<"DailyNote"> | string
-    mood?: StringNullableFilter<"DailyNote"> | string | null
+    mood?: EnumMoodNullableFilter<"DailyNote"> | $Enums.Mood | null
     userId?: StringFilter<"DailyNote"> | string
     createdAt?: DateTimeFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeFilter<"DailyNote"> | Date | string
@@ -17481,7 +17477,7 @@ export namespace Prisma {
     OR?: DailyNoteWhereInput[]
     NOT?: DailyNoteWhereInput | DailyNoteWhereInput[]
     content?: StringFilter<"DailyNote"> | string
-    mood?: StringNullableFilter<"DailyNote"> | string | null
+    mood?: EnumMoodNullableFilter<"DailyNote"> | $Enums.Mood | null
     userId?: StringFilter<"DailyNote"> | string
     createdAt?: DateTimeFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeFilter<"DailyNote"> | Date | string
@@ -17508,7 +17504,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DailyNote"> | string
     date?: DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
     content?: StringWithAggregatesFilter<"DailyNote"> | string
-    mood?: StringNullableWithAggregatesFilter<"DailyNote"> | string | null
+    mood?: EnumMoodNullableWithAggregatesFilter<"DailyNote"> | $Enums.Mood | null
     userId?: StringWithAggregatesFilter<"DailyNote"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DailyNote"> | Date | string
@@ -17520,7 +17516,6 @@ export namespace Prisma {
     NOT?: TaskWhereInput | TaskWhereInput[]
     id?: StringFilter<"Task"> | string
     title?: StringFilter<"Task"> | string
-    description?: StringNullableFilter<"Task"> | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -17535,7 +17530,6 @@ export namespace Prisma {
   export type TaskOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrderInput | SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -17553,7 +17547,6 @@ export namespace Prisma {
     OR?: TaskWhereInput[]
     NOT?: TaskWhereInput | TaskWhereInput[]
     title?: StringFilter<"Task"> | string
-    description?: StringNullableFilter<"Task"> | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -17568,7 +17561,6 @@ export namespace Prisma {
   export type TaskOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrderInput | SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -17587,7 +17579,6 @@ export namespace Prisma {
     NOT?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Task"> | string
     title?: StringWithAggregatesFilter<"Task"> | string
-    description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     completed?: BoolWithAggregatesFilter<"Task"> | boolean
     priority?: EnumTaskPriorityWithAggregatesFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
@@ -17680,7 +17671,7 @@ export namespace Prisma {
     name?: StringFilter<"Template"> | string
     description?: StringNullableFilter<"Template"> | string | null
     content?: StringFilter<"Template"> | string
-    category?: StringNullableFilter<"Template"> | string | null
+    category?: StringFilter<"Template"> | string
     createdAt?: DateTimeFilter<"Template"> | Date | string
     updatedAt?: DateTimeFilter<"Template"> | Date | string
   }
@@ -17690,7 +17681,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     content?: SortOrder
-    category?: SortOrderInput | SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17703,7 +17694,7 @@ export namespace Prisma {
     name?: StringFilter<"Template"> | string
     description?: StringNullableFilter<"Template"> | string | null
     content?: StringFilter<"Template"> | string
-    category?: StringNullableFilter<"Template"> | string | null
+    category?: StringFilter<"Template"> | string
     createdAt?: DateTimeFilter<"Template"> | Date | string
     updatedAt?: DateTimeFilter<"Template"> | Date | string
   }, "id">
@@ -17713,7 +17704,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     content?: SortOrder
-    category?: SortOrderInput | SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TemplateCountOrderByAggregateInput
@@ -17729,7 +17720,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Template"> | string
     description?: StringNullableWithAggregatesFilter<"Template"> | string | null
     content?: StringWithAggregatesFilter<"Template"> | string
-    category?: StringNullableWithAggregatesFilter<"Template"> | string | null
+    category?: StringWithAggregatesFilter<"Template"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Template"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Template"> | Date | string
   }
@@ -17741,7 +17732,7 @@ export namespace Prisma {
     id?: StringFilter<"KnowledgeArticle"> | string
     title?: StringFilter<"KnowledgeArticle"> | string
     content?: StringFilter<"KnowledgeArticle"> | string
-    category?: StringNullableFilter<"KnowledgeArticle"> | string | null
+    category?: StringFilter<"KnowledgeArticle"> | string
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
@@ -17753,7 +17744,7 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    category?: SortOrderInput | SortOrder
+    category?: SortOrder
     tags?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -17768,7 +17759,7 @@ export namespace Prisma {
     NOT?: KnowledgeArticleWhereInput | KnowledgeArticleWhereInput[]
     title?: StringFilter<"KnowledgeArticle"> | string
     content?: StringFilter<"KnowledgeArticle"> | string
-    category?: StringNullableFilter<"KnowledgeArticle"> | string | null
+    category?: StringFilter<"KnowledgeArticle"> | string
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
@@ -17780,7 +17771,7 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    category?: SortOrderInput | SortOrder
+    category?: SortOrder
     tags?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -17797,7 +17788,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     title?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     content?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
-    category?: StringNullableWithAggregatesFilter<"KnowledgeArticle"> | string | null
+    category?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringWithAggregatesFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeWithAggregatesFilter<"KnowledgeArticle"> | Date | string
@@ -18320,41 +18311,35 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateInput = {
-    id?: string
     note: NoteCreateNestedOneWithoutTagsInput
     tag: TagCreateNestedOneWithoutNotesInput
   }
 
   export type NoteTagUncheckedCreateInput = {
-    id?: string
     noteId: string
     tagId: string
   }
 
   export type NoteTagUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     note?: NoteUpdateOneRequiredWithoutTagsNestedInput
     tag?: TagUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type NoteTagUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagCreateManyInput = {
-    id?: string
     noteId: string
     tagId: string
   }
 
   export type NoteTagUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
+
   }
 
   export type NoteTagUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
@@ -18363,7 +18348,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: string | null
+    mood?: $Enums.Mood | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutDailyNotesInput
@@ -18373,7 +18358,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: string | null
+    mood?: $Enums.Mood | null
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18383,7 +18368,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDailyNotesNestedInput
@@ -18393,7 +18378,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18403,7 +18388,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: string | null
+    mood?: $Enums.Mood | null
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18413,7 +18398,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18422,7 +18407,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18431,7 +18416,6 @@ export namespace Prisma {
   export type TaskCreateInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -18444,7 +18428,6 @@ export namespace Prisma {
   export type TaskUncheckedCreateInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -18457,7 +18440,6 @@ export namespace Prisma {
   export type TaskUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18470,7 +18452,6 @@ export namespace Prisma {
   export type TaskUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18483,7 +18464,6 @@ export namespace Prisma {
   export type TaskCreateManyInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -18496,7 +18476,6 @@ export namespace Prisma {
   export type TaskUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18507,7 +18486,6 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18602,7 +18580,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     content: string
-    category?: string | null
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18612,7 +18590,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     content: string
-    category?: string | null
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18622,7 +18600,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18632,7 +18610,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18642,7 +18620,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     content: string
-    category?: string | null
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18652,7 +18630,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18662,7 +18640,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18671,7 +18649,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category?: string | null
+    category: string
     tags?: KnowledgeArticleCreatetagsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18682,7 +18660,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category?: string | null
+    category: string
     tags?: KnowledgeArticleCreatetagsInput | string[]
     userId: string
     createdAt?: Date | string
@@ -18693,7 +18671,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18704,7 +18682,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18715,7 +18693,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category?: string | null
+    category: string
     tags?: KnowledgeArticleCreatetagsInput | string[]
     userId: string
     createdAt?: Date | string
@@ -18726,7 +18704,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18736,7 +18714,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19251,21 +19229,25 @@ export namespace Prisma {
   }
 
   export type NoteTagCountOrderByAggregateInput = {
-    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
   }
 
   export type NoteTagMaxOrderByAggregateInput = {
-    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
   }
 
   export type NoteTagMinOrderByAggregateInput = {
-    id?: SortOrder
     noteId?: SortOrder
     tagId?: SortOrder
+  }
+
+  export type EnumMoodNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMoodNullableFilter<$PrismaModel> | $Enums.Mood | null
   }
 
   export type DailyNoteCountOrderByAggregateInput = {
@@ -19298,6 +19280,16 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumMoodNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMoodNullableWithAggregatesFilter<$PrismaModel> | $Enums.Mood | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMoodNullableFilter<$PrismaModel>
+    _max?: NestedEnumMoodNullableFilter<$PrismaModel>
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -19318,7 +19310,6 @@ export namespace Prisma {
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrder
@@ -19331,7 +19322,6 @@ export namespace Prisma {
   export type TaskMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrder
@@ -19344,7 +19334,6 @@ export namespace Prisma {
   export type TaskMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
     completed?: SortOrder
     priority?: SortOrder
     dueDate?: SortOrder
@@ -20122,6 +20111,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type NullableEnumMoodFieldUpdateOperationsInput = {
+    set?: $Enums.Mood | null
+  }
+
   export type UserUpdateOneRequiredWithoutDailyNotesNestedInput = {
     create?: XOR<UserCreateWithoutDailyNotesInput, UserUncheckedCreateWithoutDailyNotesInput>
     connectOrCreate?: UserCreateOrConnectWithoutDailyNotesInput
@@ -20435,6 +20428,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNoteStatusFilter<$PrismaModel>
     _max?: NestedEnumNoteStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMoodNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMoodNullableFilter<$PrismaModel> | $Enums.Mood | null
+  }
+
+  export type NestedEnumMoodNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Mood | EnumMoodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Mood[] | ListEnumMoodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMoodNullableWithAggregatesFilter<$PrismaModel> | $Enums.Mood | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMoodNullableFilter<$PrismaModel>
+    _max?: NestedEnumMoodNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -20759,7 +20769,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: string | null
+    mood?: $Enums.Mood | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20768,7 +20778,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: string | null
+    mood?: $Enums.Mood | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20787,7 +20797,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category?: string | null
+    category: string
     tags?: KnowledgeArticleCreatetagsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20797,7 +20807,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category?: string | null
+    category: string
     tags?: KnowledgeArticleCreatetagsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20902,7 +20912,6 @@ export namespace Prisma {
   export type TaskCreateWithoutUserInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -20914,7 +20923,6 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutUserInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -21019,7 +21027,7 @@ export namespace Prisma {
     id?: StringFilter<"DailyNote"> | string
     date?: DateTimeFilter<"DailyNote"> | Date | string
     content?: StringFilter<"DailyNote"> | string
-    mood?: StringNullableFilter<"DailyNote"> | string | null
+    mood?: EnumMoodNullableFilter<"DailyNote"> | $Enums.Mood | null
     userId?: StringFilter<"DailyNote"> | string
     createdAt?: DateTimeFilter<"DailyNote"> | Date | string
     updatedAt?: DateTimeFilter<"DailyNote"> | Date | string
@@ -21048,7 +21056,7 @@ export namespace Prisma {
     id?: StringFilter<"KnowledgeArticle"> | string
     title?: StringFilter<"KnowledgeArticle"> | string
     content?: StringFilter<"KnowledgeArticle"> | string
-    category?: StringNullableFilter<"KnowledgeArticle"> | string | null
+    category?: StringFilter<"KnowledgeArticle"> | string
     tags?: StringNullableListFilter<"KnowledgeArticle">
     userId?: StringFilter<"KnowledgeArticle"> | string
     createdAt?: DateTimeFilter<"KnowledgeArticle"> | Date | string
@@ -21163,7 +21171,6 @@ export namespace Prisma {
     NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
     id?: StringFilter<"Task"> | string
     title?: StringFilter<"Task"> | string
-    description?: StringNullableFilter<"Task"> | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityFilter<"Task"> | $Enums.TaskPriority
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -21240,12 +21247,10 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateWithoutNoteInput = {
-    id?: string
     tag: TagCreateNestedOneWithoutNotesInput
   }
 
   export type NoteTagUncheckedCreateWithoutNoteInput = {
-    id?: string
     tagId: string
   }
 
@@ -21357,7 +21362,6 @@ export namespace Prisma {
     AND?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
     OR?: NoteTagScalarWhereInput[]
     NOT?: NoteTagScalarWhereInput | NoteTagScalarWhereInput[]
-    id?: StringFilter<"NoteTag"> | string
     noteId?: StringFilter<"NoteTag"> | string
     tagId?: StringFilter<"NoteTag"> | string
   }
@@ -21499,12 +21503,10 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateWithoutTagInput = {
-    id?: string
     note: NoteCreateNestedOneWithoutTagsInput
   }
 
   export type NoteTagUncheckedCreateWithoutTagInput = {
-    id?: string
     noteId: string
   }
 
@@ -21922,7 +21924,6 @@ export namespace Prisma {
   export type TaskCreateWithoutProjectInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -21934,7 +21935,6 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutProjectInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -22131,7 +22131,7 @@ export namespace Prisma {
     id?: string
     date: Date | string
     content: string
-    mood?: string | null
+    mood?: $Enums.Mood | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22140,7 +22140,7 @@ export namespace Prisma {
     id?: string
     title: string
     content: string
-    category?: string | null
+    category: string
     tags?: KnowledgeArticleCreatetagsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22175,7 +22175,6 @@ export namespace Prisma {
   export type TaskCreateManyUserInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -22259,7 +22258,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22268,7 +22267,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22277,7 +22276,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     content?: StringFieldUpdateOperationsInput | string
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: NullableEnumMoodFieldUpdateOperationsInput | $Enums.Mood | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22286,7 +22285,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22296,7 +22295,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22306,7 +22305,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    category?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
     tags?: KnowledgeArticleUpdatetagsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22397,7 +22396,6 @@ export namespace Prisma {
   export type TaskUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22409,7 +22407,6 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22421,7 +22418,6 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22431,22 +22427,18 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateManyNoteInput = {
-    id?: string
     tagId: string
   }
 
   export type NoteTagUpdateWithoutNoteInput = {
-    id?: StringFieldUpdateOperationsInput | string
     tag?: TagUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type NoteTagUncheckedUpdateWithoutNoteInput = {
-    id?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagUncheckedUpdateManyWithoutNoteInput = {
-    id?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -22493,29 +22485,24 @@ export namespace Prisma {
   }
 
   export type NoteTagCreateManyTagInput = {
-    id?: string
     noteId: string
   }
 
   export type NoteTagUpdateWithoutTagInput = {
-    id?: StringFieldUpdateOperationsInput | string
     note?: NoteUpdateOneRequiredWithoutTagsNestedInput
   }
 
   export type NoteTagUncheckedUpdateWithoutTagInput = {
-    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NoteTagUncheckedUpdateManyWithoutTagInput = {
-    id?: StringFieldUpdateOperationsInput | string
     noteId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TaskCreateManyProjectInput = {
     id?: string
     title: string
-    description?: string | null
     completed?: boolean
     priority?: $Enums.TaskPriority
     dueDate?: Date | string | null
@@ -22527,7 +22514,6 @@ export namespace Prisma {
   export type TaskUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22539,7 +22525,6 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22551,7 +22536,6 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: EnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
